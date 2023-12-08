@@ -96,7 +96,7 @@ export const ResetPasswordForm = () => {
         </div>
         <div className='flex items-center justify-center'>
           <Link
-            href='/sign-in'
+            href='/auth/signin'
             className='text-sm text-gray-100 mt-2 hover:underline'
           >
             Voltar para login

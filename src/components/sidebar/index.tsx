@@ -23,7 +23,7 @@ export function SideBar() {
       <nav className='flex flex-col w-full'>
         <div className='h-14 bg-gray-800 border-b border-gray-900 flex items-center pl-6'>
           <div>
-            <Link href='/overview'>
+            <Link href='/dashboard'>
               <HeaderLogo />
             </Link>
           </div>

@@ -1,9 +1,8 @@
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
+import { api } from '@/lib/api';
 import { env } from '@/utils/env';
-
-import { nextAuthCallback } from './callback';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -14,40 +13,52 @@ export const authOptions: NextAuthOptions = {
           label: 'Email',
           type: 'text',
         },
-        password: { label: 'Password', type: 'password' },
+        password: { label: 'Senha', type: 'password' },
       },
       async authorize(credentials) {
-        console.log('credentials', credentials);
         if (!credentials) {
           return null;
         }
 
         const { email, password } = credentials;
 
-        const signInResponse = await fetch(`${env.API_URL}/sessions`, {
+        const response = await api('/sessions', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
           body: JSON.stringify({
             email,
             password,
           }),
         });
 
-        const user = await signInResponse.json();
-
-        if (user && signInResponse.ok) {
-          return user;
+        if (!response) {
+          return null;
         }
 
-        return null;
+        return response;
       },
     }),
   ],
-  callbacks: nextAuthCallback,
-  pages: {
-    signIn: '/sign-in',
+  callbacks: {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === 'update') {
+        return { token, ...session.user };
+      }
+
+      return { ...token, ...user };
+    },
+    async session({ session, token }) {
+      session.user = token.user;
+      session.accessToken = token.accessToken;
+
+      return session;
+    },
   },
-  debug: env.NEXTAUTH_DEBUG || false,
+  pages: {
+    signIn: '/auth/signin',
+  },
+  session: {
+    strategy: 'jwt',
+  },
+  secret: env.NEXTAUTH_SECRET,
+  debug: env.NEXTAUTH_DEBUG,
 };

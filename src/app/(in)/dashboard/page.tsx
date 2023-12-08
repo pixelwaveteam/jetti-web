@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
 
-import { OverviewStats } from '@/app/(in)/overview/stats';
+import { OverviewStats } from '@/app/(in)/dashboard/stats';
 
-import { OverviewChart } from '@/app/(in)/overview/chart';
-import { OverviewFilter } from '@/app/(in)/overview/filter';
-import { RecentCashFlows } from '@/app/(in)/overview/recent-cash-flows';
+import { OverviewChart } from '@/app/(in)/dashboard/chart';
+import { OverviewFilter } from '@/app/(in)/dashboard/filter';
+import { RecentCashFlows } from '@/app/(in)/dashboard/recent-cash-flows';
 import { PageContainer } from '@/components/page-container';
 import {
   Card,
@@ -15,13 +15,13 @@ import {
 } from '@/components/ui/card';
 
 export const metadata: Metadata = {
-  title: 'Overview',
-  description: 'Overview of data and important informations.',
+  title: 'Dashboard',
+  description: 'Resumo das informações importantes da aplicação.',
 };
 
-export default async function Overview() {
+export default async function Dashboard() {
   return (
-    <PageContainer title='Overview' action={<OverviewFilter />}>
+    <PageContainer title='Dashboard' action={<OverviewFilter />}>
       <OverviewStats />
       <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
         <Card className='col-span-2'>

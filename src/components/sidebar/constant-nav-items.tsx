@@ -20,7 +20,7 @@ export const navItems = [
   {
     title: 'Dashboard',
     icon: LayoutDashboard,
-    path: '/overview',
+    path: '/dashboard',
   },
   {
     title: 'Organizações',
