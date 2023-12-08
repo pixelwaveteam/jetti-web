@@ -11,7 +11,7 @@ export function HeaderMobile() {
   return (
     <div className='flex md:hidden justify-between items-center w-full'>
       <MobileMenu />
-      <Link href='/overview'>
+      <Link href='/dashboard'>
         <Image src={Logo} alt='Logo' />
       </Link>
       <HeaderAvatarMenu />

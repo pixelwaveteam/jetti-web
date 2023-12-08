@@ -1,11 +1,20 @@
+import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { HeaderDashLayout } from '@/components/header/in';
 import { SideBar } from '@/components/sidebar';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 
-interface DashLayoutProps {
+interface InLayoutProps {
   children: React.ReactNode;
 }
 
-export default function DashLayout({ children }: DashLayoutProps) {
+export default async function InLayout({ children }: InLayoutProps) {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.accessToken) {
+    redirect(`/auth/signin`);
+  }
+
   return (
     <div className='flex min-h-screen w-full'>
       <SideBar />

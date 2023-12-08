@@ -1,6 +1,8 @@
 'use client';
 
 import { LogOut, Settings, User } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -14,11 +16,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { getInitials } from '@/utils/text';
-import { useRouter } from 'next/navigation';
 
 export function HeaderAvatarMenu() {
-  const [open, setOpen] = useState(false);
   const router = useRouter();
+  const { data: session } = useSession();
+
+  const [open, setOpen] = useState(false);
 
   const toogleMenu = () => {
     setOpen(!open);
@@ -34,8 +37,9 @@ export function HeaderAvatarMenu() {
     setOpen(false);
   };
 
-  const handleSignOut = () => {
-    router.push('/api/auth/signout');
+  const handleSignOut = async () => {
+    await signOut();
+
     setOpen(false);
   };
 
@@ -48,7 +52,9 @@ export function HeaderAvatarMenu() {
       >
         <Avatar>
           <AvatarImage src='https://github.com/ruverd.png' />
-          <AvatarFallback>{getInitials('Ruver Dornelas')}</AvatarFallback>
+          <AvatarFallback>
+            {getInitials(session?.user?.name || '')}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>

@@ -42,7 +42,7 @@ export const SignInForm = () => {
   const { handleSubmit, control } = formMethods;
 
   const onSubmit = async (data: SignInFormSchemaType) => {
-    const callbackUrl = searchParams.get('callbackUrl') || '/overview';
+    const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
 
     const response = await signIn('credentials', {
       email: data.email,
@@ -85,7 +85,7 @@ export const SignInForm = () => {
                   Senha
                   <Link
                     className='text-gray-300 hover:underline'
-                    href='/forgot-password'
+                    href='/auth/forgot-password'
                   >
                     Esquceu Senha?
                   </Link>
