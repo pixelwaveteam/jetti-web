@@ -14,13 +14,13 @@ import {
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
 
-interface OrganizationEditDrawerProps {
+interface OrganizationEditSheetProps {
   organization: Organization;
 }
 
-export function OrganizationEditDrawer({
+export function OrganizationEditSheet({
   organization,
-}: OrganizationEditDrawerProps) {
+}: OrganizationEditSheetProps) {
   const { show, setShow } = useContext(SheetContext);
 
   return (
@@ -35,7 +35,7 @@ export function OrganizationEditDrawer({
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Edit Organization</SheetTitle>
+          <SheetTitle>Alterar Organização</SheetTitle>
         </SheetHeader>
         <OrganizationFormEdit organization={organization} />
       </SheetContent>

@@ -4,18 +4,18 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import * as z from 'zod';
 
-import { OrganizationEditDrawer } from '@/app/(in)/organizations/edit/edit-drawer';
+import { OrganizationEditSheet } from '@/app/(in)/organizations/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 const OrganizationSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   name: z.string(),
 });
 
 export type OrganizationData = z.infer<typeof OrganizationSchema>;
 export type Organization = {
-  id: number;
+  id: string;
   name: string;
 };
 
@@ -49,9 +49,11 @@ export const organizationColumns: ColumnDef<OrganizationData>[] = [
       const organization = row.original;
 
       return (
-        <SheetProvider>
-          <OrganizationEditDrawer organization={organization} />
-        </SheetProvider>
+        <div className='w-full text-right'>
+          <SheetProvider>
+            <OrganizationEditSheet organization={organization} />
+          </SheetProvider>
+        </div>
       );
     },
   },

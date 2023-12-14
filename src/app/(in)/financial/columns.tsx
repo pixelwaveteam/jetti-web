@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import * as z from 'zod';
 
-import { FinancialEditDrawer } from '@/app/(in)/financial/edit/edit-drawer';
+import { FinancialEditDrawer } from '@/app/(in)/financial/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 

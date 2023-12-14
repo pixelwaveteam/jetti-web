@@ -2,7 +2,6 @@
 
 import { ReactNode } from 'react';
 
-import { QueryProvider } from '@/providers/query-provider';
 import { SidebarProvider } from '@/providers/sidebar-provider';
 import { ThemeProvider } from '@/providers/theme-provider';
 import { SessionProvider } from 'next-auth/react';
@@ -20,9 +19,7 @@ export function AppProvider({ children }: AppProviderProps) {
         enableSystem
         disableTransitionOnChange
       >
-        <QueryProvider>
-          <SidebarProvider>{children}</SidebarProvider>
-        </QueryProvider>
+        <SidebarProvider>{children}</SidebarProvider>
       </ThemeProvider>
     </SessionProvider>
   );

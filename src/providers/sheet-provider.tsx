@@ -7,7 +7,9 @@ interface SheetContextValues {
   setShow: (showed: boolean) => void;
 }
 
-export const SheetContext = createContext({} as SheetContextValues);
+export const SheetContext = createContext({
+  show: false,
+} as SheetContextValues);
 
 interface SheetProviderProps {
   children: ReactNode;

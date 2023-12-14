@@ -1,5 +1,5 @@
 import { InterfaceData, interfaceColumns } from '@/app/(in)/interfaces/columns';
-import { InterfaceCreateDrawer } from '@/app/(in)/interfaces/create/create-drawer';
+import { InterfaceCreateDrawer } from '@/app/(in)/interfaces/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 
