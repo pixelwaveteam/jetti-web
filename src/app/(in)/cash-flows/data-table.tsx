@@ -1,5 +1,5 @@
 import { CashFlowData, cashFlowColumns } from '@/app/(in)/cash-flows/columns';
-import { CashFlowCreateDrawer } from '@/app/(in)/cash-flows/create/create-drawer';
+import { CashFlowCreateDrawer } from '@/app/(in)/cash-flows/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 

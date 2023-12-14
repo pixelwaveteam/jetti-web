@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 
+import { Toaster } from '@/components/ui/toaster';
 import { AppProvider } from '@/providers/app-provider';
 import '@/styles/globals.css';
 import { cn } from '@/utils/style';
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         className={cn('bg-background font-sans antialiased', fontSans.variable)}
       >
         <AppProvider>{children}</AppProvider>
+        <Toaster />
       </body>
     </html>
   );

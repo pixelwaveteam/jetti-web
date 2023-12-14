@@ -31,13 +31,17 @@ export async function api<T = any>(
     ...moreOptions,
   })
     .then(async (response) => {
-      const content = await response.json();
+      try {
+        const content = await response.json();
 
-      return content as T;
+        return content as T;
+      } catch (err) {
+        return null as unknown as T;
+      }
     })
-    .catch((err) => {
-      console.error('API FETCH', err);
+    .catch((error) => {
+      console.error('API FETCH', error);
 
-      throw new Error(err);
+      throw new Error(error);
     });
 }

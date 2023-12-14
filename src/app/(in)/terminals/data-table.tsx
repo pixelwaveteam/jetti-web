@@ -1,5 +1,5 @@
 import { TerminalData, terminalColumns } from '@/app/(in)/terminals/columns';
-import { TerminalCreateDrawer } from '@/app/(in)/terminals/create/create-drawer';
+import { TerminalCreateDrawer } from '@/app/(in)/terminals/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 

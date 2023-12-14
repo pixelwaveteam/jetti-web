@@ -2,7 +2,7 @@ import {
   EstablishmentData,
   establishmentColumns,
 } from '@/app/(in)/establishments/columns';
-import { EstablishmentCreateDrawer } from '@/app/(in)/establishments/create/create-drawer';
+import { EstablishmentCreateDrawer } from '@/app/(in)/establishments/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 

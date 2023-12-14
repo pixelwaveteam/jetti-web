@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import * as z from 'zod';
 
-import { InterfaceEditDrawer } from '@/app/(in)/interfaces/edit/edit-drawer';
+import { InterfaceEditDrawer } from '@/app/(in)/interfaces/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 

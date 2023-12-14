@@ -1,5 +1,5 @@
 import { UserData, userColumns } from '@/app/(in)/users/columns';
-import { UserCreateDrawer } from '@/app/(in)/users/create/create-drawer';
+import { UserCreateDrawer } from '@/app/(in)/users/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 
