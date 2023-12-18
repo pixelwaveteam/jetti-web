@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 
+import { fetchInterfaces } from '@/app/(in)/interfaces/actions/fetch-interfaces';
 import { InterfaceDataTable } from '@/app/(in)/interfaces/data-table';
 import { PageContainer } from '@/components/page-container';
 
@@ -8,10 +9,12 @@ export const metadata: Metadata = {
   description: 'Administrar interfaces dos terminais.',
 };
 
-export default function Interfaces() {
+export default async function Interfaces() {
+  const interfaces = await fetchInterfaces();
+
   return (
     <PageContainer title='Interfaces'>
-      <InterfaceDataTable interfaces={[]} />
+      <InterfaceDataTable data={interfaces} />
     </PageContainer>
   );
 }

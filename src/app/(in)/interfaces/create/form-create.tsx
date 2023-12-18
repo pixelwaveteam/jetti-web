@@ -1,9 +1,12 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
+import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+import { createInterface } from '@/app/(in)/interfaces/actions/create-interface';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -16,6 +19,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
+import { SheetContext } from '@/providers/sheet-provider';
 
 const InterfaceFormCreateSchema = z.object({
   name: z
@@ -31,6 +35,7 @@ type InterfaceFormCreateType = z.infer<typeof InterfaceFormCreateSchema>;
 
 export function InterfaceFormCreate() {
   const { toast } = useToast();
+  const { setShow } = useContext(SheetContext);
 
   const formMethods = useForm<InterfaceFormCreateType>({
     resolver: zodResolver(InterfaceFormCreateSchema),
@@ -39,10 +44,22 @@ export function InterfaceFormCreate() {
     },
   });
 
-  const { control, handleSubmit } = formMethods;
+  const { control, formState, handleSubmit } = formMethods;
 
   const onSubmit = async (data: InterfaceFormCreateType) => {
     try {
+      await createInterface({
+        ...data,
+      });
+
+      setShow(false);
+
+      toast({
+        variant: 'default',
+        title: 'Sucesso',
+        description: 'Interface criada com sucesso.',
+        duration: 5000,
+      });
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -63,17 +80,25 @@ export function InterfaceFormCreate() {
             <FormItem>
               <FormLabel>Nome</FormLabel>
               <FormControl>
-                <Input placeholder='Nome da organização' {...field} />
+                <Input placeholder='Nome da interface' {...field} />
               </FormControl>
               <FormDescription>
-                Esse nome será exibido em telas e relatórios.
+                Nome da interface utilizada nos terminais.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type='submit' className='w-full'>
-          Criar
+        <Button
+          type='submit'
+          disabled={formState.isSubmitting}
+          className='w-full'
+        >
+          {formState.isSubmitting ? (
+            <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+          ) : (
+            'Criar'
+          )}
         </Button>
       </form>
     </Form>

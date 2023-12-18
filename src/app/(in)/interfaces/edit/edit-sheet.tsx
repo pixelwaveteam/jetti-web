@@ -14,13 +14,13 @@ import {
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
 
-interface InterfaceEditDrawerProps {
+interface InterfaceEditSheetProps {
   interfaceTerminal: Interface;
 }
 
-export function InterfaceEditDrawer({
+export function InterfaceEditSheet({
   interfaceTerminal,
-}: InterfaceEditDrawerProps) {
+}: InterfaceEditSheetProps) {
   const { show, setShow } = useContext(SheetContext);
 
   return (

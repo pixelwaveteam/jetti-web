@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -47,7 +48,7 @@ export function OrganizationFormEdit({
     },
   });
 
-  const { handleSubmit, control } = formMethods;
+  const { handleSubmit, control, formState } = formMethods;
 
   const onSubmit = async (data: OrganizationFormEditType) => {
     try {
@@ -117,8 +118,16 @@ export function OrganizationFormEdit({
             )}
           />
           <div className='flex gap-2'>
-            <Button type='submit' className='w-full'>
-              Alterar
+            <Button
+              type='submit'
+              disabled={formState.isSubmitting}
+              className='w-full'
+            >
+              {formState.isSubmitting ? (
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              ) : (
+                'Alterar'
+              )}
             </Button>
             <DialogProvider>
               <ConfirmDeletionDialog onConfirm={handleDeleteOrganization}>
