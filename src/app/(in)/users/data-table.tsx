@@ -1,5 +1,5 @@
 import { UserData, userColumns } from '@/app/(in)/users/columns';
-import { UserCreateDrawer } from '@/app/(in)/users/create/create-sheet';
+import { UserCreateSheet } from '@/app/(in)/users/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 
@@ -18,7 +18,7 @@ export function UserDataTable({ users }: UserDataTableProps) {
       }}
     >
       <SheetProvider>
-        <UserCreateDrawer />
+        <UserCreateSheet />
       </SheetProvider>
     </DataTable>
   );

@@ -2,7 +2,7 @@
 
 import { Plus } from 'lucide-react';
 
-import { InterfaceFormCreate } from '@/app/(in)/interfaces/create/form-create';
+import { EstablishmentFormCreate } from '@/app/(in)/establishments/create/form-create';
 import {
   Sheet,
   SheetContent,
@@ -11,7 +11,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 
-export function InterfaceCreateDrawer() {
+export function EstablishmentCreateSheet() {
   return (
     <Sheet>
       <SheetTrigger>
@@ -20,14 +20,14 @@ export function InterfaceCreateDrawer() {
           className='inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2'
         >
           <Plus size={16} />
-          <span>Interface</span>
+          <span className='hidden md:block'>Local</span>
         </div>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Nova Interface</SheetTitle>
+          <SheetTitle>Novo Local</SheetTitle>
         </SheetHeader>
-        <InterfaceFormCreate />
+        <EstablishmentFormCreate />
       </SheetContent>
     </Sheet>
   );

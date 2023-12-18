@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import * as z from 'zod';
 
-import { CashFlowEditDrawer } from '@/app/(in)/cash-flows/edit/edit-sheet';
+import { CashFlowEditSheet } from '@/app/(in)/cash-flows/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 
@@ -50,7 +50,7 @@ export const cashFlowColumns: ColumnDef<CashFlowData>[] = [
 
       return (
         <SheetProvider>
-          <CashFlowEditDrawer cashFlow={cashFlow} />
+          <CashFlowEditSheet cashFlow={cashFlow} />
         </SheetProvider>
       );
     },

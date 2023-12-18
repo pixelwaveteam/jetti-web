@@ -1,0 +1,14 @@
+'use server';
+
+import { TerminalData } from '@/app/(in)/terminals/columns';
+import { api } from '@/lib/api';
+
+export async function fetchTerminals() {
+  const response = await api<TerminalData[]>('/terminals', {
+    next: {
+      tags: ['terminals'],
+    },
+  });
+
+  return response;
+}

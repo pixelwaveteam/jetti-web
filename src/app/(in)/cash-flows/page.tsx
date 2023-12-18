@@ -5,10 +5,10 @@ import { PageContainer } from '@/components/page-container';
 
 export const metadata: Metadata = {
   title: 'Leituras',
-  description: 'Administrar usuários com acesso a aplicação.',
+  description: 'Administrar leituras dos terminais.',
 };
 
-export default function CashFlows() {
+export default async function CashFlows() {
   return (
     <PageContainer title='Leituras'>
       <CashFlowDataTable cashFlows={[]} />

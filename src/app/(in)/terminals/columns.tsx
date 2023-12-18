@@ -4,31 +4,38 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import * as z from 'zod';
 
-import { TerminalEditDrawer } from '@/app/(in)/terminals/edit/edit-sheet';
+import { TerminalEditSheet } from '@/app/(in)/terminals/edit/edit-sheet';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 const TerminalSchema = z.object({
-  id: z.number(),
-  name: z.string(),
+  id: z.string(),
+  establishmentId: z.string(),
+  interfaceId: z.string(),
+  code: z.string(),
+  isActive: z.boolean(),
 });
 
 export type TerminalData = z.infer<typeof TerminalSchema>;
 export type Terminal = {
-  id: number;
-  name: string;
+  id: string;
+  establishmentId: string;
+  interfaceId: string;
+  code: string;
+  isActive: boolean;
 };
 
 export const terminalColumns: ColumnDef<TerminalData>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'code',
     header: ({ column }) => {
       return (
         <Button
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Nome
+          Código
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
@@ -38,7 +45,13 @@ export const terminalColumns: ColumnDef<TerminalData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{terminal.name}</span>
+          <span className='truncate'>{terminal.code}</span>
+          <Badge
+            variant={terminal.isActive ? 'default' : 'destructive'}
+            className='text-xs'
+          >
+            {terminal.isActive ? 'Ativo' : 'Inativo'}
+          </Badge>
         </div>
       );
     },
@@ -50,7 +63,7 @@ export const terminalColumns: ColumnDef<TerminalData>[] = [
 
       return (
         <SheetProvider>
-          <TerminalEditDrawer terminal={terminal} />
+          <TerminalEditSheet terminal={terminal} />
         </SheetProvider>
       );
     },

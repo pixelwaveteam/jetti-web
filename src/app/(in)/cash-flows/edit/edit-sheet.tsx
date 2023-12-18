@@ -3,8 +3,8 @@
 import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
-import { Interface } from '@/app/(in)/interfaces/columns';
-import { InterfaceFormEdit } from '@/app/(in)/interfaces/edit/form-edit';
+import { CashFlow } from '@/app/(in)/cash-flows/columns';
+import { CashFlowFormEdit } from '@/app/(in)/cash-flows/edit/form-edit';
 import {
   Sheet,
   SheetContent,
@@ -14,13 +14,11 @@ import {
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
 
-interface InterfaceEditDrawerProps {
-  interfaceTerminal: Interface;
+interface CashFlowEditSheetProps {
+  cashFlow: CashFlow;
 }
 
-export function InterfaceEditDrawer({
-  interfaceTerminal,
-}: InterfaceEditDrawerProps) {
+export function CashFlowEditSheet({ cashFlow }: CashFlowEditSheetProps) {
   const { show, setShow } = useContext(SheetContext);
 
   return (
@@ -35,9 +33,9 @@ export function InterfaceEditDrawer({
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Edit Interface</SheetTitle>
+          <SheetTitle>Edit CashFlow</SheetTitle>
         </SheetHeader>
-        <InterfaceFormEdit interfaceTerminal={interfaceTerminal} />
+        <CashFlowFormEdit cashFlow={cashFlow} />
       </SheetContent>
     </Sheet>
   );

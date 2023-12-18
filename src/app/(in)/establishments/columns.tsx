@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import * as z from 'zod';
 
-import { EstablishmentEditDrawer } from '@/app/(in)/establishments/edit/edit-sheet';
+import { EstablishmentEditSheet } from '@/app/(in)/establishments/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 
@@ -50,7 +50,7 @@ export const establishmentColumns: ColumnDef<EstablishmentData>[] = [
 
       return (
         <SheetProvider>
-          <EstablishmentEditDrawer establishment={establishment} />
+          <EstablishmentEditSheet establishment={establishment} />
         </SheetProvider>
       );
     },

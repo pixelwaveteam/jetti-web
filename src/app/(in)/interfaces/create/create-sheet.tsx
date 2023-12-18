@@ -2,7 +2,7 @@
 
 import { Plus } from 'lucide-react';
 
-import { CashFlowFormCreate } from '@/app/(in)/cash-flows/create/form-create';
+import { InterfaceFormCreate } from '@/app/(in)/interfaces/create/form-create';
 import {
   Sheet,
   SheetContent,
@@ -11,7 +11,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 
-export function CashFlowCreateDrawer() {
+export function InterfaceCreateSheet() {
   return (
     <Sheet>
       <SheetTrigger>
@@ -20,14 +20,14 @@ export function CashFlowCreateDrawer() {
           className='inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2'
         >
           <Plus size={16} />
-          <span>Leitura</span>
+          <span className='hidden md:block'>Interface</span>
         </div>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Nova Leitura</SheetTitle>
+          <SheetTitle>Nova Interface</SheetTitle>
         </SheetHeader>
-        <CashFlowFormCreate />
+        <InterfaceFormCreate />
       </SheetContent>
     </Sheet>
   );

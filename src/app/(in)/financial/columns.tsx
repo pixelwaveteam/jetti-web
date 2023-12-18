@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import * as z from 'zod';
 
-import { FinancialEditDrawer } from '@/app/(in)/financial/edit/edit-sheet';
+import { FinancialEditSheet } from '@/app/(in)/financial/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 
@@ -50,7 +50,7 @@ export const financialColumns: ColumnDef<FinancialData>[] = [
 
       return (
         <SheetProvider>
-          <FinancialEditDrawer financial={financial} />
+          <FinancialEditSheet financial={financial} />
         </SheetProvider>
       );
     },

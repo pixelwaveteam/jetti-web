@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import * as z from 'zod';
 
-import { UserEditDrawer } from '@/app/(in)/users/edit/edit-sheet';
+import { UserEditSheet } from '@/app/(in)/users/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 
@@ -50,7 +50,7 @@ export const userColumns: ColumnDef<UserData>[] = [
 
       return (
         <SheetProvider>
-          <UserEditDrawer user={user} />
+          <UserEditSheet user={user} />
         </SheetProvider>
       );
     },

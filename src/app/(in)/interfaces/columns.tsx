@@ -4,18 +4,18 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import * as z from 'zod';
 
-import { InterfaceEditDrawer } from '@/app/(in)/interfaces/edit/edit-sheet';
+import { InterfaceEditSheet } from '@/app/(in)/interfaces/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 const InterfaceSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   name: z.string(),
 });
 
 export type InterfaceData = z.infer<typeof InterfaceSchema>;
 export type Interface = {
-  id: number;
+  id: string;
   name: string;
 };
 
@@ -50,7 +50,7 @@ export const interfaceColumns: ColumnDef<InterfaceData>[] = [
 
       return (
         <SheetProvider>
-          <InterfaceEditDrawer interfaceTerminal={interfaceTerminal} />
+          <InterfaceEditSheet interfaceTerminal={interfaceTerminal} />
         </SheetProvider>
       );
     },

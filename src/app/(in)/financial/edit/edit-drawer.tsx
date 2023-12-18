@@ -14,11 +14,11 @@ import {
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
 
-interface FinancialEditDrawerProps {
+interface FinancialEditSheetProps {
   financial: Financial;
 }
 
-export function FinancialEditDrawer({ financial }: FinancialEditDrawerProps) {
+export function FinancialEditSheet({ financial }: FinancialEditSheetProps) {
   const { show, setShow } = useContext(SheetContext);
 
   return (

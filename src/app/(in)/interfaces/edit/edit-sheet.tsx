@@ -3,8 +3,8 @@
 import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
-import { Terminal } from '@/app/(in)/terminals/columns';
-import { TerminalFormEdit } from '@/app/(in)/terminals/edit/form-edit';
+import { Interface } from '@/app/(in)/interfaces/columns';
+import { InterfaceFormEdit } from '@/app/(in)/interfaces/edit/form-edit';
 import {
   Sheet,
   SheetContent,
@@ -14,11 +14,13 @@ import {
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
 
-interface TerminalEditDrawerProps {
-  terminal: Terminal;
+interface InterfaceEditSheetProps {
+  interfaceTerminal: Interface;
 }
 
-export function TerminalEditDrawer({ terminal }: TerminalEditDrawerProps) {
+export function InterfaceEditSheet({
+  interfaceTerminal,
+}: InterfaceEditSheetProps) {
   const { show, setShow } = useContext(SheetContext);
 
   return (
@@ -33,9 +35,9 @@ export function TerminalEditDrawer({ terminal }: TerminalEditDrawerProps) {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Edit Terminal</SheetTitle>
+          <SheetTitle>Edit Interface</SheetTitle>
         </SheetHeader>
-        <TerminalFormEdit terminal={terminal} />
+        <InterfaceFormEdit interfaceTerminal={interfaceTerminal} />
       </SheetContent>
     </Sheet>
   );

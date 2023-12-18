@@ -3,8 +3,8 @@
 import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
-import { User } from '@/app/(in)/users/columns';
-import { UserFormEdit } from '@/app/(in)/users/edit/form-edit';
+import { Establishment } from '@/app/(in)/establishments/columns';
+import { EstablishmentFormEdit } from '@/app/(in)/establishments/edit/form-edit';
 import {
   Sheet,
   SheetContent,
@@ -14,11 +14,13 @@ import {
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
 
-interface UserEditDrawerProps {
-  user: User;
+interface EstablishmentEditSheetProps {
+  establishment: Establishment;
 }
 
-export function UserEditDrawer({ user }: UserEditDrawerProps) {
+export function EstablishmentEditSheet({
+  establishment,
+}: EstablishmentEditSheetProps) {
   const { show, setShow } = useContext(SheetContext);
 
   return (
@@ -33,9 +35,9 @@ export function UserEditDrawer({ user }: UserEditDrawerProps) {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Edit User</SheetTitle>
+          <SheetTitle>Edit Establishment</SheetTitle>
         </SheetHeader>
-        <UserFormEdit user={user} />
+        <EstablishmentFormEdit establishment={establishment} />
       </SheetContent>
     </Sheet>
   );
