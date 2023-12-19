@@ -3,8 +3,6 @@
 import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
-import { Financial } from '@/app/(in)/financial/columns';
-import { FinancialFormEdit } from '@/app/(in)/financial/edit/form-edit';
 import {
   Sheet,
   SheetContent,
@@ -14,11 +12,7 @@ import {
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
 
-interface FinancialEditSheetProps {
-  financial: Financial;
-}
-
-export function FinancialEditSheet({ financial }: FinancialEditSheetProps) {
+export function FinancialViewSheet() {
   const { show, setShow } = useContext(SheetContext);
 
   return (
@@ -33,9 +27,8 @@ export function FinancialEditSheet({ financial }: FinancialEditSheetProps) {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Edit Financial</SheetTitle>
+          <SheetTitle>Visualizar Ganhos</SheetTitle>
         </SheetHeader>
-        <FinancialFormEdit financial={financial} />
       </SheetContent>
     </Sheet>
   );

@@ -78,7 +78,11 @@ export function ConfirmDeletionDialog({
             <DialogHeader>
               <DialogTitle>Confirmar exclusão</DialogTitle>
               <DialogDescription>
-                {`Digite "${CONFIRM_WORD}" e clique em confirmar`}
+                <span>
+                  Digite{' '}
+                  <strong className='font-bold'>{`"${CONFIRM_WORD}"`}</strong> e
+                  clique em confirmar
+                </span>
               </DialogDescription>
             </DialogHeader>
             <FormField
@@ -87,7 +91,7 @@ export function ConfirmDeletionDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder='Digite...' {...field} />
+                    <Input placeholder='Digite o código...' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

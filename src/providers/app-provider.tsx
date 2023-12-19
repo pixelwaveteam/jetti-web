@@ -1,10 +1,10 @@
 'use client';
 
+import { SessionProvider } from 'next-auth/react';
 import { ReactNode } from 'react';
 
 import { SidebarProvider } from '@/providers/sidebar-provider';
 import { ThemeProvider } from '@/providers/theme-provider';
-import { SessionProvider } from 'next-auth/react';
 
 interface AppProviderProps {
   children: ReactNode;
