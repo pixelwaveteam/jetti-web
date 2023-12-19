@@ -49,9 +49,11 @@ export const interfaceColumns: ColumnDef<InterfaceData>[] = [
       const interfaceTerminal = row.original;
 
       return (
-        <SheetProvider>
-          <InterfaceEditSheet interfaceTerminal={interfaceTerminal} />
-        </SheetProvider>
+        <div className='w-full text-right'>
+          <SheetProvider>
+            <InterfaceEditSheet interfaceTerminal={interfaceTerminal} />
+          </SheetProvider>
+        </div>
       );
     },
   },

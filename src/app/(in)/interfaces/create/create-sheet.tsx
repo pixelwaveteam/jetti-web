@@ -1,6 +1,7 @@
 'use client';
 
 import { Plus } from 'lucide-react';
+import { useContext } from 'react';
 
 import { InterfaceFormCreate } from '@/app/(in)/interfaces/create/form-create';
 import {
@@ -10,10 +11,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { SheetContext } from '@/providers/sheet-provider';
 
 export function InterfaceCreateSheet() {
+  const { show, setShow } = useContext(SheetContext);
+
   return (
-    <Sheet>
+    <Sheet open={show} onOpenChange={setShow}>
       <SheetTrigger>
         <div
           role='button'

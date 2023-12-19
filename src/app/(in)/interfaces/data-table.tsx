@@ -4,14 +4,14 @@ import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 interface InterfaceDataTableProps {
-  interfaces: InterfaceData[];
+  data: InterfaceData[];
 }
 
-export function InterfaceDataTable({ interfaces }: InterfaceDataTableProps) {
+export function InterfaceDataTable({ data }: InterfaceDataTableProps) {
   return (
     <DataTable
       columns={interfaceColumns}
-      data={interfaces}
+      data={data}
       filterBy={{
         key: 'name',
         label: 'nome',
