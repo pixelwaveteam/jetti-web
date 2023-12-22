@@ -111,7 +111,7 @@ export function InterfaceFormEdit({
                   <Input placeholder='Nome da interface' {...field} />
                 </FormControl>
                 <FormDescription>
-                  Esse nome será exibido em telas e relatórios.
+                  Nome da interface utilizada nos terminais.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

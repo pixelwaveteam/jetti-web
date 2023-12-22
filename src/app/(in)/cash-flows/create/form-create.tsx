@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -15,16 +16,20 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { Calendar } from 'lucide-react';
 
 const CashFlowFormCreateSchema = z.object({
-  name: z
-    .string()
-    .min(3, 'Nome deve ter pelo menos 3 caractere.')
-    .max(50, 'Nome deve ter no máximo 50 caracteres.')
-    .refine((value) => value.trim().length > 0, {
-      message: 'Nome não pode ser vazio.',
-    }),
+  terminalId: z.string(),
+  cashIn: z.coerce.number(),
+  cashOut: z.coerce.number(),
 });
 
 type CashFlowFormCreateType = z.infer<typeof CashFlowFormCreateSchema>;
@@ -34,9 +39,7 @@ export function CashFlowFormCreate() {
 
   const formMethods = useForm<CashFlowFormCreateType>({
     resolver: zodResolver(CashFlowFormCreateSchema),
-    defaultValues: {
-      name: '',
-    },
+    defaultValues: {},
   });
 
   const { control, handleSubmit } = formMethods;
@@ -58,20 +61,62 @@ export function CashFlowFormCreate() {
       <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
         <FormField
           control={control}
-          name='name'
+          name='terminalId'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nome</FormLabel>
-              <FormControl>
-                <Input placeholder='Nome da organização' {...field} />
-              </FormControl>
-              <FormDescription>
-                Esse nome será exibido em telas e relatórios.
-              </FormDescription>
+              <FormLabel>Local</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder='Selecione...' />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value='m@example.com'>m@example.com</SelectItem>
+                  <SelectItem value='m@google.com'>m@google.com</SelectItem>
+                  <SelectItem value='m@support.com'>m@support.com</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
         />
+        <FormField
+          control={control}
+          name='cashIn'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Ganhos R$</FormLabel>
+              <FormControl>
+                <Input placeholder='Ganhos no terminal' {...field} />
+              </FormControl>
+              <FormDescription>Ganhos no terminal no período.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name='cashOut'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Perdas R$</FormLabel>
+              <FormControl>
+                <Input placeholder='Perdas no terminal' {...field} />
+              </FormControl>
+              <FormDescription>Perdas no terminal no período.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Alert>
+          <Calendar className='h-4 w-4' />
+          <AlertTitle>Período</AlertTitle>
+          <AlertDescription>01/08/2023 - 31/08/2023</AlertDescription>
+          <AlertDescription className='text-xs text-gray-300'>
+            Última leitura - 31/07/2023
+          </AlertDescription>
+        </Alert>
         <Button type='submit' className='w-full'>
           Criar
         </Button>

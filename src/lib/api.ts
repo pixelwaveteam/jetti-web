@@ -7,7 +7,9 @@ import { env } from '@/utils/env';
 
 export async function api<T = any>(
   path: string,
-  options: RequestInit
+  options: RequestInit = {
+    method: 'GET',
+  }
 ): Promise<T> {
   const session = await getServerSession(authOptions);
 

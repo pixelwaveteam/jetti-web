@@ -1,6 +1,5 @@
 'use client';
 
-import { useTheme } from 'next-themes';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -14,25 +13,30 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
+import { useSession } from 'next-auth/react';
 
 export function CommandMenu() {
-  const { setTheme } = useTheme();
+  const { data: session } = useSession();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
 
-  const navigationCommands = navItems.map((nav) => {
-    const Icon = nav.icon;
+  const role = session?.user?.role || 'OPERATOR';
 
-    return {
-      label: nav.title,
-      icon: <Icon className='mr-2 h-4 w-4' />,
-      onSelect: () => {
-        setOpen(false);
-        router.push(nav.path);
-      },
-    };
-  });
+  const navigationCommands = navItems
+    .filter((item) => item.roles.includes(role))
+    .map((nav) => {
+      const Icon = nav.icon;
+
+      return {
+        label: nav.title,
+        icon: <Icon className='mr-2 h-4 w-4' />,
+        onSelect: () => {
+          setOpen(false);
+          router.push(nav.path);
+        },
+      };
+    });
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -46,7 +50,7 @@ export function CommandMenu() {
     document.addEventListener('keydown', down);
 
     return () => document.removeEventListener('keydown', down);
-  }, [setTheme]);
+  }, []);
 
   return (
     <>

@@ -30,8 +30,6 @@ export const authOptions: NextAuthOptions = {
           }),
         });
 
-        console.log('response next AUUU', response);
-
         if (response.statusCode === 401) {
           throw new Error('Credenciais inválidas');
         }

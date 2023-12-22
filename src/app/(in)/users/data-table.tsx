@@ -4,14 +4,14 @@ import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 interface UserDataTableProps {
-  users: UserData[];
+  data: UserData[];
 }
 
-export function UserDataTable({ users }: UserDataTableProps) {
+export function UserDataTable({ data }: UserDataTableProps) {
   return (
     <DataTable
       columns={userColumns}
-      data={users}
+      data={data}
       filterBy={{
         key: 'name',
         label: 'nome',

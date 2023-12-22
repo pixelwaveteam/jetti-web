@@ -7,6 +7,8 @@ interface UpdateUser {
   id: string;
   data: {
     name: string;
+    email: string;
+    role: 'ADMIN' | 'OPERATOR';
   };
 }
 

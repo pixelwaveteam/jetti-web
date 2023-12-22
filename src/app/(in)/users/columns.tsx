@@ -9,14 +9,22 @@ import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 const UserSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   name: z.string(),
+  email: z.string(),
+  role: z.enum(['ADMIN', 'OPERATOR'] as const),
+  avatarId: z.string().optional(),
+  isActive: z.boolean(),
 });
 
 export type UserData = z.infer<typeof UserSchema>;
 export type User = {
-  id: number;
+  id: string;
   name: string;
+  email: string;
+  role: 'ADMIN' | 'OPERATOR';
+  avatarId?: string;
+  isActive: boolean;
 };
 
 export const userColumns: ColumnDef<UserData>[] = [
@@ -37,10 +45,22 @@ export const userColumns: ColumnDef<UserData>[] = [
       const user = row.original;
 
       return (
-        <div className='flex gap-2 items-center'>
-          <span className='truncate'>{user.name}</span>
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{user.name}</span>
+          <span className='text-xs text-gray-300'>{user.email}</span>
         </div>
       );
+    },
+  },
+  {
+    accessorKey: 'role',
+    header: 'Permissão',
+    cell: ({ row }) => {
+      const user = row.original;
+
+      const role = user.role === 'ADMIN' ? 'Admin' : 'Operador';
+
+      return <span>{role}</span>;
     },
   },
   {
@@ -49,9 +69,11 @@ export const userColumns: ColumnDef<UserData>[] = [
       const user = row.original;
 
       return (
-        <SheetProvider>
-          <UserEditSheet user={user} />
-        </SheetProvider>
+        <div className='flex justify-end'>
+          <SheetProvider>
+            <UserEditSheet user={user} />
+          </SheetProvider>
+        </div>
       );
     },
   },

@@ -6,6 +6,8 @@ import { api } from '@/lib/api';
 
 interface CreateUser {
   name: string;
+  email: string;
+  role: 'ADMIN' | 'OPERATOR';
 }
 
 export async function createUser(data: CreateUser) {

@@ -8,22 +8,32 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { TerminalContext } from '@/providers/terminal-provider';
+import { useContext } from 'react';
 
 const TerminalFormCreateSchema = z.object({
-  name: z
+  establishmentId: z.string(),
+  interfaceId: z.string(),
+  code: z
     .string()
-    .min(3, 'Nome deve ter pelo menos 3 caractere.')
-    .max(50, 'Nome deve ter no máximo 50 caracteres.')
+    .min(3, 'Código deve ter pelo menos 3 caractere.')
+    .max(10, 'Código deve ter no máximo 10 caracteres.')
     .refine((value) => value.trim().length > 0, {
-      message: 'Nome não pode ser vazio.',
+      message: 'Código não pode ser vazio.',
     }),
 });
 
@@ -31,12 +41,11 @@ type TerminalFormCreateType = z.infer<typeof TerminalFormCreateSchema>;
 
 export function TerminalFormCreate() {
   const { toast } = useToast();
+  const { organizations } = useContext(TerminalContext);
 
   const formMethods = useForm<TerminalFormCreateType>({
     resolver: zodResolver(TerminalFormCreateSchema),
-    defaultValues: {
-      name: '',
-    },
+    defaultValues: {},
   });
 
   const { control, handleSubmit } = formMethods;
@@ -58,16 +67,59 @@ export function TerminalFormCreate() {
       <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
         <FormField
           control={control}
-          name='name'
+          name='code'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nome</FormLabel>
+              <FormLabel>Código</FormLabel>
               <FormControl>
-                <Input placeholder='Nome da organização' {...field} />
+                <Input placeholder='Código do terminal' {...field} />
               </FormControl>
-              <FormDescription>
-                Esse nome será exibido em telas e relatórios.
-              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name='establishmentId'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Local</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder='Selecione...' />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {organizations.map((organization) => (
+                    <SelectItem key={organization.id} value={organization.id}>
+                      {organization.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name='interfaceId'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Interface</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder='Selecione...' />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value='m@example.com'>m@example.com</SelectItem>
+                  <SelectItem value='m@google.com'>m@google.com</SelectItem>
+                  <SelectItem value='m@support.com'>m@support.com</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

@@ -1,6 +1,6 @@
 'use client';
 
-import { LogOut, Settings, User } from 'lucide-react';
+import { LogOut, User } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -51,8 +51,8 @@ export function HeaderAvatarMenu() {
         onSelect={toogleMenu}
       >
         <Avatar>
-          <AvatarImage src='https://github.com/ruverd.png' />
-          <AvatarFallback>
+          <AvatarImage src='' />
+          <AvatarFallback className='bg-gray-950'>
             {getInitials(session?.user?.name || '')}
           </AvatarFallback>
         </Avatar>
@@ -68,15 +68,7 @@ export function HeaderAvatarMenu() {
             <User className='mr-2 h-4 w-4' />
             <span>Perfil</span>
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className='hover:cursor-pointer'
-            onSelect={handleSettings}
-          >
-            <Settings className='mr-2 h-4 w-4' />
-            <span>Configurações</span>
-          </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
         <DropdownMenuItem
           className='hover:cursor-pointer'
           onSelect={handleSignOut}
