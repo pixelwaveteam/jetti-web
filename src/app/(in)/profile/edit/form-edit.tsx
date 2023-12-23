@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -12,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,7 +29,6 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { SheetContext } from '@/providers/sheet-provider';
-import { useSession } from 'next-auth/react';
 
 const ProfileFormEditSchema = z.object({
   name: z
@@ -54,9 +55,7 @@ interface ProfileFormEditProps {
 export function ProfileFormEdit({ user }: ProfileFormEditProps) {
   const { toast } = useToast();
   const { setShow } = useContext(SheetContext);
-  const { data: session } = useSession();
-
-  const role = session?.user?.role || 'OPERATOR';
+  const { data: session, update } = useSession();
 
   const formMethods = useForm<ProfileFormEditType>({
     resolver: zodResolver(ProfileFormEditSchema),
@@ -71,9 +70,21 @@ export function ProfileFormEdit({ user }: ProfileFormEditProps) {
 
   const onSubmit = async (data: ProfileFormEditType) => {
     try {
+      if (!session) {
+        return null;
+      }
+
       await updateUser({
         id: user.id,
         data,
+      });
+
+      update({
+        ...session,
+        user: {
+          ...session.user,
+          name: data.name,
+        },
       });
 
       setShow(false);
@@ -133,7 +144,7 @@ export function ProfileFormEdit({ user }: ProfileFormEditProps) {
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  disabled={role === 'OPERATOR'}
+                  disabled
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -145,6 +156,9 @@ export function ProfileFormEdit({ user }: ProfileFormEditProps) {
                     <SelectItem value='OPERATOR'>Operador</SelectItem>
                   </SelectContent>
                 </Select>
+                <FormDescription>
+                  Não é possível alterar a permissão do próprio usuário.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

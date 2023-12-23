@@ -39,7 +39,7 @@ export function PageContainer({
           )}
         </div>
 
-        <div className='flex items-center space-x-2'>{action}</div>
+        {action && <div className='flex items-center space-x-2'>{action}</div>}
       </div>
       {children}
     </div>
