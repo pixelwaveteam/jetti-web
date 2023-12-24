@@ -89,10 +89,6 @@ export function EstablishmentAddressFormCreate({
     if (zipCode && zipCode.length === 8) {
       const fetchAddress = async () => {
         const response = await fetchAddressByCep(zipCode);
-        console.log(
-          '🚀 ~ file: form-create.tsx:87 ~ fetchAddress ~ response:',
-          response
-        );
 
         if (!response.logradouro) {
           toast({

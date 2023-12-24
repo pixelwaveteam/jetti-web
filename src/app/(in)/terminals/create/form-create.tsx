@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+import { createTerminal } from '@/app/(in)/terminals/actions/create-terminal';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -22,7 +23,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { SheetContext } from '@/providers/sheet-provider';
 import { TerminalContext } from '@/providers/terminal-provider';
+import { getRandomString } from '@/utils/text';
 import { useContext } from 'react';
 
 const TerminalFormCreateSchema = z.object({
@@ -38,17 +41,33 @@ type TerminalFormCreateType = z.infer<typeof TerminalFormCreateSchema>;
 
 export function TerminalFormCreate() {
   const { toast } = useToast();
-  const { organizations } = useContext(TerminalContext);
+  const { setShow } = useContext(SheetContext);
+  const { establishments, interfaces } = useContext(TerminalContext);
 
   const formMethods = useForm<TerminalFormCreateType>({
     resolver: zodResolver(TerminalFormCreateSchema),
-    defaultValues: {},
+    defaultValues: {
+      code: getRandomString().toLocaleLowerCase(),
+    },
   });
 
   const { control, handleSubmit } = formMethods;
 
   const onSubmit = async (data: TerminalFormCreateType) => {
     try {
+      await createTerminal({
+        ...data,
+        isActive: true,
+      });
+
+      setShow(false);
+
+      toast({
+        variant: 'default',
+        title: 'Sucesso',
+        description: 'Terminal criado com sucesso.',
+        duration: 5000,
+      });
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -88,9 +107,9 @@ export function TerminalFormCreate() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {organizations.map((organization) => (
-                    <SelectItem key={organization.id} value={organization.id}>
-                      {organization.name}
+                  {establishments.map((establishment) => (
+                    <SelectItem key={establishment.id} value={establishment.id}>
+                      {establishment.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -112,9 +131,11 @@ export function TerminalFormCreate() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value='m@example.com'>m@example.com</SelectItem>
-                  <SelectItem value='m@google.com'>m@google.com</SelectItem>
-                  <SelectItem value='m@support.com'>m@support.com</SelectItem>
+                  {interfaces.map((interfaceItem) => (
+                    <SelectItem key={interfaceItem.id} value={interfaceItem.id}>
+                      {interfaceItem.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />

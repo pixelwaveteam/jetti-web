@@ -1,10 +1,14 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+import { deleteTerminal } from '@/app/(in)/terminals/actions/delete-terminal';
+import { updateTerminal } from '@/app/(in)/terminals/actions/update-terminal';
 import { Terminal } from '@/app/(in)/terminals/columns';
+import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -24,6 +28,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
+import { DialogProvider } from '@/providers/dialog-provider';
+import { SheetContext } from '@/providers/sheet-provider';
+import { TerminalContext } from '@/providers/terminal-provider';
 
 const TerminalFormEditSchema = z.object({
   establishmentId: z.string(),
@@ -42,6 +50,10 @@ interface TerminalFormEditProps {
 }
 
 export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
+  const { toast } = useToast();
+  const { setShow } = useContext(SheetContext);
+  const { establishments, interfaces } = useContext(TerminalContext);
+
   const formMethods = useForm<TerminalFormEditType>({
     resolver: zodResolver(TerminalFormEditSchema),
     defaultValues: {
@@ -54,9 +66,52 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
 
   const { handleSubmit, control } = formMethods;
 
-  const onSubmit = async (data: TerminalFormEditType) => {};
+  const onSubmit = async (data: TerminalFormEditType) => {
+    try {
+      await updateTerminal({
+        id: terminal.id,
+        data,
+      });
 
-  const handleDeleteTerminal = async () => {};
+      setShow(false);
+
+      toast({
+        variant: 'default',
+        title: 'Sucesso',
+        description: 'Terminal alterado com sucesso.',
+        duration: 5000,
+      });
+    } catch {
+      toast({
+        variant: 'destructive',
+        title: 'Erro',
+        description: 'Favor tente novamente mais tarde.',
+        duration: 5000,
+      });
+    }
+  };
+
+  const handleDeleteTerminal = async () => {
+    try {
+      await deleteTerminal(terminal.id);
+
+      setShow(false);
+
+      toast({
+        variant: 'default',
+        title: 'Sucesso',
+        description: 'Terminal excluido com sucesso.',
+        duration: 5000,
+      });
+    } catch {
+      toast({
+        variant: 'destructive',
+        title: 'Erro',
+        description: 'Favor tente novamente mais tarde.',
+        duration: 5000,
+      });
+    }
+  };
 
   return (
     <div className='space-y-6'>
@@ -91,9 +146,14 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value='m@example.com'>m@example.com</SelectItem>
-                    <SelectItem value='m@google.com'>m@google.com</SelectItem>
-                    <SelectItem value='m@support.com'>m@support.com</SelectItem>
+                    {establishments.map((establishment) => (
+                      <SelectItem
+                        key={establishment.id}
+                        value={establishment.id}
+                      >
+                        {establishment.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -116,9 +176,14 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value='m@example.com'>m@example.com</SelectItem>
-                    <SelectItem value='m@google.com'>m@google.com</SelectItem>
-                    <SelectItem value='m@support.com'>m@support.com</SelectItem>
+                    {interfaces.map((interfaceItem) => (
+                      <SelectItem
+                        key={interfaceItem.id}
+                        value={interfaceItem.id}
+                      >
+                        {interfaceItem.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -151,14 +216,13 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
             <Button type='submit' className='w-full'>
               Save
             </Button>
-            <Button
-              type='button'
-              variant='destructive'
-              className='w-full'
-              onClick={handleDeleteTerminal}
-            >
-              Delete
-            </Button>
+            <DialogProvider>
+              <ConfirmDeletionDialog onConfirm={handleDeleteTerminal}>
+                <Button type='button' variant='destructive' className='w-full'>
+                  Excluir
+                </Button>
+              </ConfirmDeletionDialog>
+            </DialogProvider>
           </div>
         </form>
       </Form>

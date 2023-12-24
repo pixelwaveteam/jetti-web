@@ -62,9 +62,11 @@ export const terminalColumns: ColumnDef<TerminalData>[] = [
       const terminal = row.original;
 
       return (
-        <SheetProvider>
-          <TerminalEditSheet terminal={terminal} />
-        </SheetProvider>
+        <div className='flex justify-end'>
+          <SheetProvider>
+            <TerminalEditSheet terminal={terminal} />
+          </SheetProvider>
+        </div>
       );
     },
   },

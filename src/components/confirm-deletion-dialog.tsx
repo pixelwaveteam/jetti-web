@@ -55,12 +55,14 @@ export function ConfirmDeletionDialog({
     },
   });
 
-  const { control, trigger, formState } = formMethods;
+  const { control, trigger } = formMethods;
 
-  const handleDelete = async () => {
-    await trigger();
+  const handleDelete = async (event: React.FormEvent) => {
+    event.preventDefault();
 
-    if (formState.isValid) {
+    const result = await trigger();
+
+    if (result) {
       onConfirm();
     }
   };
@@ -97,7 +99,7 @@ export function ConfirmDeletionDialog({
                 </FormItem>
               )}
             />
-            <Button type='button' onClick={handleDelete}>
+            <Button type='submit' onClick={handleDelete}>
               Confirmar
             </Button>
           </form>
