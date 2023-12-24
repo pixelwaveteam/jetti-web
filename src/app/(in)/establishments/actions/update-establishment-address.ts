@@ -7,9 +7,10 @@ import { api } from '@/lib/api';
 interface UpdateEstablishmentAddress {
   id: string;
   data: {
+    establishmentId: string;
     street: string;
     number: string;
-    additional: string | null;
+    additional?: string;
     district: string;
     city: string;
     state: string;

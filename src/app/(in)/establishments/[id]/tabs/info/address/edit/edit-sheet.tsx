@@ -3,8 +3,8 @@
 import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
-import { Establishment } from '@/app/(in)/establishments/columns';
-import { EstablishmentFormEdit } from '@/app/(in)/establishments/edit/form-edit';
+import { EstablishmentAddressFormEdit } from '@/app/(in)/establishments/[id]/tabs/info/address/edit/form-edit';
+import { EstablishmentAddressData } from '@/app/(in)/establishments/actions/fetch-establishment-address';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -15,13 +15,13 @@ import {
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
 
-interface EstablishmentEditSheetProps {
-  establishment: Establishment;
+interface EstablishmentAddressEditSheetProps {
+  establishmentAddress: EstablishmentAddressData;
 }
 
-export function EstablishmentEditSheet({
-  establishment,
-}: EstablishmentEditSheetProps) {
+export function EstablishmentAddressEditSheet({
+  establishmentAddress,
+}: EstablishmentAddressEditSheetProps) {
   const { show, setShow } = useContext(SheetContext);
 
   return (
@@ -34,9 +34,11 @@ export function EstablishmentEditSheet({
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle className='truncate'>Alterar Local</SheetTitle>
+          <SheetTitle>Alterar Endereço</SheetTitle>
         </SheetHeader>
-        <EstablishmentFormEdit establishment={establishment} />
+        <EstablishmentAddressFormEdit
+          establishmentAddress={establishmentAddress}
+        />
       </SheetContent>
     </Sheet>
   );

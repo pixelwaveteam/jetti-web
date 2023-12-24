@@ -29,12 +29,9 @@ const TerminalFormCreateSchema = z.object({
   establishmentId: z.string(),
   interfaceId: z.string(),
   code: z
-    .string()
+    .string({ required_error: 'Código não pode ser vazio.' })
     .min(3, 'Código deve ter pelo menos 3 caractere.')
-    .max(10, 'Código deve ter no máximo 10 caracteres.')
-    .refine((value) => value.trim().length > 0, {
-      message: 'Código não pode ser vazio.',
-    }),
+    .max(10, 'Código deve ter no máximo 10 caracteres.'),
 });
 
 type TerminalFormCreateType = z.infer<typeof TerminalFormCreateSchema>;

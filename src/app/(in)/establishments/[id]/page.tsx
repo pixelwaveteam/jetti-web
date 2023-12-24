@@ -53,10 +53,10 @@ export default async function Establishment({
             </TabsTrigger>
           </TabsList>
           <TabsContent value='info'>
-            <TabInfo />
+            <TabInfo establishment={establishment} />
           </TabsContent>
           <TabsContent value='distribution'>
-            <TabDistribution />
+            <TabDistribution establishment={establishment} />
           </TabsContent>
         </Tabs>
       </PageContainer>

@@ -1,0 +1,110 @@
+[
+  {
+    "shortName": "AC",
+    "name": "Acre"
+  },
+  {
+    "shortName": "AL",
+    "name": "Alagoas"
+  },
+  {
+    "shortName": "AM",
+    "name": "Amazonas"
+  },
+  {
+    "shortName": "AP",
+    "name": "Amapá"
+  },
+  {
+    "shortName": "BA",
+    "name": "Bahia"
+  },
+  {
+    "shortName": "CE",
+    "name": "Ceará"
+  },
+  {
+    "shortName": "DF",
+    "name": "Distrito Federal"
+  },
+  {
+    "shortName": "ES",
+    "name": "Espírito Santo"
+  },
+  {
+    "shortName": "GO",
+    "name": "Goiás"
+  },
+  {
+    "shortName": "MA",
+    "name": "Maranhão"
+  },
+  {
+    "shortName": "MG",
+    "name": "Minas Gerais"
+  },
+  {
+    "shortName": "MS",
+    "name": "Mato Grosso do Sul"
+  },
+  {
+    "shortName": "MT",
+    "name": "Mato Grosso"
+  },
+  {
+    "shortName": "PA",
+    "name": "Pará"
+  },
+  {
+    "shortName": "PB",
+    "name": "Paraíba"
+  },
+  {
+    "shortName": "PE",
+    "name": "Pernambuco"
+  },
+  {
+    "shortName": "PI",
+    "name": "Piauí"
+  },
+  {
+    "shortName": "PR",
+    "name": "Paraná"
+  },
+  {
+    "shortName": "RJ",
+    "name": "Rio de Janeiro"
+  },
+  {
+    "shortName": "RN",
+    "name": "Rio Grande do Norte"
+  },
+  {
+    "shortName": "RO",
+    "name": "Rondônia"
+  },
+  {
+    "shortName": "RR",
+    "name": "Roraima"
+  },
+  {
+    "shortName": "RS",
+    "name": "Rio Grande do Sul"
+  },
+  {
+    "shortName": "SC",
+    "name": "Santa Catarina"
+  },
+  {
+    "shortName": "SE",
+    "name": "Sergipe"
+  },
+  {
+    "shortName": "SP",
+    "name": "São Paulo"
+  },
+  {
+    "shortName": "TO",
+    "name": "Tocantins"
+  }
+]

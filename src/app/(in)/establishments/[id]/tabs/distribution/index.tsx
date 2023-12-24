@@ -1,3 +1,4 @@
+import { EstablishmentData } from '@/app/(in)/establishments/columns';
 import { EmptyState } from '@/components/empty-state';
 import {
   Card,
@@ -7,9 +8,11 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-interface TabDistributionProps {}
+interface TabDistributionProps {
+  establishment: EstablishmentData;
+}
 
-export function TabDistribution({}: TabDistributionProps) {
+export function TabDistribution({ establishment }: TabDistributionProps) {
   return (
     <Card>
       <CardHeader>

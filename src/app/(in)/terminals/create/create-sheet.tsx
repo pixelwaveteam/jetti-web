@@ -23,7 +23,7 @@ export function TerminalCreateSheet() {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Novo Terminal</SheetTitle>
+          <SheetTitle>CriarTerminal</SheetTitle>
         </SheetHeader>
         <TerminalFormCreate />
       </SheetContent>

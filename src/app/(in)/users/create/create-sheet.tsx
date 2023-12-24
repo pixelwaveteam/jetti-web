@@ -27,7 +27,7 @@ export function UserCreateSheet() {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Novo Usuário</SheetTitle>
+          <SheetTitle>CriarUsuário</SheetTitle>
         </SheetHeader>
         <UserFormCreate />
       </SheetContent>

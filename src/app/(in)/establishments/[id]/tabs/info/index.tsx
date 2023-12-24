@@ -1,4 +1,8 @@
-import { EmptyState } from '@/components/empty-state';
+import { EstablishmentAddress } from '@/app/(in)/establishments/[id]/tabs/info/address';
+import { EstablishmentContacts } from '@/app/(in)/establishments/[id]/tabs/info/contacts';
+import { fetchEstablishmentAddress } from '@/app/(in)/establishments/actions/fetch-establishment-address';
+import { fetchEstablishmentContacts } from '@/app/(in)/establishments/actions/fetch-establishment-contacts';
+import { EstablishmentData } from '@/app/(in)/establishments/columns';
 import {
   Card,
   CardContent,
@@ -7,9 +11,19 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-interface TabInfoProps {}
+interface TabInfoProps {
+  establishment: EstablishmentData;
+}
 
-export function TabInfo({}: TabInfoProps) {
+export async function TabInfo({ establishment }: TabInfoProps) {
+  const establishmentAddress = await fetchEstablishmentAddress(
+    establishment.id
+  );
+
+  const establishmentContacts = await fetchEstablishmentContacts(
+    establishment.id
+  );
+
   return (
     <Card>
       <CardHeader>
@@ -19,8 +33,14 @@ export function TabInfo({}: TabInfoProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className='space-y-4'>
-        <EmptyState label='Criar endereço' />
-        <EmptyState label='Criar contato' />
+        <EstablishmentAddress
+          establishmentAddress={establishmentAddress}
+          establishmentId={establishment.id}
+        />
+        <EstablishmentContacts
+          establishmentContacts={establishmentContacts}
+          establishmentId={establishment.id}
+        />
       </CardContent>
     </Card>
   );

@@ -31,17 +31,15 @@ import { DialogProvider } from '@/providers/dialog-provider';
 import { EstablishmentContext } from '@/providers/establishment-provider';
 import { SheetContext } from '@/providers/sheet-provider';
 import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 
 const EstablishmentFormEditSchema = z.object({
   organizationId: z.string({ required_error: 'Selecione uma organização.' }),
   name: z
-    .string()
+    .string({ required_error: 'Nome não pode ser vazio.' })
     .min(3, 'Nome deve ter pelo menos 3 caractere.')
-    .max(50, 'Nome deve ter no máximo 50 caracteres.')
-    .refine((value) => value.trim().length > 0, {
-      message: 'Nome não pode ser vazio.',
-    }),
+    .max(50, 'Nome deve ter no máximo 50 caracteres.'),
 });
 
 type EstablishmentFormEditType = z.infer<typeof EstablishmentFormEditSchema>;
@@ -56,6 +54,7 @@ export function EstablishmentFormEdit({
   const { organizations } = useContext(EstablishmentContext);
   const { setShow } = useContext(SheetContext);
   const { toast } = useToast();
+  const router = useRouter();
 
   const formMethods = useForm<EstablishmentFormEditType>({
     resolver: zodResolver(EstablishmentFormEditSchema),
@@ -104,6 +103,8 @@ export function EstablishmentFormEdit({
         description: 'Local excluido com sucesso.',
         duration: 5000,
       });
+
+      router.push(`/establishments`);
     } catch {
       toast({
         variant: 'destructive',

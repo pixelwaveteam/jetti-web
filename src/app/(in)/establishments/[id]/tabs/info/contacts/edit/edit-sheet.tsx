@@ -3,8 +3,8 @@
 import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
-import { Establishment } from '@/app/(in)/establishments/columns';
-import { EstablishmentFormEdit } from '@/app/(in)/establishments/edit/form-edit';
+import { EstablishmentContactFormEdit } from '@/app/(in)/establishments/[id]/tabs/info/contacts/edit/form-edit';
+import { EstablishmentContactData } from '@/app/(in)/establishments/actions/fetch-establishment-contacts';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -15,28 +15,29 @@ import {
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
 
-interface EstablishmentEditSheetProps {
-  establishment: Establishment;
+interface EstablishmentContactEditSheetProps {
+  establishmentContact: EstablishmentContactData;
 }
 
-export function EstablishmentEditSheet({
-  establishment,
-}: EstablishmentEditSheetProps) {
+export function EstablishmentContactEditSheet({
+  establishmentContact,
+}: EstablishmentContactEditSheetProps) {
   const { show, setShow } = useContext(SheetContext);
 
   return (
     <Sheet open={show} onOpenChange={setShow}>
       <SheetTrigger asChild>
-        <Button variant='secondary' className='flex gap-1' size={'default'}>
+        <Button variant='ghost' size={'icon'}>
           <Edit size={16} />
-          <span className='hidden md:block'>Alterar</span>
         </Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle className='truncate'>Alterar Local</SheetTitle>
+          <SheetTitle>Alterar Contato</SheetTitle>
         </SheetHeader>
-        <EstablishmentFormEdit establishment={establishment} />
+        <EstablishmentContactFormEdit
+          establishmentContact={establishmentContact}
+        />
       </SheetContent>
     </Sheet>
   );

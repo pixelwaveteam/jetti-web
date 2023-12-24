@@ -1,80 +1,70 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import { deleteUser } from '@/app/(in)/users/actions/delete-user';
-import { updateUser } from '@/app/(in)/users/actions/update-user';
-import { User } from '@/app/(in)/users/columns';
+import { deleteEstablishmentContact } from '@/app/(in)/establishments/actions/delete-establishment-contact';
+import { EstablishmentContactData } from '@/app/(in)/establishments/actions/fetch-establishment-contacts';
+import { updateEstablishmentContact } from '@/app/(in)/establishments/actions/update-establishment-contact';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
-import { Loader2 } from 'lucide-react';
-import { useSession } from 'next-auth/react';
 
-const UserFormEditSchema = z.object({
-  name: z
-    .string({ required_error: 'Nome não pode ser vazio.' })
-    .min(6, 'Nome deve ter pelo menos 3 caractere.')
-    .max(50, 'Nome deve ter no máximo 50 caracteres.'),
-  email: z.string().email('Email inválido.'),
-  role: z
-    .enum(['ADMIN', 'OPERATOR'] as const)
-    .refine((value) => value === 'ADMIN' || value === 'OPERATOR', {
-      message: 'Permissão inválida.',
-    }),
+const EstablishmentContactFormEditSchema = z.object({
+  name: z.string({ required_error: 'Nome não pode ser vazio.' }),
+  phone: z.string({ required_error: 'Telefone não pode ser vazio.' }),
+  email: z
+    .string({ required_error: 'Email não pode ser vazio.' })
+    .email({ message: 'Email inválido.' }),
 });
 
-type UserFormEditType = z.infer<typeof UserFormEditSchema>;
+type EstablishmentContactFormEditType = z.infer<
+  typeof EstablishmentContactFormEditSchema
+>;
 
-interface UserFormEditProps {
-  user: User;
+interface EstablishmentContactFormEditProps {
+  establishmentContact: EstablishmentContactData;
 }
 
-export function UserFormEdit({ user }: UserFormEditProps) {
-  const { toast } = useToast();
+export function EstablishmentContactFormEdit({
+  establishmentContact,
+}: EstablishmentContactFormEditProps) {
   const { setShow } = useContext(SheetContext);
-  const { data: session } = useSession();
+  const { toast } = useToast();
 
-  const role = session?.user?.role || 'OPERATOR';
-
-  const formMethods = useForm<UserFormEditType>({
-    resolver: zodResolver(UserFormEditSchema),
+  const formMethods = useForm<EstablishmentContactFormEditType>({
+    resolver: zodResolver(EstablishmentContactFormEditSchema),
     defaultValues: {
-      name: user.name,
-      email: user.email,
-      role: user.role,
+      name: establishmentContact.name,
+      phone: establishmentContact.phone,
+      email: establishmentContact.email,
     },
   });
 
-  const { handleSubmit, control, formState } = formMethods;
+  const { handleSubmit, formState, control } = formMethods;
 
-  const onSubmit = async (data: UserFormEditType) => {
+  const onSubmit = async (data: EstablishmentContactFormEditType) => {
     try {
-      await updateUser({
-        id: user.id,
-        data,
+      await updateEstablishmentContact({
+        id: establishmentContact.id,
+        data: {
+          establishmentId: establishmentContact.establishmentId,
+          ...data,
+        },
       });
 
       setShow(false);
@@ -82,7 +72,7 @@ export function UserFormEdit({ user }: UserFormEditProps) {
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Usuário alterado com sucesso.',
+        description: 'Contato do Local alterado com sucesso.',
         duration: 5000,
       });
     } catch {
@@ -95,16 +85,16 @@ export function UserFormEdit({ user }: UserFormEditProps) {
     }
   };
 
-  const handleDeleteUser = async () => {
+  const handleDeleteEsblishmentContact = async () => {
     try {
-      await deleteUser(user.id);
+      await deleteEstablishmentContact(establishmentContact.id);
 
       setShow(false);
 
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Usuário excluida com sucesso.',
+        description: 'Contato do local excluida com sucesso.',
         duration: 5000,
       });
     } catch {
@@ -128,7 +118,20 @@ export function UserFormEdit({ user }: UserFormEditProps) {
               <FormItem>
                 <FormLabel>Nome</FormLabel>
                 <FormControl>
-                  <Input placeholder='Nome do usuário' {...field} />
+                  <Input placeholder='Nome de contato' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name='phone'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Telefone</FormLabel>
+                <FormControl>
+                  <Input placeholder='Telefone do contato' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -141,46 +144,13 @@ export function UserFormEdit({ user }: UserFormEditProps) {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='Email do usuário' {...field} />
+                  <Input placeholder='Email do contato' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
-            control={control}
-            name='role'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Permissão</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  disabled={
-                    role === 'OPERATOR' || user.id === session?.user?.id
-                  }
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder='Selecione...' />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value='ADMIN'>Admin</SelectItem>
-                    <SelectItem value='OPERATOR'>Operador</SelectItem>
-                  </SelectContent>
-                </Select>
 
-                {user.id === session?.user?.id && (
-                  <FormDescription>
-                    Não é possível alterar a permissão do próprio usuário.
-                  </FormDescription>
-                )}
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <div className='flex gap-2'>
             <Button
               type='submit'
@@ -194,7 +164,7 @@ export function UserFormEdit({ user }: UserFormEditProps) {
               )}
             </Button>
             <DialogProvider>
-              <ConfirmDeletionDialog onConfirm={handleDeleteUser}>
+              <ConfirmDeletionDialog onConfirm={handleDeleteEsblishmentContact}>
                 <Button type='button' variant='destructive' className='w-full'>
                   Excluir
                 </Button>

@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { changePassword } from '@/app/(in)/profile/actions/change-password';
-import { User } from '@/app/(in)/users/columns';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -38,10 +37,6 @@ const ChangePasswordFormSchema = z
 
 type ChangePasswordFormType = z.infer<typeof ChangePasswordFormSchema>;
 
-interface ChangePasswordFormProps {
-  user: User;
-}
-
 export function ChangePasswordForm() {
   const { toast } = useToast();
   const { setShow } = useContext(SheetContext);
@@ -54,8 +49,6 @@ export function ChangePasswordForm() {
 
   const onSubmit = async (data: ChangePasswordFormType) => {
     try {
-      console.log('data', data);
-
       await changePassword({
         ...data,
       });

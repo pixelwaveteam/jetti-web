@@ -27,7 +27,7 @@ export function EstablishmentCreateSheet() {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Novo Local</SheetTitle>
+          <SheetTitle>CriarLocal</SheetTitle>
         </SheetHeader>
         <EstablishmentFormCreate />
       </SheetContent>

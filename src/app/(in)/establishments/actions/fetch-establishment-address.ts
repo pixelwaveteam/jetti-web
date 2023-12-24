@@ -21,7 +21,7 @@ export type EstablishmentAddressData = z.infer<
 
 export async function fetchEstablishmentAddress(establishmentId: string) {
   const response = await api<EstablishmentAddressData[]>(
-    `/establishment-adresses/${establishmentId}`,
+    `/establishment-adresses/establishment/${establishmentId}`,
     {
       next: {
         tags: ['establishment-address'],
