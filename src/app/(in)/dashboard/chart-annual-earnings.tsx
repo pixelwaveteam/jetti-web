@@ -1,5 +1,7 @@
 'use client';
 
+import { DashboardContext } from '@/providers/dashboard-provider';
+import { useContext } from 'react';
 import {
   Bar,
   BarChart,
@@ -9,61 +11,41 @@ import {
   YAxis,
 } from 'recharts';
 
-const data = [
-  {
-    name: 'Jan',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Fev',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Mar',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Abr',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Mai',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Jun',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Jul',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Ago',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Set',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Out',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Nov',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: 'Dez',
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-];
-
 export function ChartAnnualEarnings() {
+  const { cashFlows } = useContext(DashboardContext);
+
+  const yearCurrent = new Date().getFullYear();
+  const monthNames = [
+    'Jan',
+    'Fev',
+    'Mar',
+    'Abr',
+    'Mai',
+    'Jun',
+    'Jul',
+    'Ago',
+    'Set',
+    'Out',
+    'Nov',
+    'Dez',
+  ];
+  const earningsByMonth = monthNames.map((month) => ({
+    name: month,
+    total: 0,
+  }));
+
+  cashFlows.forEach((cashFlow) => {
+    const cashFlowDate = new Date(cashFlow.createdAt);
+
+    if (cashFlowDate.getFullYear() === yearCurrent) {
+      const month = cashFlowDate.getMonth();
+      earningsByMonth[month].total += cashFlow.net;
+    }
+  });
+
   return (
     <ResponsiveContainer width='100%' height={350}>
-      <BarChart data={data}>
+      <BarChart data={earningsByMonth}>
         <XAxis
           dataKey='name'
           stroke='#D1D5DB'

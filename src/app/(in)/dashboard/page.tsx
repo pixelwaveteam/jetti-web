@@ -1,10 +1,11 @@
+import { getYear } from 'date-fns';
 import { Metadata } from 'next';
 
-import { ChartAnnualEarnings } from '@/app/(in)/dashboard/chart-annual-earnings';
-import { OverviewFilter } from '@/app/(in)/dashboard/filter';
-import { RecentCashFlows } from '@/app/(in)/dashboard/recent-cash-flows';
-import { OverviewStats } from '@/app/(in)/dashboard/stats';
+import { fetchCashFlows } from '@/app/(in)/cash-flows/actions/fetch-cash-flows';
+import { fetchEstablishments } from '@/app/(in)/establishments/actions/fetch-establishments';
+import { fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
 import { PageContainer } from '@/components/page-container';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -12,7 +13,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { getYear } from 'date-fns';
+import { DashboardProvider } from '@/providers/dashboard-provider';
+
+import Link from 'next/link';
+import { ChartAnnualEarnings } from './chart-annual-earnings';
+import { OverviewFilter } from './filter';
+import { RecentCashFlows } from './recent-cash-flows';
+import { OverviewStats } from './stats';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -20,28 +27,45 @@ export const metadata: Metadata = {
 };
 
 export default async function Dashboard() {
+  const [cashFlows, terminals, establishments] = await Promise.all([
+    fetchCashFlows(),
+    fetchTerminals(),
+    fetchEstablishments(),
+  ]);
+
   return (
-    <PageContainer title='Dashboard' action={<OverviewFilter />}>
-      <OverviewStats />
-      <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-        <Card className='col-span-2'>
-          <CardHeader>
-            <CardTitle>Ganhos em {getYear(new Date())}</CardTitle>
-          </CardHeader>
-          <CardContent className='pl-2'>
-            <ChartAnnualEarnings />
-          </CardContent>
-        </Card>
-        <Card className='col-span-2'>
-          <CardHeader>
-            <CardTitle>Leituras recentes</CardTitle>
-            <CardDescription>Você fez 6 leituras esse mês.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <RecentCashFlows />
-          </CardContent>
-        </Card>
-      </div>
-    </PageContainer>
+    <DashboardProvider initialData={{ cashFlows, terminals, establishments }}>
+      <PageContainer title='Dashboard' action={<OverviewFilter />}>
+        <OverviewStats />
+        <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
+          <Card className='col-span-2'>
+            <CardHeader>
+              <CardTitle>Ganhos em {getYear(new Date())}</CardTitle>
+            </CardHeader>
+            <CardContent className='pl-2'>
+              <ChartAnnualEarnings />
+            </CardContent>
+          </Card>
+          <Card className='col-span-2'>
+            <CardHeader>
+              <div className='flex items-center justify-between'>
+                <div className='space-y-2'>
+                  <CardTitle>Leituras recentes</CardTitle>
+                  <CardDescription>
+                    Lista das últimas leituras realizadas.
+                  </CardDescription>
+                </div>
+                <Link href='/cash-flows'>
+                  <Button variant='outline'>Ver todas</Button>
+                </Link>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <RecentCashFlows />
+            </CardContent>
+          </Card>
+        </div>
+      </PageContainer>
+    </DashboardProvider>
   );
 }

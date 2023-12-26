@@ -24,6 +24,9 @@ export type CashFlowDataTable = {
   id: string;
   terminal: string;
   operator: string;
+  cashIn: number;
+  cashOut: number;
+  net: number;
   createdAt: Date;
 };
 

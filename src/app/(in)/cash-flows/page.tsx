@@ -12,8 +12,10 @@ export const metadata: Metadata = {
 };
 
 export default async function CashFlows() {
-  const cashFlows = await fetchCashFlows();
-  const terminals = await fetchTerminals();
+  const [cashFlows, terminals] = await Promise.all([
+    fetchCashFlows(),
+    fetchTerminals(),
+  ]);
 
   return (
     <PageContainer title='Leituras'>
