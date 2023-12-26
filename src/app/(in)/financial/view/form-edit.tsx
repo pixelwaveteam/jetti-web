@@ -38,7 +38,7 @@ export function FinancialFormEdit({ financial }: FinancialFormEditProps) {
         <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
           <div className='flex gap-2'>
             <Button type='submit' className='w-full'>
-              Save
+              Alterar
             </Button>
             <Button
               type='button'
@@ -46,7 +46,7 @@ export function FinancialFormEdit({ financial }: FinancialFormEditProps) {
               className='w-full'
               onClick={handleDeleteFinancial}
             >
-              Delete
+              Excluir
             </Button>
           </div>
         </form>

@@ -3,8 +3,8 @@
 import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
-import { Establishment } from '@/app/(in)/establishments/columns';
-import { EstablishmentFormEdit } from '@/app/(in)/establishments/edit/form-edit';
+import { CashFlowFormEdit } from '@/app/(in)/cash-flows/[id]/edit/form-edit';
+import { CashFlow } from '@/app/(in)/cash-flows/columns';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -15,13 +15,11 @@ import {
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
 
-interface EstablishmentEditSheetProps {
-  establishment: Establishment;
+interface CashFlowEditSheetProps {
+  cashFlow: CashFlow;
 }
 
-export function EstablishmentEditSheet({
-  establishment,
-}: EstablishmentEditSheetProps) {
+export function CashFlowEditSheet({ cashFlow }: CashFlowEditSheetProps) {
   const { show, setShow } = useContext(SheetContext);
 
   return (
@@ -34,9 +32,9 @@ export function EstablishmentEditSheet({
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle className='truncate'>Alterar Local</SheetTitle>
+          <SheetTitle>Editar Leitura</SheetTitle>
         </SheetHeader>
-        <EstablishmentFormEdit establishment={establishment} />
+        <CashFlowFormEdit cashFlow={cashFlow} />
       </SheetContent>
     </Sheet>
   );

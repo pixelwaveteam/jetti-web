@@ -3,8 +3,8 @@
 import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
-import { CashFlow } from '@/app/(in)/cash-flows/columns';
-import { CashFlowFormEdit } from '@/app/(in)/cash-flows/edit/form-edit';
+import { EstablishmentFormEdit } from '@/app/(in)/establishments/[id]/edit/form-edit';
+import { Establishment } from '@/app/(in)/establishments/columns';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -15,25 +15,28 @@ import {
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
 
-interface CashFlowEditSheetProps {
-  cashFlow: CashFlow;
+interface EstablishmentEditSheetProps {
+  establishment: Establishment;
 }
 
-export function CashFlowEditSheet({ cashFlow }: CashFlowEditSheetProps) {
+export function EstablishmentEditSheet({
+  establishment,
+}: EstablishmentEditSheetProps) {
   const { show, setShow } = useContext(SheetContext);
 
   return (
     <Sheet open={show} onOpenChange={setShow}>
       <SheetTrigger asChild>
-        <Button variant='ghost' className='flex gap-1' size={'icon'}>
+        <Button variant='secondary' className='flex gap-1' size={'default'}>
           <Edit size={16} />
+          <span className='hidden md:block'>Alterar</span>
         </Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Edit CashFlow</SheetTitle>
+          <SheetTitle className='truncate'>Alterar Local</SheetTitle>
         </SheetHeader>
-        <CashFlowFormEdit cashFlow={cashFlow} />
+        <EstablishmentFormEdit establishment={establishment} />
       </SheetContent>
     </Sheet>
   );

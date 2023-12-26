@@ -2,17 +2,22 @@
 
 import { revalidateTag } from 'next/cache';
 
+import { CashFlowData } from '@/app/(in)/cash-flows/columns';
 import { api } from '@/lib/api';
 
 interface CreateCashFlow {
-  name: string;
+  terminalId: string;
+  cashIn: number;
+  cashOut: number;
 }
 
 export async function createCashFlow(data: CreateCashFlow) {
-  await api('/cash-flows', {
+  const response = await api<CashFlowData>('/cash-flows', {
     method: 'POST',
     body: JSON.stringify(data),
   });
 
   revalidateTag('cash-flows');
+
+  return response;
 }

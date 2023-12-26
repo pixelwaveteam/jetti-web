@@ -1,6 +1,13 @@
 'use client';
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 const data = [
   {
@@ -53,7 +60,7 @@ const data = [
   },
 ];
 
-export function OverviewChart() {
+export function ChartAnnualEarnings() {
   return (
     <ResponsiveContainer width='100%' height={350}>
       <BarChart data={data}>
@@ -72,6 +79,12 @@ export function OverviewChart() {
           tickFormatter={(value) => `R$ ${value}`}
         />
         <Bar dataKey='total' fill='#818CF8' radius={[4, 4, 0, 0]} />
+        <Tooltip
+          cursor={{ fill: 'transparent' }}
+          formatter={(value) => [`R$ ${value}`]}
+          labelStyle={{ color: '#312E81' }}
+          labelFormatter={(label) => `${label}`}
+        />
       </BarChart>
     </ResponsiveContainer>
   );

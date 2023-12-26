@@ -17,3 +17,14 @@ export function getAllDatesBetween(startDate: Date, endDate: Date): string[] {
 
   return datesArray;
 }
+
+export function getDateFormatted(
+  date: Date | string,
+  showTime = false
+): string {
+  const formatString = showTime ? 'dd/MM/yyyy HH:mm' : 'dd/MM/yyyy';
+
+  const dateFormatted = format(new Date(date), formatString);
+
+  return dateFormatted;
+}

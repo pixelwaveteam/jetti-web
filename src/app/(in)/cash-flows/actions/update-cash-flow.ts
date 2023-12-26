@@ -6,7 +6,9 @@ import { revalidateTag } from 'next/cache';
 interface UpdateCashFlow {
   id: string;
   data: {
-    name: string;
+    terminalId: string;
+    cashIn: number;
+    cashOut: number;
   };
 }
 

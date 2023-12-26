@@ -1,10 +1,9 @@
 import { Metadata } from 'next';
 
-import { OverviewStats } from '@/app/(in)/dashboard/stats';
-
-import { OverviewChart } from '@/app/(in)/dashboard/chart';
+import { ChartAnnualEarnings } from '@/app/(in)/dashboard/chart-annual-earnings';
 import { OverviewFilter } from '@/app/(in)/dashboard/filter';
 import { RecentCashFlows } from '@/app/(in)/dashboard/recent-cash-flows';
+import { OverviewStats } from '@/app/(in)/dashboard/stats';
 import { PageContainer } from '@/components/page-container';
 import {
   Card,
@@ -13,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { getYear } from 'date-fns';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -26,10 +26,10 @@ export default async function Dashboard() {
       <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
         <Card className='col-span-2'>
           <CardHeader>
-            <CardTitle>Ganhos últimos meses</CardTitle>
+            <CardTitle>Ganhos em {getYear(new Date())}</CardTitle>
           </CardHeader>
           <CardContent className='pl-2'>
-            <OverviewChart />
+            <ChartAnnualEarnings />
           </CardContent>
         </Card>
         <Card className='col-span-2'>

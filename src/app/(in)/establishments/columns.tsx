@@ -50,7 +50,7 @@ export const establishmentColumns: ColumnDef<EstablishmentData>[] = [
       const establishment = row.original;
 
       return (
-        <div className='w-full text-right'>
+        <div className='flex justify-end'>
           <Button variant={'ghost'} size={'icon'} asChild>
             <Link href={`/establishments/${establishment.id}`}>
               <ChevronRight className='h-4 w-4' />

@@ -4,7 +4,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { createCashFlow } from '@/app/(in)/cash-flows/actions/create-cash-flow';
+import { fetchLastCashFlow } from '@/app/(in)/cash-flows/actions/fetch-last-cash-flow';
+import { CardPeriodCashFlow } from '@/app/(in)/cash-flows/card-period';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -24,17 +26,31 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar } from 'lucide-react';
+import { CashFlowContext } from '@/providers/cash-flow-provider';
+import { SheetContext } from '@/providers/sheet-provider';
+import { useRouter } from 'next/navigation';
+import { useContext, useEffect } from 'react';
 
 const CashFlowFormCreateSchema = z.object({
   terminalId: z.string(),
-  cashIn: z.coerce.number(),
-  cashOut: z.coerce.number(),
+  cashIn: z.coerce.number().transform((val) => {
+    const cashInCents = val * 100;
+
+    return cashInCents;
+  }),
+  cashOut: z.coerce.number().transform((val) => {
+    const cashOutCents = val * 100;
+
+    return cashOutCents;
+  }),
 });
 
 type CashFlowFormCreateType = z.infer<typeof CashFlowFormCreateSchema>;
 
 export function CashFlowFormCreate() {
+  const router = useRouter();
+  const { terminals, setPeriod } = useContext(CashFlowContext);
+  const { setShow } = useContext(SheetContext);
   const { toast } = useToast();
 
   const formMethods = useForm<CashFlowFormCreateType>({
@@ -42,10 +58,26 @@ export function CashFlowFormCreate() {
     defaultValues: {},
   });
 
-  const { control, handleSubmit } = formMethods;
+  const { control, handleSubmit, watch } = formMethods;
+
+  const terminalId = watch('terminalId');
 
   const onSubmit = async (data: CashFlowFormCreateType) => {
     try {
+      const cashFlowCreated = await createCashFlow({
+        ...data,
+      });
+
+      setShow(false);
+
+      toast({
+        variant: 'default',
+        title: 'Sucesso',
+        description: 'Local criado com sucesso.',
+        duration: 5000,
+      });
+
+      router.push(`/cash-flows/${cashFlowCreated.id}`);
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -56,6 +88,22 @@ export function CashFlowFormCreate() {
     }
   };
 
+  useEffect(() => {
+    async function handlePeriodCashFlow(terminalId: string) {
+      try {
+        const result = await fetchLastCashFlow(terminalId);
+
+        setPeriod(result.createdAt);
+      } catch {
+        setPeriod(null);
+      }
+    }
+
+    if (terminalId) {
+      handlePeriodCashFlow(terminalId);
+    }
+  }, [setPeriod, terminalId]);
+
   return (
     <Form {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
@@ -64,7 +112,7 @@ export function CashFlowFormCreate() {
           name='terminalId'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Local</FormLabel>
+              <FormLabel>Terminal</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -72,9 +120,11 @@ export function CashFlowFormCreate() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value='m@example.com'>m@example.com</SelectItem>
-                  <SelectItem value='m@google.com'>m@google.com</SelectItem>
-                  <SelectItem value='m@support.com'>m@support.com</SelectItem>
+                  {terminals.map((terminal) => (
+                    <SelectItem key={terminal.id} value={terminal.id}>
+                      {terminal.code}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -86,11 +136,13 @@ export function CashFlowFormCreate() {
           name='cashIn'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Ganhos R$</FormLabel>
+              <FormLabel>Entradas R$</FormLabel>
               <FormControl>
-                <Input placeholder='Ganhos no terminal' {...field} />
+                <Input placeholder='Total de Entradas' {...field} />
               </FormControl>
-              <FormDescription>Ganhos no terminal no período.</FormDescription>
+              <FormDescription>
+                Entradas no terminal no período.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -100,23 +152,17 @@ export function CashFlowFormCreate() {
           name='cashOut'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Perdas R$</FormLabel>
+              <FormLabel>Saídas R$</FormLabel>
               <FormControl>
-                <Input placeholder='Perdas no terminal' {...field} />
+                <Input placeholder='Total de Saídas' {...field} />
               </FormControl>
-              <FormDescription>Perdas no terminal no período.</FormDescription>
+              <FormDescription>Saídas no terminal no período.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Alert>
-          <Calendar className='h-4 w-4' />
-          <AlertTitle>Período</AlertTitle>
-          <AlertDescription>01/08/2023 - 31/08/2023</AlertDescription>
-          <AlertDescription className='text-xs text-gray-300'>
-            Última leitura - 31/07/2023
-          </AlertDescription>
-        </Alert>
+
+        <CardPeriodCashFlow show={!!terminalId} />
         <Button type='submit' className='w-full'>
           Criar
         </Button>

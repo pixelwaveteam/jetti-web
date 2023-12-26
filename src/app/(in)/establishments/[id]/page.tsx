@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 
+import { EstablishmentEditSheet } from '@/app/(in)/establishments/[id]/edit/edit-sheet';
 import { TabDistribution } from '@/app/(in)/establishments/[id]/tabs/distribution';
 import { TabInfo } from '@/app/(in)/establishments/[id]/tabs/info';
 import { fetchEstablishment } from '@/app/(in)/establishments/actions/fetch-establishment';
-import { EstablishmentEditSheet } from '@/app/(in)/establishments/edit/edit-sheet';
 import { fetchOrganizations } from '@/app/(in)/organizations/actions/fetch-organizations';
 import { PageContainer } from '@/components/page-container';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -11,8 +11,8 @@ import { EstablishmentProvider } from '@/providers/establishment-provider';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 export const metadata: Metadata = {
-  title: 'Locais',
-  description: 'Locais onde estão localizados os terminais.',
+  title: 'Local',
+  description: 'Local onde estão localizados os terminais.',
 };
 
 interface EstablishmentProps {

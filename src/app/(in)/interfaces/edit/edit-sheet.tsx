@@ -33,7 +33,7 @@ export function InterfaceEditSheet({
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Edit Interface</SheetTitle>
+          <SheetTitle>Alterar Interface</SheetTitle>
         </SheetHeader>
         <InterfaceFormEdit interfaceTerminal={interfaceTerminal} />
       </SheetContent>

@@ -1,22 +1,30 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, ChevronRight } from 'lucide-react';
 import * as z from 'zod';
 
-import { CashFlowEditSheet } from '@/app/(in)/cash-flows/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
-import { SheetProvider } from '@/providers/sheet-provider';
+import Link from 'next/link';
 
 const CashFlowSchema = z.object({
-  id: z.number(),
-  name: z.string(),
+  id: z.string(),
+  terminalId: z.string(),
+  operatorId: z.string(),
+  cashIn: z.coerce.number(),
+  cashOut: z.coerce.number(),
+  net: z.coerce.number(),
+  createdAt: z.date(),
 });
 
 export type CashFlowData = z.infer<typeof CashFlowSchema>;
 export type CashFlow = {
-  id: number;
-  name: string;
+  id: string;
+  terminalId: string;
+  operatorId: string;
+  cashIn: number;
+  cashOut: number;
+  net: number;
 };
 
 export const cashFlowColumns: ColumnDef<CashFlowData>[] = [
@@ -38,7 +46,7 @@ export const cashFlowColumns: ColumnDef<CashFlowData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{cashFlow.name}</span>
+          <span className='truncate'>{cashFlow.id}</span>
         </div>
       );
     },
@@ -49,9 +57,13 @@ export const cashFlowColumns: ColumnDef<CashFlowData>[] = [
       const cashFlow = row.original;
 
       return (
-        <SheetProvider>
-          <CashFlowEditSheet cashFlow={cashFlow} />
-        </SheetProvider>
+        <div className='flex justify-end'>
+          <Button variant={'ghost'} size={'icon'} asChild>
+            <Link href={`/cash-flows/${cashFlow.id}`}>
+              <ChevronRight className='h-4 w-4' />
+            </Link>
+          </Button>
+        </div>
       );
     },
   },

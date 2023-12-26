@@ -1,6 +1,7 @@
 'use client';
 
 import { Plus } from 'lucide-react';
+import { useContext } from 'react';
 
 import { CashFlowFormCreate } from '@/app/(in)/cash-flows/create/form-create';
 import { Button } from '@/components/ui/button';
@@ -11,10 +12,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { SheetContext } from '@/providers/sheet-provider';
 
 export function CashFlowCreateSheet() {
+  const { show, setShow } = useContext(SheetContext);
+
   return (
-    <Sheet>
+    <Sheet open={show} onOpenChange={setShow}>
       <SheetTrigger asChild>
         <Button variant='secondary' className='flex gap-1' size={'default'}>
           <Plus size={16} />
@@ -23,7 +27,7 @@ export function CashFlowCreateSheet() {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Nova Leitura</SheetTitle>
+          <SheetTitle>Criar Leitura</SheetTitle>
         </SheetHeader>
         <CashFlowFormCreate />
       </SheetContent>

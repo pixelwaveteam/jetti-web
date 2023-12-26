@@ -31,7 +31,7 @@ export function TerminalEditSheet({ terminal }: TerminalEditSheetProps) {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Edit Terminal</SheetTitle>
+          <SheetTitle>Alterar Terminal</SheetTitle>
         </SheetHeader>
         <TerminalFormEdit terminal={terminal} />
       </SheetContent>

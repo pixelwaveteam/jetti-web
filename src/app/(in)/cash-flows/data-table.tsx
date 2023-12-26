@@ -4,17 +4,17 @@ import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 interface CashFlowDataTableProps {
-  cashFlows: CashFlowData[];
+  data: CashFlowData[];
 }
 
-export function CashFlowDataTable({ cashFlows }: CashFlowDataTableProps) {
+export function CashFlowDataTable({ data }: CashFlowDataTableProps) {
   return (
     <DataTable
       columns={cashFlowColumns}
-      data={cashFlows}
+      data={data}
       filterBy={{
-        key: 'name',
-        label: 'nome',
+        key: 'code',
+        label: 'code',
       }}
     >
       <SheetProvider>

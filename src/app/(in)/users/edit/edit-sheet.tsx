@@ -31,7 +31,7 @@ export function UserEditSheet({ user }: UserEditSheetProps) {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Edit User</SheetTitle>
+          <SheetTitle>Alterar Usuário</SheetTitle>
         </SheetHeader>
         <UserFormEdit user={user} />
       </SheetContent>

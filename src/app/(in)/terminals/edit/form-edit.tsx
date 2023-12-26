@@ -214,7 +214,7 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
           />
           <div className='flex gap-2'>
             <Button type='submit' className='w-full'>
-              Save
+              Alterar
             </Button>
             <DialogProvider>
               <ConfirmDeletionDialog onConfirm={handleDeleteTerminal}>
