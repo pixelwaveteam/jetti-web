@@ -19,4 +19,5 @@ export async function updateCashFlow({ id, data }: UpdateCashFlow) {
   });
 
   revalidateTag('cash-flows');
+  revalidateTag('net-distributions');
 }

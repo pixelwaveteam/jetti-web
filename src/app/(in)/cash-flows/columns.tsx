@@ -5,6 +5,7 @@ import { ArrowUpDown, ChevronRight } from 'lucide-react';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
+import { getDateFormatted } from '@/utils/date';
 import Link from 'next/link';
 
 const CashFlowSchema = z.object({
@@ -18,6 +19,14 @@ const CashFlowSchema = z.object({
 });
 
 export type CashFlowData = z.infer<typeof CashFlowSchema>;
+
+export type CashFlowDataTable = {
+  id: string;
+  terminal: string;
+  operator: string;
+  createdAt: Date;
+};
+
 export type CashFlow = {
   id: string;
   terminalId: string;
@@ -27,16 +36,16 @@ export type CashFlow = {
   net: number;
 };
 
-export const cashFlowColumns: ColumnDef<CashFlowData>[] = [
+export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'terminal',
     header: ({ column }) => {
       return (
         <Button
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Nome
+          Código do Terminal
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
@@ -45,8 +54,32 @@ export const cashFlowColumns: ColumnDef<CashFlowData>[] = [
       const cashFlow = row.original;
 
       return (
-        <div className='flex gap-2 items-center'>
-          <span className='truncate'>{cashFlow.id}</span>
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{cashFlow.terminal}</span>
+          <span className='text-xs text-gray-300'>{cashFlow.operator}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'createdAt',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Data
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{getDateFormatted(cashFlow.createdAt)}</span>
         </div>
       );
     },

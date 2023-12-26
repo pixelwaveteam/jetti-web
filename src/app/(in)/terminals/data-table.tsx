@@ -14,7 +14,7 @@ export function TerminalDataTable({ data }: TerminalDataTableProps) {
       data={data}
       filterBy={{
         key: 'code',
-        label: 'Código',
+        label: 'código',
       }}
     >
       <SheetProvider>
