@@ -17,7 +17,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials) {
-          return null;
+          throw new Error('Credenciais não informadas');
         }
 
         const { email, password } = credentials;
@@ -30,8 +30,8 @@ export const authOptions: NextAuthOptions = {
           }),
         });
 
-        if (!response) {
-          return null;
+        if (response.statusCode === 401) {
+          throw new Error('Credenciais inválidas');
         }
 
         return response;
@@ -41,7 +41,12 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (trigger === 'update') {
-        return { token, ...session.user };
+        return {
+          ...token,
+          user: {
+            ...session.user,
+          },
+        };
       }
 
       return { ...token, ...user };
@@ -58,6 +63,7 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: env.NEXTAUTH_SECRET,
   debug: env.NEXTAUTH_DEBUG,

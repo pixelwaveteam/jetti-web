@@ -1,17 +1,27 @@
 import { Metadata } from 'next';
 
+import { fetchCashFlows } from '@/app/(in)/cash-flows/actions/fetch-cash-flows';
 import { CashFlowDataTable } from '@/app/(in)/cash-flows/data-table';
+import { fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
 import { PageContainer } from '@/components/page-container';
+import { CashFlowProvider } from '@/providers/cash-flow-provider';
 
 export const metadata: Metadata = {
   title: 'Leituras',
-  description: 'Administrar usuários com acesso a aplicação.',
+  description: 'Administrar leituras dos terminais.',
 };
 
-export default function CashFlows() {
+export default async function CashFlows() {
+  const [cashFlows, terminals] = await Promise.all([
+    fetchCashFlows(),
+    fetchTerminals(),
+  ]);
+
   return (
     <PageContainer title='Leituras'>
-      <CashFlowDataTable cashFlows={[]} />
+      <CashFlowProvider initialData={{ terminals }}>
+        <CashFlowDataTable data={cashFlows} />
+      </CashFlowProvider>
     </PageContainer>
   );
 }

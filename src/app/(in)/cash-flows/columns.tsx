@@ -1,34 +1,54 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, ChevronRight } from 'lucide-react';
 import * as z from 'zod';
 
-import { CashFlowEditDrawer } from '@/app/(in)/cash-flows/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
-import { SheetProvider } from '@/providers/sheet-provider';
+import { getDateFormatted } from '@/utils/date';
+import Link from 'next/link';
 
 const CashFlowSchema = z.object({
-  id: z.number(),
-  name: z.string(),
+  id: z.string(),
+  terminalId: z.string(),
+  operatorId: z.string(),
+  cashIn: z.coerce.number(),
+  cashOut: z.coerce.number(),
+  net: z.coerce.number(),
+  createdAt: z.date(),
 });
 
 export type CashFlowData = z.infer<typeof CashFlowSchema>;
-export type CashFlow = {
-  id: number;
-  name: string;
+
+export type CashFlowDataTable = {
+  id: string;
+  terminal: string;
+  operator: string;
+  cashIn: number;
+  cashOut: number;
+  net: number;
+  createdAt: Date;
 };
 
-export const cashFlowColumns: ColumnDef<CashFlowData>[] = [
+export type CashFlow = {
+  id: string;
+  terminalId: string;
+  operatorId: string;
+  cashIn: number;
+  cashOut: number;
+  net: number;
+};
+
+export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'terminal',
     header: ({ column }) => {
       return (
         <Button
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Nome
+          Código do Terminal
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
@@ -37,8 +57,32 @@ export const cashFlowColumns: ColumnDef<CashFlowData>[] = [
       const cashFlow = row.original;
 
       return (
-        <div className='flex gap-2 items-center'>
-          <span className='truncate'>{cashFlow.name}</span>
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{cashFlow.terminal}</span>
+          <span className='text-xs text-gray-300'>{cashFlow.operator}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'createdAt',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Data
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{getDateFormatted(cashFlow.createdAt)}</span>
         </div>
       );
     },
@@ -49,9 +93,13 @@ export const cashFlowColumns: ColumnDef<CashFlowData>[] = [
       const cashFlow = row.original;
 
       return (
-        <SheetProvider>
-          <CashFlowEditDrawer cashFlow={cashFlow} />
-        </SheetProvider>
+        <div className='flex justify-end'>
+          <Button variant={'ghost'} size={'icon'} asChild>
+            <Link href={`/cash-flows/${cashFlow.id}`}>
+              <ChevronRight className='h-4 w-4' />
+            </Link>
+          </Button>
+        </div>
       );
     },
   },

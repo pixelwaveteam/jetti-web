@@ -2,28 +2,26 @@ import {
   EstablishmentData,
   establishmentColumns,
 } from '@/app/(in)/establishments/columns';
-import { EstablishmentCreateDrawer } from '@/app/(in)/establishments/create/create-sheet';
+import { EstablishmentCreateSheet } from '@/app/(in)/establishments/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 interface EstablishmentDataTableProps {
-  establishments: EstablishmentData[];
+  data: EstablishmentData[];
 }
 
-export function EstablishmentDataTable({
-  establishments,
-}: EstablishmentDataTableProps) {
+export function EstablishmentDataTable({ data }: EstablishmentDataTableProps) {
   return (
     <DataTable
       columns={establishmentColumns}
-      data={establishments}
+      data={data}
       filterBy={{
         key: 'name',
         label: 'nome',
       }}
     >
       <SheetProvider>
-        <EstablishmentCreateDrawer />
+        <EstablishmentCreateSheet />
       </SheetProvider>
     </DataTable>
   );

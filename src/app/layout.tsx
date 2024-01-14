@@ -10,7 +10,7 @@ const fontSans = FontSans({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   title: 'Jetti',
-  description: 'Controle de receita em terminais de jogos de azar',
+  description: 'Controle de receita em terminais com interfaces interativas',
 };
 
 interface RootLayoutProps {
@@ -19,7 +19,7 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html className={fontSans.variable} lang='en'>
+    <html lang='en' suppressHydrationWarning>
       <body
         className={cn('bg-background font-sans antialiased', fontSans.variable)}
       >

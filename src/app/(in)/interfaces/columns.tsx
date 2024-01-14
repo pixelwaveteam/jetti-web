@@ -49,7 +49,7 @@ export const interfaceColumns: ColumnDef<InterfaceData>[] = [
       const interfaceTerminal = row.original;
 
       return (
-        <div className='w-full text-right'>
+        <div className='flex justify-end'>
           <SheetProvider>
             <InterfaceEditSheet interfaceTerminal={interfaceTerminal} />
           </SheetProvider>

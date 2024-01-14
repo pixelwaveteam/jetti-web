@@ -1,24 +1,27 @@
-import { CashFlowData, cashFlowColumns } from '@/app/(in)/cash-flows/columns';
-import { CashFlowCreateDrawer } from '@/app/(in)/cash-flows/create/create-sheet';
+import {
+  CashFlowDataTable,
+  cashFlowColumns,
+} from '@/app/(in)/cash-flows/columns';
+import { CashFlowCreateSheet } from '@/app/(in)/cash-flows/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 interface CashFlowDataTableProps {
-  cashFlows: CashFlowData[];
+  data: CashFlowDataTable[];
 }
 
-export function CashFlowDataTable({ cashFlows }: CashFlowDataTableProps) {
+export function CashFlowDataTable({ data }: CashFlowDataTableProps) {
   return (
     <DataTable
       columns={cashFlowColumns}
-      data={cashFlows}
+      data={data}
       filterBy={{
-        key: 'name',
-        label: 'nome',
+        key: 'terminal',
+        label: 'código',
       }}
     >
       <SheetProvider>
-        <CashFlowCreateDrawer />
+        <CashFlowCreateSheet />
       </SheetProvider>
     </DataTable>
   );

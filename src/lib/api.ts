@@ -7,7 +7,9 @@ import { env } from '@/utils/env';
 
 export async function api<T = any>(
   path: string,
-  options: RequestInit
+  options: RequestInit = {
+    method: 'GET',
+  }
 ): Promise<T> {
   const session = await getServerSession(authOptions);
 
@@ -23,7 +25,7 @@ export async function api<T = any>(
 
   const { method = 'GET', ...moreOptions } = options;
 
-  const url = `${env.API_URL}${path}`;
+  const url = `${env.NEXT_PUBLIC_API_URL}${path}`;
 
   return fetch(url, {
     method,

@@ -23,7 +23,7 @@ export function NavItem({ item }: NavItemProps) {
 
   const Icon = item.icon;
 
-  const isActive = pathname === item.path;
+  const isActive = pathname === item.path || pathname.startsWith(item.path);
 
   const renderLink = () => {
     return (

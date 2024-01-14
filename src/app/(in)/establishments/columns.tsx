@@ -1,21 +1,22 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, ChevronRight } from 'lucide-react';
 import * as z from 'zod';
 
-import { EstablishmentEditDrawer } from '@/app/(in)/establishments/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
-import { SheetProvider } from '@/providers/sheet-provider';
+import Link from 'next/link';
 
 const EstablishmentSchema = z.object({
-  id: z.number(),
+  id: z.string(),
+  organizationId: z.string(),
   name: z.string(),
 });
 
 export type EstablishmentData = z.infer<typeof EstablishmentSchema>;
 export type Establishment = {
-  id: number;
+  id: string;
+  organizationId: string;
   name: string;
 };
 
@@ -49,9 +50,13 @@ export const establishmentColumns: ColumnDef<EstablishmentData>[] = [
       const establishment = row.original;
 
       return (
-        <SheetProvider>
-          <EstablishmentEditDrawer establishment={establishment} />
-        </SheetProvider>
+        <div className='flex justify-end'>
+          <Button variant={'ghost'} size={'icon'} asChild>
+            <Link href={`/establishments/${establishment.id}`}>
+              <ChevronRight className='h-4 w-4' />
+            </Link>
+          </Button>
+        </div>
       );
     },
   },

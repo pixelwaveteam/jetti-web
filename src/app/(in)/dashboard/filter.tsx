@@ -3,7 +3,7 @@
 import { format, subDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Calendar as CalendarIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
 import { Button } from '@/components/ui/button';
@@ -13,13 +13,22 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { DashboardContext } from '@/providers/dashboard-provider';
 import { cn } from '@/utils/style';
 
 export function OverviewFilter() {
+  const { changeFilter } = useContext(DashboardContext);
+
   const [date, setDate] = useState<DateRange | undefined>({
     from: subDays(new Date(), 30),
     to: new Date(),
   });
+
+  useEffect(() => {
+    if (date?.from && date?.to) {
+      changeFilter(date.from, date.to);
+    }
+  }, [date, changeFilter]);
 
   return (
     <Popover>

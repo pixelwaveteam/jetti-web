@@ -1,24 +1,24 @@
 import { TerminalData, terminalColumns } from '@/app/(in)/terminals/columns';
-import { TerminalCreateDrawer } from '@/app/(in)/terminals/create/create-sheet';
+import { TerminalCreateSheet } from '@/app/(in)/terminals/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 interface TerminalDataTableProps {
-  terminals: TerminalData[];
+  data: TerminalData[];
 }
 
-export function TerminalDataTable({ terminals }: TerminalDataTableProps) {
+export function TerminalDataTable({ data }: TerminalDataTableProps) {
   return (
     <DataTable
       columns={terminalColumns}
-      data={terminals}
+      data={data}
       filterBy={{
-        key: 'name',
-        label: 'nome',
+        key: 'code',
+        label: 'código',
       }}
     >
       <SheetProvider>
-        <TerminalCreateDrawer />
+        <TerminalCreateSheet />
       </SheetProvider>
     </DataTable>
   );

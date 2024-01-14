@@ -4,6 +4,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+import { createCashFlow } from '@/app/(in)/cash-flows/actions/create-cash-flow';
+import { fetchLastCashFlow } from '@/app/(in)/cash-flows/actions/fetch-last-cash-flow';
+import { CardPeriodCashFlow } from '@/app/(in)/cash-flows/card-period';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -15,34 +18,66 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { CashFlowContext } from '@/providers/cash-flow-provider';
+import { SheetContext } from '@/providers/sheet-provider';
+import { useRouter } from 'next/navigation';
+import { useContext, useEffect } from 'react';
 
 const CashFlowFormCreateSchema = z.object({
-  name: z
-    .string()
-    .min(3, 'Nome deve ter pelo menos 3 caractere.')
-    .max(50, 'Nome deve ter no máximo 50 caracteres.')
-    .refine((value) => value.trim().length > 0, {
-      message: 'Nome não pode ser vazio.',
-    }),
+  terminalId: z.string(),
+  cashIn: z.coerce.number().transform((val) => {
+    const cashInCents = val * 100;
+
+    return cashInCents;
+  }),
+  cashOut: z.coerce.number().transform((val) => {
+    const cashOutCents = val * 100;
+
+    return cashOutCents;
+  }),
 });
 
 type CashFlowFormCreateType = z.infer<typeof CashFlowFormCreateSchema>;
 
 export function CashFlowFormCreate() {
+  const router = useRouter();
+  const { terminals, setPeriod } = useContext(CashFlowContext);
+  const { setShow } = useContext(SheetContext);
   const { toast } = useToast();
 
   const formMethods = useForm<CashFlowFormCreateType>({
     resolver: zodResolver(CashFlowFormCreateSchema),
-    defaultValues: {
-      name: '',
-    },
+    defaultValues: {},
   });
 
-  const { control, handleSubmit } = formMethods;
+  const { control, handleSubmit, watch } = formMethods;
+
+  const terminalId = watch('terminalId');
 
   const onSubmit = async (data: CashFlowFormCreateType) => {
     try {
+      const cashFlowCreated = await createCashFlow({
+        ...data,
+      });
+
+      setShow(false);
+
+      toast({
+        variant: 'default',
+        title: 'Sucesso',
+        description: 'Local criado com sucesso.',
+        duration: 5000,
+      });
+
+      router.push(`/cash-flows/${cashFlowCreated.id}`);
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -53,25 +88,81 @@ export function CashFlowFormCreate() {
     }
   };
 
+  useEffect(() => {
+    async function handlePeriodCashFlow(terminalId: string) {
+      try {
+        const result = await fetchLastCashFlow(terminalId);
+
+        setPeriod(result.createdAt);
+      } catch {
+        setPeriod(null);
+      }
+    }
+
+    if (terminalId) {
+      handlePeriodCashFlow(terminalId);
+    }
+  }, [setPeriod, terminalId]);
+
   return (
     <Form {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
         <FormField
           control={control}
-          name='name'
+          name='terminalId'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nome</FormLabel>
+              <FormLabel>Terminal</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder='Selecione...' />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {terminals.map((terminal) => (
+                    <SelectItem key={terminal.id} value={terminal.id}>
+                      {terminal.code}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name='cashIn'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Entradas R$</FormLabel>
               <FormControl>
-                <Input placeholder='Nome da organização' {...field} />
+                <Input placeholder='Total de Entradas' {...field} />
               </FormControl>
               <FormDescription>
-                Esse nome será exibido em telas e relatórios.
+                Entradas no terminal no período.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        <FormField
+          control={control}
+          name='cashOut'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Saídas R$</FormLabel>
+              <FormControl>
+                <Input placeholder='Total de Saídas' {...field} />
+              </FormControl>
+              <FormDescription>Saídas no terminal no período.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <CardPeriodCashFlow show={!!terminalId} />
         <Button type='submit' className='w-full'>
           Criar
         </Button>

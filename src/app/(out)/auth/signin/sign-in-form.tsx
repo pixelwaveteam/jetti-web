@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 const SignInFormSchema = z.object({
@@ -31,6 +32,8 @@ type SignInFormSchemaType = z.infer<typeof SignInFormSchema>;
 export const SignInForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { toast } = useToast();
+
   const formMethods = useForm<SignInFormSchemaType>({
     resolver: zodResolver(SignInFormSchema),
     defaultValues: {
@@ -39,7 +42,7 @@ export const SignInForm = () => {
     },
   });
 
-  const { handleSubmit, control } = formMethods;
+  const { handleSubmit, control, setFocus } = formMethods;
 
   const onSubmit = async (data: SignInFormSchemaType) => {
     const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
@@ -51,7 +54,15 @@ export const SignInForm = () => {
     });
 
     if (response?.error) {
-      console.log(response.error);
+      // set focus to email input using react-hook-form
+      setFocus('email');
+
+      toast({
+        variant: 'destructive',
+        title: 'Erro',
+        description: 'Email ou senha incorretos. Favor tente novamente.',
+        duration: 5000,
+      });
     }
 
     if (response?.ok) {
@@ -70,7 +81,11 @@ export const SignInForm = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='mail@examplo.com' {...field} />
+                  <Input
+                    placeholder='mail@examplo.com'
+                    {...field}
+                    tabIndex={1}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -84,8 +99,9 @@ export const SignInForm = () => {
                 <FormLabel className='flex flex-row justify-between'>
                   Senha
                   <Link
-                    className='text-gray-300 hover:underline'
+                    className='text-indigo-400 hover:underline hover:text-indigo-300'
                     href='/auth/forgot-password'
+                    tabIndex={3}
                   >
                     Esquceu Senha?
                   </Link>
@@ -95,6 +111,7 @@ export const SignInForm = () => {
                     type='password'
                     placeholder='Digite sua senha'
                     {...field}
+                    tabIndex={2}
                   />
                 </FormControl>
                 <FormMessage />
@@ -102,7 +119,7 @@ export const SignInForm = () => {
             )}
           />
         </div>
-        <Button className='w-full mt-10' type='submit'>
+        <Button className='w-full mt-10' type='submit' tabIndex={4}>
           Entrar
         </Button>
       </form>

@@ -23,12 +23,9 @@ import { SheetContext } from '@/providers/sheet-provider';
 
 const OrganizationFormCreateSchema = z.object({
   name: z
-    .string()
+    .string({ required_error: 'Nome não pode ser vazio.' })
     .min(3, 'Nome deve ter pelo menos 3 caractere.')
-    .max(50, 'Nome deve ter no máximo 50 caracteres.')
-    .refine((value) => value.trim().length > 0, {
-      message: 'Nome não pode ser vazio.',
-    }),
+    .max(50, 'Nome deve ter no máximo 50 caracteres.'),
 });
 
 type OrganizationFormCreateType = z.infer<typeof OrganizationFormCreateSchema>;

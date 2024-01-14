@@ -49,7 +49,7 @@ export const organizationColumns: ColumnDef<OrganizationData>[] = [
       const organization = row.original;
 
       return (
-        <div className='w-full text-right'>
+        <div className='flex justify-end'>
           <SheetProvider>
             <OrganizationEditSheet organization={organization} />
           </SheetProvider>
