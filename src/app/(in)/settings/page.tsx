@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function Profile() {
   return (
     <PageContainer title='Configurações'>
-      <UserDataTable users={[]} />
+      <UserDataTable data={[]} />
     </PageContainer>
   );
 }
