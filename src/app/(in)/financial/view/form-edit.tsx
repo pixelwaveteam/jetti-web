@@ -4,13 +4,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import { Financial } from '@/app/(in)/financial/columns';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 
 const FinancialFormEditSchema = z.object({
   name: z.string(),
 });
+
+interface Financial {
+  id: string;
+  name: string;
+}
 
 type FinancialFormEditType = z.infer<typeof FinancialFormEditSchema>;
 
