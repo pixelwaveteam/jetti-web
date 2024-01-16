@@ -18,7 +18,7 @@ export function SideBar() {
   return (
     <aside
       className={cn(
-        'hidden w-52 md:flex bg-gray-800 min-h-screen max-h-screen overflow-hidden transition-width duration-200 ease-in-out',
+        'hidden sticky top-0 w-52 md:flex bg-gray-800 min-h-screen max-h-screen overflow-hidden transition-width duration-200 ease-in-out',
         {
           'w-14': isCollapsed,
         }
