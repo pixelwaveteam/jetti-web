@@ -46,7 +46,7 @@ export default async function Dashboard() {
               <ChartAnnualEarnings />
             </CardContent>
           </Card>
-          <Card className='col-span-2'>
+          <Card className='col-span-2 flex flex-col'>
             <CardHeader>
               <div className='flex items-center justify-between'>
                 <div className='space-y-2'>
@@ -55,12 +55,15 @@ export default async function Dashboard() {
                     Lista das últimas leituras realizadas.
                   </CardDescription>
                 </div>
-                <Link href='/cash-flows'>
-                  <Button variant='outline'>Ver todas</Button>
-                </Link>
+                {
+                  cashFlows.length > 0 &&
+                    <Link href='/cash-flows'>
+                      <Button variant='outline'>Ver todas</Button>
+                    </Link>
+                }
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className='flex-1'>
               <RecentCashFlows />
             </CardContent>
           </Card>
