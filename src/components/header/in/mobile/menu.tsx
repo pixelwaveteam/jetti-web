@@ -19,7 +19,7 @@ export function MobileMenu() {
         <span className='uppercase text-gray-400 font-bold text-xs ml-6'>
           menu
         </span>
-        <ul className='flex w-full flex-col px-2 space-y-4'>
+        <ul className='flex w-full flex-col px-2 space-y-4 overflow-y-auto'>
           {navItems.map((item) => (
             <MenuNavItem key={item.title} item={item} />
           ))}
