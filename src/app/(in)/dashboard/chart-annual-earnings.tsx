@@ -42,7 +42,7 @@ export function ChartAnnualEarnings() {
 
     if (cashFlowDate.getFullYear() === yearCurrent) {
       const month = cashFlowDate.getMonth();
-      earningsByMonth[month].total += cashFlow.net;
+      earningsByMonth[month].total += (cashFlow.net/100);
     }
   });
 
