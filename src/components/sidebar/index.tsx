@@ -25,14 +25,14 @@ export function SideBar() {
       )}
     >
       <nav className='flex flex-col w-full'>
-        <div className='h-14 bg-gray-800 border-b border-gray-900 flex items-center pl-6'>
+        <div className='min-h-[3.5rem] h-14 bg-gray-800 border-b border-gray-900 flex items-center pl-6'>
           <div>
             <Link href='/dashboard'>
               <HeaderLogo />
             </Link>
           </div>
         </div>
-        <ul className='flex w-full flex-col mt-8 px-2 space-y-4'>
+        <ul className='flex w-full flex-col mt-8 px-2 space-y-4 overflow-y-auto'>
           {navItems
             .filter((item) => item.roles.includes(role))
             .map((item) => (
