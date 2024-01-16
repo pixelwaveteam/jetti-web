@@ -64,6 +64,7 @@ export function ChartAnnualEarnings() {
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => `R$ ${value}`}
+              allowDecimals={true}
             />
             <Bar dataKey='total' fill='#818CF8' radius={[4, 4, 0, 0]} />
             <Tooltip
