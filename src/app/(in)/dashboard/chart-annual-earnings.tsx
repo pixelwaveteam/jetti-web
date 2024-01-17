@@ -50,31 +50,29 @@ export function ChartAnnualEarnings() {
     <ResponsiveContainer width='100%' height={350}>
       {
         cashFlows.length > 0 ?
-          <>
-            <BarChart data={earningsByMonth}>
-              <XAxis
-                dataKey='name'
-                stroke='#D1D5DB'
-                fontSize={12}
-                tickLine={false}
-                axisLine={false}
-              />
-              <YAxis
-                stroke='#9CA3AF'
-                fontSize={12}
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={(value) => `R$ ${value}`}
-              />
-              <Bar dataKey='total' fill='#818CF8' radius={[4, 4, 0, 0]} />
-              <Tooltip
-                cursor={{ fill: 'transparent' }}
-                formatter={(value) => [`R$ ${value}`]}
-                labelStyle={{ color: '#312E81' }}
-                labelFormatter={(label) => `${label}`}
-              />
-            </BarChart>
-          </>
+          <BarChart data={earningsByMonth}>
+            <XAxis
+              dataKey='name'
+              stroke='#D1D5DB'
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              stroke='#9CA3AF'
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => `R$ ${value}`}
+            />
+            <Bar dataKey='total' fill='#818CF8' radius={[4, 4, 0, 0]} />
+            <Tooltip
+              cursor={{ fill: 'transparent' }}
+              formatter={(value) => [`R$ ${value}`]}
+              labelStyle={{ color: '#312E81' }}
+              labelFormatter={(label) => `${label}`}
+            />
+          </BarChart>
         :
           <div className='h-full w-full flex items-center justify-center'>
             <CardDescription>Nenhum ganho registrado este ano</CardDescription>
