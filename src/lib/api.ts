@@ -33,6 +33,12 @@ export async function api<T = any>(
     ...moreOptions,
   })
     .then(async (response) => {
+      if(!response.ok) {
+        const content = await response.json();
+
+        throw new Error(content.message);
+      }
+
       try {
         const content = await response.json();
 
@@ -44,6 +50,10 @@ export async function api<T = any>(
     .catch((error) => {
       console.error('API FETCH', error);
 
+      if(error instanceof Error) {
+        throw error;
+      }
+      
       throw new Error(error);
     });
 }
