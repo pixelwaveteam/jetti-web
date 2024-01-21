@@ -88,12 +88,12 @@ export function OrganizationFormEdit({
         duration: 5000,
       });
     } catch(err) {
-      if(err instanceof Error && err.message === "Organization has dependencies.") {
+      if(err instanceof Error && err.message === "Organization has dependents.") {
         toast({
           variant: 'destructive',
           title: 'Erro',
           description: 'Essa organização tem registros associados à ela. Para exclui-la, exclua suas associações antes!',
-          duration: 5000,
+          duration: 7000,
         });
 
         setShow(false);
