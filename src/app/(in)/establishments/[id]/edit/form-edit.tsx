@@ -81,7 +81,20 @@ export function EstablishmentFormEdit({
         description: 'Local alterado com sucesso.',
         duration: 5000,
       });
-    } catch {
+    } catch(err) {
+      if(err instanceof Error && err.message === "Establishment has dependents.") {
+        toast({
+          variant: 'destructive',
+          title: 'Erro',
+          description: 'Esse local tem registros associados à ele. Para exclui-lo, exclua suas associações antes!',
+          duration: 7000,
+        });
+
+        setShow(false);
+
+        return
+      }
+
       toast({
         variant: 'destructive',
         title: 'Erro',
