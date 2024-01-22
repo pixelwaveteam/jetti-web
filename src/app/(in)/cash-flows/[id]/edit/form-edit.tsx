@@ -159,6 +159,13 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
               </FormItem>
             )}
           />
+
+          <FormItem>
+            <FormLabel>Local</FormLabel>
+              <Input disabled value={cashFlow.establishmentName} />
+            <FormMessage />
+          </FormItem>
+
           <FormField
             control={control}
             name='cashIn'
