@@ -32,7 +32,7 @@ interface DataTableProps<TData, TValue> {
     key: string;
     label: string;
     isNumber?: boolean
-  };
+  }[];
   globalFiltering?: boolean;
   children?: ReactNode;
 }
@@ -79,30 +79,38 @@ export function DataTable<TData, TValue>({
           )
         }
         {
-          filterBy.isNumber ?
-            <Input
-              placeholder={`Min de ${filterBy.label}...`}
-              value={
-                (table.getColumn(filterBy.key)?.getFilterValue() as [number, number])?.[0] ?? ''
-              }
-              onChange={(event) =>
-                table.getColumn(filterBy.key)?.setFilterValue([Number(event.target.value) > 0 ? Number(event.target.value) : undefined, Infinity])
-              }
-              className='max-w-[10rem]'
-              name='search'
-            />
-        :
-          <Input
-            placeholder={`Filtrar por ${filterBy.label}...`}
-            value={
-              (table.getColumn(filterBy.key)?.getFilterValue() as string) ?? ''
+          filterBy.map(filter => {
+            if(filter.isNumber) {
+              return (
+                <Input
+                  placeholder={`Min de ${filter.label}...`}
+                  value={
+                    (table.getColumn(filter.key)?.getFilterValue() as [number, number])?.[0] ?? ''
+                  }
+                  onChange={(event) =>
+                    table.getColumn(filter.key)?.setFilterValue([Number(event.target.value) > 0 ? Number(event.target.value) : undefined, Infinity])
+                  }
+                  className='max-w-[10rem]'
+                  name='search'
+                  key={filter.key}
+                />
+              )
             }
-            onChange={(event) =>
-              table.getColumn(filterBy.key)?.setFilterValue(event.target.value)
-            }
-            className='max-w-sm'
-            name='search'
-          />
+            return (
+              <Input
+                placeholder={`Filtrar por ${filter.label}...`}
+                value={
+                  (table.getColumn(filter.key)?.getFilterValue() as string) ?? ''
+                }
+                onChange={(event) =>
+                  table.getColumn(filter.key)?.setFilterValue(event.target.value)
+                }
+                className='max-w-sm'
+                name='search'
+                key={filter.key}
+              />
+            )
+          })
         }
         {children}
       </div>

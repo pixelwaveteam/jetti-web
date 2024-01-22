@@ -15,10 +15,10 @@ export function EstablishmentDataTable({ data }: EstablishmentDataTableProps) {
     <DataTable
       columns={establishmentColumns}
       data={data}
-      filterBy={{
+      filterBy={[{
         key: 'name',
         label: 'nome',
-      }}
+      }]}
     >
       <SheetProvider>
         <EstablishmentCreateSheet />

@@ -12,10 +12,10 @@ export function TerminalDataTable({ data }: TerminalDataTableProps) {
     <DataTable
       columns={terminalColumns}
       data={data}
-      filterBy={{
+      filterBy={[{
         key: 'code',
         label: 'código',
-      }}
+      }]}
     >
       <SheetProvider>
         <TerminalCreateSheet />

@@ -12,10 +12,10 @@ export function UserDataTable({ data }: UserDataTableProps) {
     <DataTable
       columns={userColumns}
       data={data}
-      filterBy={{
+      filterBy={[{
         key: 'name',
         label: 'nome',
-      }}
+      }]}
     >
       <SheetProvider>
         <UserCreateSheet />
