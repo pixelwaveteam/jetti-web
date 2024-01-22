@@ -63,7 +63,9 @@ export function CashFlowFormCreate() {
 
   const formMethods = useForm<CashFlowFormCreateType>({
     resolver: zodResolver(CashFlowFormCreateSchema),
-    defaultValues: {},
+    defaultValues: {
+      date: new Date()
+    },
   });
 
   const { control, handleSubmit, watch } = formMethods;
@@ -210,6 +212,7 @@ export function CashFlowFormCreate() {
                   mode='single'
                   selected={field.value}
                   onSelect={field.onChange}
+                  
                 />
               </PopoverContent>
             </Popover>
