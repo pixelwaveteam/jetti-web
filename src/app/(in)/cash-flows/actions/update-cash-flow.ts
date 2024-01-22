@@ -9,6 +9,7 @@ interface UpdateCashFlow {
     terminalId: string;
     cashIn: number;
     cashOut: number;
+    date: string;
   };
 }
 

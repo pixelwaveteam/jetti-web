@@ -8,6 +8,7 @@ import { createCashFlow } from '@/app/(in)/cash-flows/actions/create-cash-flow';
 import { fetchLastCashFlow } from '@/app/(in)/cash-flows/actions/fetch-last-cash-flow';
 import { CardPeriodCashFlow } from '@/app/(in)/cash-flows/card-period';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
   FormControl,
@@ -18,6 +19,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -28,11 +30,14 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { CashFlowContext } from '@/providers/cash-flow-provider';
 import { SheetContext } from '@/providers/sheet-provider';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { fetchEstablishment } from '../../establishments/actions/fetch-establishment';
 
 const CashFlowFormCreateSchema = z.object({
-  terminalId: z.string(),
+  terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
   cashIn: z.coerce.number().transform((val) => {
     const cashInCents = val * 100;
 
@@ -43,6 +48,7 @@ const CashFlowFormCreateSchema = z.object({
 
     return cashOutCents;
   }),
+  date: z.date({ required_error: 'Data é obrigatória.' }),
 });
 
 type CashFlowFormCreateType = z.infer<typeof CashFlowFormCreateSchema>;
@@ -53,19 +59,24 @@ export function CashFlowFormCreate() {
   const { setShow } = useContext(SheetContext);
   const { toast } = useToast();
 
+  const [establishmentName, setEstablishmentName] = useState('');
+
   const formMethods = useForm<CashFlowFormCreateType>({
     resolver: zodResolver(CashFlowFormCreateSchema),
-    defaultValues: {},
+    defaultValues: {
+      date: new Date()
+    },
   });
 
   const { control, handleSubmit, watch } = formMethods;
 
   const terminalId = watch('terminalId');
 
-  const onSubmit = async (data: CashFlowFormCreateType) => {
+  const onSubmit = async ({date, ...data}: CashFlowFormCreateType) => {
     try {
       const cashFlowCreated = await createCashFlow({
         ...data,
+        date: date.toISOString()
       });
 
       setShow(false);
@@ -93,7 +104,7 @@ export function CashFlowFormCreate() {
       try {
         const result = await fetchLastCashFlow(terminalId);
 
-        setPeriod(result.createdAt);
+        setPeriod(result.date);
       } catch {
         setPeriod(null);
       }
@@ -103,6 +114,17 @@ export function CashFlowFormCreate() {
       handlePeriodCashFlow(terminalId);
     }
   }, [setPeriod, terminalId]);
+
+
+  useEffect(() => {
+    if(terminals.length > 0) {
+      const terminal = terminals.find(terminalItem => terminalItem.id === terminalId)
+
+      if(terminal) {
+        fetchEstablishment(terminal.establishmentId).then(establishment => setEstablishmentName(establishment.name))
+      }
+    }
+  }, [terminals, terminalId])
 
   return (
     <Form {...formMethods}>
@@ -131,6 +153,13 @@ export function CashFlowFormCreate() {
             </FormItem>
           )}
         />
+
+        <FormItem>
+          <FormLabel>Local</FormLabel>
+            <Input value={establishmentName} readOnly />
+          <FormMessage />
+        </FormItem>
+
         <FormField
           control={control}
           name='cashIn'
@@ -160,6 +189,34 @@ export function CashFlowFormCreate() {
               <FormMessage />
             </FormItem>
           )}
+        />
+        <FormField
+          control={control}
+          name='date'
+          render={({ field }) => {console.log({field}); return(
+            <Popover key={field.name}>
+              <PopoverTrigger asChild>
+                <FormItem>
+                  <FormLabel>Data</FormLabel>
+                  <Input
+                    placeholder='--/--/----'
+                    value={field.value ? format(field.value, 'dd/MM/yyyy') : ''}
+                    className='max-w-xs'
+                  />
+                  <FormMessage />
+                </FormItem>
+              </PopoverTrigger>
+              <PopoverContent>
+                <Calendar
+                  locale={ptBR}
+                  mode='single'
+                  selected={field.value}
+                  onSelect={field.onChange}
+                  
+                />
+              </PopoverContent>
+            </Popover>
+          )}}
         />
 
         <CardPeriodCashFlow show={!!terminalId} />

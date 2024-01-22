@@ -15,10 +15,17 @@ export function CashFlowDataTable({ data }: CashFlowDataTableProps) {
     <DataTable
       columns={cashFlowColumns}
       data={data}
-      filterBy={[{
-        key: 'terminal',
-        label: 'código',
-      }]}
+      filterBy={[
+        {
+          key: 'terminal',
+          label: 'código de terminal',
+        },
+        {
+          key: 'date',
+          label: 'intervalo',
+          isDate: true
+        }
+      ]}
     >
       <SheetProvider>
         <CashFlowCreateSheet />

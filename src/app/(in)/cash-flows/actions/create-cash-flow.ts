@@ -9,6 +9,7 @@ interface CreateCashFlow {
   terminalId: string;
   cashIn: number;
   cashOut: number;
+  date: string;
 }
 
 export async function createCashFlow(data: CreateCashFlow) {
