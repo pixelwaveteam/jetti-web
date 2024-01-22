@@ -34,7 +34,7 @@ interface DataTableProps<TData, TValue> {
     key: string;
     label: string;
     isNumber?: boolean;
-    options?: {[value: string]: string};
+    options?: {[label: string]: any};
   }[];
   globalFiltering?: boolean;
   children?: ReactNode;
@@ -99,9 +99,9 @@ export function DataTable<TData, TValue>({
                     </SelectTrigger>
                     <SelectContent>
                       {
-                        Object.keys(filter.options).map(value => (
-                          <SelectItem value={value} key={value}>
-                            {filter.options?.[value]}
+                        Object.keys(filter.options).map(label => (
+                          <SelectItem value={filter.options?.[label]} key={filter.options?.[label]}>
+                            {label}
                           </SelectItem>
                         ))
                       }
