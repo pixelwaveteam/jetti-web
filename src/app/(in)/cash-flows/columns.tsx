@@ -18,7 +18,7 @@ const CashFlowSchema = z.object({
   cashIn: z.coerce.number(),
   cashOut: z.coerce.number(),
   net: z.coerce.number(),
-  createdAt: z.date(),
+  date: z.date(),
 });
 
 export type CashFlowData = z.infer<typeof CashFlowSchema>;
@@ -31,7 +31,7 @@ export type CashFlowDataTable = {
   cashIn: number;
   cashOut: number;
   net: number;
-  createdAt: Date;
+  date: Date;
 };
 
 export type CashFlow = {
@@ -41,6 +41,7 @@ export type CashFlow = {
   cashIn: number;
   cashOut: number;
   net: number;
+  date: Date;
 };
 
 export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
@@ -161,7 +162,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
     },
   },
   {
-    accessorKey: 'createdAt',
+    accessorKey: 'date',
     filterFn: (row, id, value) => {
       
       const splitDate = (row.getValue(id) as string).slice(0, 10).split('-').map(part => Number(part))
@@ -196,7 +197,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{getDateFormatted(cashFlow.createdAt)}</span>
+          <span>{getDateFormatted(cashFlow.date)}</span>
         </div>
       );
     },

@@ -21,7 +21,7 @@ export function CashFlowDataTable({ data }: CashFlowDataTableProps) {
           label: 'código de terminal',
         },
         {
-          key: 'createdAt',
+          key: 'date',
           label: 'intervalo',
           isDate: true
         }
