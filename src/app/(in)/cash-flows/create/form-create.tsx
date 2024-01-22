@@ -33,7 +33,8 @@ import { SheetContext } from '@/providers/sheet-provider';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { fetchEstablishment } from '../../establishments/actions/fetch-establishment';
 
 const CashFlowFormCreateSchema = z.object({
   terminalId: z.string(),
@@ -57,6 +58,8 @@ export function CashFlowFormCreate() {
   const { terminals, setPeriod } = useContext(CashFlowContext);
   const { setShow } = useContext(SheetContext);
   const { toast } = useToast();
+
+  const [establishmentName, setEstablishmentName] = useState('');
 
   const formMethods = useForm<CashFlowFormCreateType>({
     resolver: zodResolver(CashFlowFormCreateSchema),
@@ -110,6 +113,17 @@ export function CashFlowFormCreate() {
     }
   }, [setPeriod, terminalId]);
 
+
+  useEffect(() => {
+    if(terminals.length > 0) {
+      const terminal = terminals.find(terminalItem => terminalItem.id === terminalId)
+
+      if(terminal) {
+        fetchEstablishment(terminal.establishmentId).then(establishment => setEstablishmentName(establishment.name))
+      }
+    }
+  }, [terminals, terminalId])
+
   return (
     <Form {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
@@ -137,6 +151,13 @@ export function CashFlowFormCreate() {
             </FormItem>
           )}
         />
+
+        <FormItem>
+          <FormLabel>Local</FormLabel>
+            <Input value={establishmentName} readOnly />
+          <FormMessage />
+        </FormItem>
+
         <FormField
           control={control}
           name='cashIn'
