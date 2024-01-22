@@ -16,9 +16,11 @@ export function EstablishmentDataTable({ data }: EstablishmentDataTableProps) {
       columns={establishmentColumns}
       data={data}
       filterBy={[{
-        key: 'name',
-        label: 'nome',
+        key: 'terminalsTotal',
+        label: 'terminais',
+        isNumber: true
       }]}
+      globalFiltering
     >
       <SheetProvider>
         <EstablishmentCreateSheet />
