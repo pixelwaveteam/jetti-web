@@ -30,6 +30,7 @@ import { ptBR } from 'date-fns/locale';
 import { X } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
 import { Calendar } from './ui/calendar';
+import { FormItem } from './ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
@@ -109,11 +110,14 @@ const renderFilters: (table: TableType<any>, filterBy: FilterBy[]) => ReactNode 
       return (
         <Popover key={filter.key}>
           <PopoverTrigger asChild>
-            <Input
-              placeholder={`Filtrar por ${filter.label}...`}
-              value={dateToDisplay ?? ''}
-              className='max-w-xs'
-            />
+            <FormItem>
+              <Input
+                placeholder={`Filtrar por ${filter.label}...`}
+                value={dateToDisplay ?? ''}
+                className='max-w-xs'
+                readOnly
+              />
+            </FormItem>
           </PopoverTrigger>
           <PopoverContent>
             <Calendar
