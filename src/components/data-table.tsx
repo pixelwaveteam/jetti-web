@@ -111,7 +111,7 @@ const renderFilters: (table: TableType<any>, filterBy: FilterBy[]) => ReactNode 
           <PopoverTrigger asChild>
             <Input
               placeholder={`Filtrar por ${filter.label}...`}
-              value={dateToDisplay}
+              value={dateToDisplay ?? ''}
               className='max-w-xs'
             />
           </PopoverTrigger>
