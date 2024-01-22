@@ -5,6 +5,7 @@ import { ArrowUpDown, ChevronRight } from 'lucide-react';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
+import { convertCentsToCurrency } from '@/utils/currency';
 import { getDateFormatted } from '@/utils/date';
 import Link from 'next/link';
 
@@ -85,6 +86,75 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
       return (
         <div className='flex flex-col gap-2 items-start'>
           <span>{cashFlow.cashFlowCode}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'cashIn',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Entrada
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{convertCentsToCurrency(cashFlow.cashIn)}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'cashOut',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Saída
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>-{convertCentsToCurrency(cashFlow.cashOut)}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'cashOut',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Total
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{convertCentsToCurrency(cashFlow.cashIn - cashFlow.cashOut)}</span>
         </div>
       );
     },
