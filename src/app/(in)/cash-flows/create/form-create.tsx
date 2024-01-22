@@ -173,11 +173,15 @@ export function CashFlowFormCreate() {
           render={({ field }) => {console.log({field}); return(
             <Popover key={field.name}>
               <PopoverTrigger asChild>
-                <Input
-                  placeholder='--/--/----'
-                  value={field.value ? format(field.value, 'dd/MM/yyyy') : ''}
-                  className='max-w-xs'
-                />
+                <FormItem>
+                  <FormLabel>Data</FormLabel>
+                  <Input
+                    placeholder='--/--/----'
+                    value={field.value ? format(field.value, 'dd/MM/yyyy') : ''}
+                    className='max-w-xs'
+                  />
+                  <FormMessage />
+                </FormItem>
               </PopoverTrigger>
               <PopoverContent>
                 <Calendar

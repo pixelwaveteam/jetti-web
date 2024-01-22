@@ -197,14 +197,18 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
             render={({ field: { value, onChange , ...field } }) => (
               <Popover key={field.name}>
                 <PopoverTrigger asChild>
-                  <FormControl>
-                    <Input
-                      placeholder='--/--/----'
-                      value={value ? format(value, 'dd/MM/yyyy') : ''}
-                      className='max-w-xs'
-                      {...field}
-                    />
-                  </FormControl>
+                  <FormItem>
+                    <FormLabel>Data</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='--/--/----'
+                        value={value ? format(value, 'dd/MM/yyyy') : ''}
+                        className='max-w-xs'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 </PopoverTrigger>
                 <PopoverContent>
                   <Calendar
