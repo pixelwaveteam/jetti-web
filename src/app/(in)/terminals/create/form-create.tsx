@@ -33,7 +33,6 @@ const TerminalFormCreateSchema = z.object({
   interfaceId: z.string({ required_error: 'Interface não pode ser vazia.' }),
   code: z
     .string({ required_error: 'Código não pode ser vazio.' })
-    .min(3, 'Código deve ter pelo menos 3 caractere.')
     .max(10, 'Código deve ter no máximo 10 caracteres.'),
 });
 

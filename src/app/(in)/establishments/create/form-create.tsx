@@ -34,7 +34,6 @@ const EstablishmentFormCreateSchema = z.object({
   organizationId: z.string({ required_error: 'Selecione uma organização.' }),
   name: z
     .string({ required_error: 'Nome não pode ser vazio.' })
-    .min(3, 'Nome deve ter pelo menos 3 caractere.')
     .max(50, 'Nome deve ter no máximo 50 caracteres.'),
 });
 
