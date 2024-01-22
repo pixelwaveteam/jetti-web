@@ -27,9 +27,6 @@ import { SheetContext } from '@/providers/sheet-provider';
 const EstablishmentContactFormEditSchema = z.object({
   name: z.string({ required_error: 'Nome não pode ser vazio.' }),
   phone: z.string({ required_error: 'Telefone não pode ser vazio.' }),
-  email: z
-    .string({ required_error: 'Email não pode ser vazio.' })
-    .email({ message: 'Email inválido.' }),
 });
 
 type EstablishmentContactFormEditType = z.infer<
@@ -51,7 +48,6 @@ export function EstablishmentContactFormEdit({
     defaultValues: {
       name: establishmentContact.name,
       phone: establishmentContact.phone,
-      email: establishmentContact.email,
     },
   });
 
@@ -132,19 +128,6 @@ export function EstablishmentContactFormEdit({
                 <FormLabel>Telefone</FormLabel>
                 <FormControl>
                   <Input placeholder='Telefone do contato' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name='email'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder='Email do contato' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

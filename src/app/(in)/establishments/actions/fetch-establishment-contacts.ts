@@ -8,7 +8,6 @@ const EstablishmentContactSchema = z.object({
   establishmentId: z.string(),
   name: z.string(),
   phone: z.string(),
-  email: z.string(),
 });
 
 export type EstablishmentContactData = z.infer<
