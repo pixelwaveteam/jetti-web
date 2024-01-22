@@ -13,7 +13,6 @@ const EstablishmentContactSchema = z.object({
   establishmentId: z.string(),
   name: z.string(),
   phone: z.string(),
-  email: z.string().email(),
 });
 
 export type EstablishmentContactData = z.infer<
@@ -24,7 +23,6 @@ export type EstablishmentContact = {
   establishmentId: string;
   name: string;
   phone: string;
-  email: string;
 };
 
 export const establishmentContactColumns: ColumnDef<EstablishmentContactData>[] =

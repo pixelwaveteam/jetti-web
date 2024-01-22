@@ -17,10 +17,10 @@ export async function OrganizationDataTable({
     <DataTable
       columns={organizationColumns}
       data={data}
-      filterBy={{
+      filterBy={[{
         key: 'name',
         label: 'nome',
-      }}
+      }]}
     >
       <SheetProvider>
         <OrganizationCreateSheet />

@@ -33,7 +33,6 @@ import { SheetContext } from '@/providers/sheet-provider';
 const ProfileFormEditSchema = z.object({
   name: z
     .string({ required_error: 'Nome não pode ser vazio.' })
-    .min(3, 'Nome deve ter pelo menos 3 caractere.')
     .max(50, 'Nome deve ter no máximo 50 caracteres.'),
   email: z.string().email('Email inválido.'),
   role: z

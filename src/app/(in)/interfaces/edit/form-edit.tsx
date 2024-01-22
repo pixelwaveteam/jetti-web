@@ -26,7 +26,7 @@ import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
 
 const InterfaceFormEditSchema = z.object({
-  name: z.string(),
+  name: z.string({ required_error: 'Nome não pode ser vazio.' }),
 });
 
 type InterfaceFormEditType = z.infer<typeof InterfaceFormEditSchema>;

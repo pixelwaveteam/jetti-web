@@ -12,10 +12,12 @@ export const metadata: Metadata = {
 };
 
 export default async function CashFlows() {
-  const [cashFlows, terminals] = await Promise.all([
+  const [rawCashFlows, terminals] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
   ]);
+  
+  const cashFlows = rawCashFlows.map(cashFlow => ({...cashFlow, cashFlowCode: cashFlow.id.slice(0, 8)}))
 
   return (
     <PageContainer title='Leituras'>

@@ -19,10 +19,10 @@ export function EstablishmentContactDataTable({
     <DataTable
       columns={establishmentContactColumns}
       data={data}
-      filterBy={{
+      filterBy={[{
         key: 'name',
         label: 'nome',
-      }}
+      }]}
     >
       <SheetProvider>
         <EstablishmentContactCreateSheet establishmentId={establishmentId}>

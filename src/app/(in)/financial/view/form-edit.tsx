@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 
 const FinancialFormEditSchema = z.object({
-  name: z.string(),
+  name: z.string({ required_error: 'Nome não pode ser vazio.' }),
 });
 
 interface Financial {

@@ -20,10 +20,10 @@ export function EstablishmentDistributionDataTable({
     <DataTable
       columns={establishmentDistributionColumns}
       data={data}
-      filterBy={{
+      filterBy={[{
         key: 'name',
         label: 'nome',
-      }}
+      }]}
     >
       <SheetProvider>
         <EstablishmentDistributionCreateSheet establishmentId={establishmentId}>

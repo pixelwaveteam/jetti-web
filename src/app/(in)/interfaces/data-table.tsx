@@ -12,10 +12,10 @@ export function InterfaceDataTable({ data }: InterfaceDataTableProps) {
     <DataTable
       columns={interfaceColumns}
       data={data}
-      filterBy={{
+      filterBy={[{
         key: 'name',
         label: 'nome',
-      }}
+      }]}
     >
       <SheetProvider>
         <InterfaceCreateSheet />

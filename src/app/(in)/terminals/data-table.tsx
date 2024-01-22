@@ -12,10 +12,15 @@ export function TerminalDataTable({ data }: TerminalDataTableProps) {
     <DataTable
       columns={terminalColumns}
       data={data}
-      filterBy={{
-        key: 'code',
-        label: 'código',
-      }}
+      filterBy={[{
+        key: 'isActive',
+        label: 'status',
+        options: {
+          Ativo: true,
+          Desativo: false
+        }
+      }]}
+      globalFiltering
     >
       <SheetProvider>
         <TerminalCreateSheet />

@@ -5,29 +5,33 @@ import { ArrowUpDown, ChevronRight } from 'lucide-react';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
+import { convertCentsToCurrency } from '@/utils/currency';
 import { getDateFormatted } from '@/utils/date';
+import { isSameDay, isWithinInterval } from 'date-fns';
 import Link from 'next/link';
 
 const CashFlowSchema = z.object({
   id: z.string(),
+  cashFlowCode: z.string(),
   terminalId: z.string(),
   operatorId: z.string(),
   cashIn: z.coerce.number(),
   cashOut: z.coerce.number(),
   net: z.coerce.number(),
-  createdAt: z.date(),
+  date: z.date(),
 });
 
 export type CashFlowData = z.infer<typeof CashFlowSchema>;
 
 export type CashFlowDataTable = {
   id: string;
+  cashFlowCode: string;
   terminal: string;
   operator: string;
   cashIn: number;
   cashOut: number;
   net: number;
-  createdAt: Date;
+  date: Date;
 };
 
 export type CashFlow = {
@@ -37,6 +41,8 @@ export type CashFlow = {
   cashIn: number;
   cashOut: number;
   net: number;
+  date: Date;
+  establishmentName: string;
 };
 
 export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
@@ -65,7 +71,117 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
     },
   },
   {
-    accessorKey: 'createdAt',
+    accessorKey: 'cashFlowCode',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Código de Leitura
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{cashFlow.cashFlowCode}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'cashIn',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Entrada
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{convertCentsToCurrency(cashFlow.cashIn)}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'cashOut',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Saída
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>-{convertCentsToCurrency(cashFlow.cashOut)}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'total',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Total
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{convertCentsToCurrency(cashFlow.cashIn - cashFlow.cashOut)}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'date',
+    filterFn: (row, id, value) => {
+      
+      const splitDate = (row.getValue(id) as string).slice(0, 10).split('-').map(part => Number(part))
+      
+      const rowDate = new Date(splitDate[0], splitDate[1]-1, splitDate[2]);
+
+      console.log({rowDate})
+
+      if(!value.from) { 
+        return isSameDay(rowDate, value.to)
+      }
+
+      if(!value.to) {
+        return isSameDay(rowDate, value.from)
+      }
+
+      return isWithinInterval(rowDate, { start: value.from, end: value.to })
+    },
     header: ({ column }) => {
       return (
         <Button
@@ -82,7 +198,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{getDateFormatted(cashFlow.createdAt)}</span>
+          <span>{getDateFormatted(cashFlow.date)}</span>
         </div>
       );
     },
