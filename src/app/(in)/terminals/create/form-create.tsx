@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -34,6 +35,8 @@ const TerminalFormCreateSchema = z.object({
   code: z
     .string({ required_error: 'Código não pode ser vazio.' })
     .max(10, 'Código deve ter no máximo 10 caracteres.'),
+  cashIn: z.coerce.number({ required_error: 'Entrada não pode ser vazia.' }),
+  cashOut: z.coerce.number({ required_error: 'Saída não pode ser vazia.' }),
 });
 
 type TerminalFormCreateType = z.infer<typeof TerminalFormCreateSchema>;
@@ -52,7 +55,7 @@ export function TerminalFormCreate() {
 
   const { control, handleSubmit } = formMethods;
 
-  const onSubmit = async (data: TerminalFormCreateType) => {
+  const onSubmit = async ({ cashIn: _, cashOut: __, ...data}: TerminalFormCreateType) => {
     try {
       await createTerminal({
         ...data,
@@ -137,6 +140,36 @@ export function TerminalFormCreate() {
                   ))}
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name='cashIn'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Entradas R$</FormLabel>
+              <FormControl>
+                <Input placeholder='Entrada Inicial' {...field} />
+              </FormControl>
+              <FormDescription>
+                Total de entrada no terminal inicialmente.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name='cashOut'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Saídas R$</FormLabel>
+              <FormControl>
+                <Input placeholder='Total de Saídas' {...field} />
+              </FormControl>
+              <FormDescription>Total de saída no terminal inicialmente.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

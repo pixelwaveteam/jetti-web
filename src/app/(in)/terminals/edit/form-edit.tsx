@@ -40,6 +40,8 @@ const TerminalFormEditSchema = z.object({
     .string({ required_error: 'Código não pode ser vazio.' })
     .max(10, 'Código deve ter no máximo 10 caracteres.'),
   isActive: z.boolean(),
+  cashIn: z.coerce.number({ required_error: 'Entrada não pode ser vazia.' }),
+  cashOut: z.coerce.number({ required_error: 'Saída não pode ser vazia.' }),
 });
 
 type TerminalFormEditType = z.infer<typeof TerminalFormEditSchema>;
@@ -65,7 +67,7 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
 
   const { handleSubmit, control } = formMethods;
 
-  const onSubmit = async (data: TerminalFormEditType) => {
+  const onSubmit = async ({ cashIn: _, cashOut: __, ...data}: TerminalFormEditType) => {
     try {
       await updateTerminal({
         id: terminal.id,
@@ -208,6 +210,36 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
                     onCheckedChange={field.onChange}
                   />
                 </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name='cashIn'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Entradas R$</FormLabel>
+                <FormControl>
+                  <Input placeholder='Entrada Inicial' {...field} />
+                </FormControl>
+                <FormDescription>
+                  Total de entrada no terminal inicialmente.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name='cashOut'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Saídas R$</FormLabel>
+                <FormControl>
+                  <Input placeholder='Total de Saídas' {...field} />
+                </FormControl>
+                <FormDescription>Total de saída no terminal inicialmente.</FormDescription>
+                <FormMessage />
               </FormItem>
             )}
           />
