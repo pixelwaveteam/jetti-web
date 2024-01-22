@@ -6,6 +6,7 @@ import {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
+  Table as TableType,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -27,17 +28,97 @@ import {
 import { X } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
+interface FilterBy  {
+  key: string;
+  label: string;
+  isNumber?: boolean;
+  options?: {[label: string]: any};
+}
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  filterBy: {
-    key: string;
-    label: string;
-    isNumber?: boolean;
-    options?: {[label: string]: any};
-  }[];
+  filterBy: FilterBy[];
   globalFiltering?: boolean;
   children?: ReactNode;
+}
+
+const renderFilters: (table: TableType<any>, filterBy: FilterBy[]) => ReactNode = (table, filterBy) => {
+  return filterBy.map(filter => {
+    const columnFilterValue = table.getColumn(filter.key)?.getFilterValue();
+
+    if(filter.options) {
+      return (
+        <div className='flex items-center gap-x-3' key={filter.key}>
+          <Select
+            value={ 
+              (columnFilterValue as string) ?? ''
+            }
+            onValueChange={(event) =>
+              table.getColumn(filter.key)?.setFilterValue(event)
+            }
+          >
+            <SelectTrigger className='w-[24rem]'>
+              <SelectValue placeholder={`Filtrar por ${filter.label}...`} />
+            </SelectTrigger>
+            <SelectContent>
+              {
+                Object.keys(filter.options).map(label => (
+                  <SelectItem value={filter.options?.[label]} key={filter.options?.[label]}>
+                    {label}
+                  </SelectItem>
+                ))
+              }
+            </SelectContent>
+          </Select>
+            
+          {
+            <button
+              onClick={() =>
+                table.getColumn(filter.key)?.setFilterValue('')
+              }
+              className='w-fit aria-[hidden="true"]:invisible'
+              aria-hidden={columnFilterValue === undefined}
+            >
+              <X />
+            </button>
+          }
+        </div>
+      )
+    }
+
+    if(filter.isNumber) {
+      return (
+        <Input
+          placeholder={`Min de ${filter.label}...`}
+          value={
+            (columnFilterValue as [number, number])?.[0] ?? ''
+          }
+          onChange={(event) =>
+            table.getColumn(filter.key)?.setFilterValue([Number(event.target.value) > 0 ? Number(event.target.value) : undefined, Infinity])
+          }
+          className='max-w-[10rem]'
+          name='search'
+          key={filter.key}
+        />
+      )
+    }
+    
+    return (
+      <Input
+        placeholder={`Filtrar por ${filter.label}...`}
+        value={
+          (columnFilterValue as string) ?? ''
+        }
+        onChange={(event) =>
+          table.getColumn(filter.key)?.setFilterValue(event.target.value)
+        }
+        className='max-w-sm'
+        name='search'
+        key={filter.key}
+      />
+    )
+  })
 }
 
 export function DataTable<TData, TValue>({
@@ -82,81 +163,7 @@ export function DataTable<TData, TValue>({
           )
         }
         {
-          filterBy.map(filter => {
-            const columnFilterValue = table.getColumn(filter.key)?.getFilterValue();
-
-            if(filter.options) {
-              return (
-                <div className='flex items-center gap-x-3' key={filter.key}>
-                  <Select
-                    value={ 
-                      (columnFilterValue as string) ?? ''
-                    }
-                    onValueChange={(event) =>
-                      table.getColumn(filter.key)?.setFilterValue(event)
-                    }
-                  >
-                    <SelectTrigger className='w-[24rem]'>
-                      <SelectValue placeholder={`Filtrar por ${filter.label}...`} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {
-                        Object.keys(filter.options).map(label => (
-                          <SelectItem value={filter.options?.[label]} key={filter.options?.[label]}>
-                            {label}
-                          </SelectItem>
-                        ))
-                      }
-                    </SelectContent>
-                  </Select>
-                    
-                  {
-                    <button
-                      onClick={() =>
-                        table.getColumn(filter.key)?.setFilterValue('')
-                      }
-                      className='w-fit aria-[hidden="true"]:invisible'
-                      aria-hidden={columnFilterValue === undefined}
-                    >
-                      <X />
-                    </button>
-                  }
-                </div>
-              )
-            }
-
-            if(filter.isNumber) {
-              return (
-                <Input
-                  placeholder={`Min de ${filter.label}...`}
-                  value={
-                    (columnFilterValue as [number, number])?.[0] ?? ''
-                  }
-                  onChange={(event) =>
-                    table.getColumn(filter.key)?.setFilterValue([Number(event.target.value) > 0 ? Number(event.target.value) : undefined, Infinity])
-                  }
-                  className='max-w-[10rem]'
-                  name='search'
-                  key={filter.key}
-                />
-              )
-            }
-            
-            return (
-              <Input
-                placeholder={`Filtrar por ${filter.label}...`}
-                value={
-                  (columnFilterValue as string) ?? ''
-                }
-                onChange={(event) =>
-                  table.getColumn(filter.key)?.setFilterValue(event.target.value)
-                }
-                className='max-w-sm'
-                name='search'
-                key={filter.key}
-              />
-            )
-          })
+          renderFilters(table, filterBy)
         }
         {children}
       </div>
