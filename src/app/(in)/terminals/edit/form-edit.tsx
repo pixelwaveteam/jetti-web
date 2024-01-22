@@ -104,7 +104,20 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
         description: 'Terminal excluido com sucesso.',
         duration: 5000,
       });
-    } catch {
+    } catch(err: unknown) {
+      if(err instanceof Error && err.message === "Terminal has dependents.") {
+        toast({
+          variant: 'destructive',
+          title: 'Erro',
+          description: 'Esse terminal tem registros associados à ele. Para exclui-lo, exclua suas associações antes!',
+          duration: 7000,
+        });
+
+        setShow(false);
+
+        return
+      }
+
       toast({
         variant: 'destructive',
         title: 'Erro',

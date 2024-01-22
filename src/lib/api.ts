@@ -53,7 +53,6 @@ export async function api<T = any>(
       if(error instanceof Error) {
         throw error;
       }
-
       throw new Error(error);
     });
 }

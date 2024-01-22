@@ -84,7 +84,7 @@ export function EstablishmentFormEdit({
       toast({
         variant: 'destructive',
         title: 'Erro',
-        description: 'Favor tente novamente mais tarde.',
+        description: 'Favor tente novamenteDSAD mais tarde.',
         duration: 5000,
       });
     }
@@ -104,7 +104,20 @@ export function EstablishmentFormEdit({
       });
 
       router.push(`/establishments`);
-    } catch {
+    } catch(err) {
+      if(err instanceof Error && err.message === "Establishment has dependents.") {
+        toast({
+          variant: 'destructive',
+          title: 'Erro',
+          description: 'Esse local tem registros associados à ele. Para exclui-lo, exclua suas associações antes!',
+          duration: 7000,
+        });
+
+        setShow(false);
+
+        return
+      }
+
       toast({
         variant: 'destructive',
         title: 'Erro',
