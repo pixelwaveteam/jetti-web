@@ -46,6 +46,20 @@ export const terminalColumns: ColumnDef<TerminalData>[] = [
       return (
         <div className='flex gap-2 items-center'>
           <span className='truncate'>{terminal.code}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'isActive',
+    header: () => {
+      return "Status";
+    },
+    cell: ({ row }) => {
+      const terminal = row.original;
+
+      return (
+        <div className='flex gap-2 items-center'>
           <Badge
             variant={terminal.isActive ? 'default' : 'destructive'}
             className='text-xs'
