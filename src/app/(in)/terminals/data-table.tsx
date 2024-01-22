@@ -16,6 +16,7 @@ export function TerminalDataTable({ data }: TerminalDataTableProps) {
         key: 'code',
         label: 'código',
       }]}
+      globalFiltering
     >
       <SheetProvider>
         <TerminalCreateSheet />
