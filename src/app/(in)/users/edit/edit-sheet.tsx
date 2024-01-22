@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SheetContext } from '@/providers/sheet-provider';
+import { useSession } from 'next-auth/react';
 import { UserOrganizationsFormEdit } from './tabs/organizations/form-edit';
 
 interface UserEditSheetProps {
@@ -23,6 +24,10 @@ interface UserEditSheetProps {
 
 export function UserEditSheet({ user }: UserEditSheetProps) {
   const { show, setShow } = useContext(SheetContext);
+  const { data: session } = useSession();
+
+  const role = session?.user?.role || 'OPERATOR';
+
 
   return (
     <Sheet open={show} onOpenChange={setShow}>
@@ -38,17 +43,24 @@ export function UserEditSheet({ user }: UserEditSheetProps) {
         <Tabs defaultValue='info' className='w-full mt-4'>
           <TabsList>
             <TabsTrigger value='info'>Informações</TabsTrigger>
-            <TabsTrigger value='distribution'>
-              Organizações
-            </TabsTrigger>
+            {
+              role === 'ADMIN' && (
+                <TabsTrigger value='organizations'>
+                  Organizações
+                </TabsTrigger>
+              )
+            }
           </TabsList>
           <TabsContent value='info'>
             <UserInfoFormEdit user={user} />
           </TabsContent>
-          <TabsContent value='distribution'>
-            {/* <TabDistribution establishment={establishment} /> */}
-            <UserOrganizationsFormEdit user={user} />
-          </TabsContent>
+          {
+            role === 'ADMIN' && (
+              <TabsContent value='organizations'>
+                <UserOrganizationsFormEdit user={user} />
+              </TabsContent>
+            )
+          }
         </Tabs>
       </SheetContent>
     </Sheet>
