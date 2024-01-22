@@ -137,7 +137,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
     },
   },
   {
-    accessorKey: 'cashOut',
+    accessorKey: 'total',
     header: ({ column }) => {
       return (
         <Button
