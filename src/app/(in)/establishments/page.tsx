@@ -5,6 +5,8 @@ import { EstablishmentDataTable } from '@/app/(in)/establishments/data-table';
 import { fetchOrganizations } from '@/app/(in)/organizations/actions/fetch-organizations';
 import { PageContainer } from '@/components/page-container';
 import { EstablishmentProvider } from '@/providers/establishment-provider';
+import { fetchTerminals } from '../terminals/actions/fetch-terminals';
+import { fetchEstablishmentAddress } from './actions/fetch-establishment-address';
 
 export const metadata: Metadata = {
   title: 'Locais',
@@ -12,7 +14,20 @@ export const metadata: Metadata = {
 };
 
 export default async function Establishments() {
-  const establishments = await fetchEstablishments();
+  const rawEstablishments = await fetchEstablishments();
+
+  const terminals = await fetchTerminals();
+
+  const establishments = []
+
+  for(const establishment of rawEstablishments) {
+    const {establishmentId: _, id: __,...establishmentAddress} = await fetchEstablishmentAddress(establishment.id);
+
+    const terminalsTotal = terminals.filter(terminal => terminal.establishmentId === establishment.id).length
+
+    establishments.push({...establishment, ...establishmentAddress, terminalsTotal})
+  }
+
   const organizations = await fetchOrganizations();
 
   return (
