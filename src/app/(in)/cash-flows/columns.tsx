@@ -7,6 +7,7 @@ import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { convertCentsToCurrency } from '@/utils/currency';
 import { getDateFormatted } from '@/utils/date';
+import { isSameDay, isWithinInterval } from 'date-fns';
 import Link from 'next/link';
 
 const CashFlowSchema = z.object({
@@ -161,6 +162,24 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
   },
   {
     accessorKey: 'createdAt',
+    filterFn: (row, id, value) => {
+      
+      const splitDate = (row.getValue(id) as string).slice(0, 10).split('-').map(part => Number(part))
+      
+      const rowDate = new Date(splitDate[0], splitDate[1]-1, splitDate[2]);
+
+      console.log({rowDate})
+
+      if(!value.from) { 
+        return isSameDay(rowDate, value.to)
+      }
+
+      if(!value.to) {
+        return isSameDay(rowDate, value.from)
+      }
+
+      return isWithinInterval(rowDate, { start: value.from, end: value.to })
+    },
     header: ({ column }) => {
       return (
         <Button
