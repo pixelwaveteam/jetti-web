@@ -162,7 +162,7 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
 
           <FormItem>
             <FormLabel>Local</FormLabel>
-              <Input disabled value={cashFlow.establishmentName} />
+              <Input disabled value={cashFlow.establishmentName} readOnly />
             <FormMessage />
           </FormItem>
 
