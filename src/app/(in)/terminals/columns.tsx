@@ -73,6 +73,7 @@ export const terminalColumns: ColumnDef<TerminalData>[] = [
         </div>
       );
     },
+    enableGlobalFilter: false,
   },
   {
     accessorKey: 'establishment',
