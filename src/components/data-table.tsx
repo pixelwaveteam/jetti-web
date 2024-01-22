@@ -95,7 +95,7 @@ export function DataTable<TData, TValue>({
                     }
                   >
                     <SelectTrigger className='w-[24rem]'>
-                      <SelectValue placeholder='Filtrar por status...' />
+                      <SelectValue placeholder={`Filtrar por ${filter.label}...`} />
                     </SelectTrigger>
                     <SelectContent>
                       {
