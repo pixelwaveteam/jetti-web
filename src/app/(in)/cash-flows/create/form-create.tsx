@@ -37,7 +37,7 @@ import { useContext, useEffect, useState } from 'react';
 import { fetchEstablishment } from '../../establishments/actions/fetch-establishment';
 
 const CashFlowFormCreateSchema = z.object({
-  terminalId: z.string(),
+  terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
   cashIn: z.coerce.number().transform((val) => {
     const cashInCents = val * 100;
 

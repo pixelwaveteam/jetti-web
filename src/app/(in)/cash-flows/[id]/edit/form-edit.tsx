@@ -38,7 +38,7 @@ import { ptBR } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
 
 const CashFlowFormEditSchema = z.object({
-  terminalId: z.string(),
+  terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
   cashIn: z.coerce.number().transform((val) => {
     const cashInCents = val * 100;
 
