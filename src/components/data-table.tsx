@@ -32,6 +32,7 @@ interface DataTableProps<TData, TValue> {
     key: string;
     label: string;
   };
+  globalFiltering?: boolean;
   children?: ReactNode;
 }
 
@@ -40,9 +41,11 @@ export function DataTable<TData, TValue>({
   data,
   filterBy,
   children,
+  globalFiltering,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
     data,
@@ -56,12 +59,25 @@ export function DataTable<TData, TValue>({
     state: {
       sorting,
       columnFilters,
+      globalFilter,
     },
   });
 
   return (
     <div>
       <div className='flex items-center justify-between gap-2 py-4'>
+        {
+          globalFiltering && (
+            <Input
+              placeholder='Filtrar por todos os campos...'
+              value={globalFilter ?? ''}
+              onChange={({ target: { value } }) => setGlobalFilter(value)}
+              className='max-w-sm'
+              name='globalSearch'
+            />
+          )
+        }
+        
         <Input
           placeholder={`Filtrar por ${filterBy.label}...`}
           value={
