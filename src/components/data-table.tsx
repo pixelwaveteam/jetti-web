@@ -31,6 +31,7 @@ interface DataTableProps<TData, TValue> {
   filterBy: {
     key: string;
     label: string;
+    isNumber?: boolean
   };
   globalFiltering?: boolean;
   children?: ReactNode;
@@ -77,18 +78,32 @@ export function DataTable<TData, TValue>({
             />
           )
         }
-        
-        <Input
-          placeholder={`Filtrar por ${filterBy.label}...`}
-          value={
-            (table.getColumn(filterBy.key)?.getFilterValue() as string) ?? ''
-          }
-          onChange={(event) =>
-            table.getColumn(filterBy.key)?.setFilterValue(event.target.value)
-          }
-          className='max-w-sm'
-          name='search'
-        />
+        {
+          filterBy.isNumber ?
+            <Input
+              placeholder={`Min de ${filterBy.label}...`}
+              value={
+                (table.getColumn(filterBy.key)?.getFilterValue() as [number, number])?.[0] ?? ''
+              }
+              onChange={(event) =>
+                table.getColumn(filterBy.key)?.setFilterValue([Number(event.target.value) > 0 ? Number(event.target.value) : undefined, Infinity])
+              }
+              className='max-w-[10rem]'
+              name='search'
+            />
+        :
+          <Input
+            placeholder={`Filtrar por ${filterBy.label}...`}
+            value={
+              (table.getColumn(filterBy.key)?.getFilterValue() as string) ?? ''
+            }
+            onChange={(event) =>
+              table.getColumn(filterBy.key)?.setFilterValue(event.target.value)
+            }
+            className='max-w-sm'
+            name='search'
+          />
+        }
         {children}
       </div>
       <div className='rounded-md border'>
