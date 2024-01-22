@@ -42,6 +42,7 @@ export type CashFlow = {
   cashOut: number;
   net: number;
   date: Date;
+  establishmentName: string;
 };
 
 export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [

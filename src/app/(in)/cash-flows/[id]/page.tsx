@@ -19,6 +19,7 @@ import { CashFlowProvider } from '@/providers/cash-flow-provider';
 import { SheetProvider } from '@/providers/sheet-provider';
 import { getDateFormatted } from '@/utils/date';
 
+import { fetchEstablishments } from '../../establishments/actions/fetch-establishments';
 import { ChartDistribution } from './chart-distribution';
 import { CashFlowEditSheet } from './edit/edit-sheet';
 import { ListDistribution } from './list-distribution';
@@ -41,6 +42,7 @@ export default async function CashFlow({ params: { id } }: CashFlowProps) {
   const isAdmin = session?.user?.role === 'ADMIN';
 
   const cashFlow = await fetchCashFlow(id);
+  const establishments = await fetchEstablishments();
   const terminals = await fetchTerminals();
   const operator = await fetchUser(cashFlow.operatorId);
   const netDistributions = await fetchNetDistributions(cashFlow.id);
@@ -49,9 +51,13 @@ export default async function CashFlow({ params: { id } }: CashFlowProps) {
     (terminalItem) => terminalItem.id === cashFlow.terminalId
   );
 
+  const establishment = establishments.find(
+    establishmentItem => establishmentItem.id === terminal?.establishmentId
+  )
+
   const renderEditCashFlowButton = (
     <SheetProvider>
-      <CashFlowEditSheet cashFlow={cashFlow} />
+      <CashFlowEditSheet cashFlow={{...cashFlow, establishmentName: establishment?.name || '' }} />
     </SheetProvider>
   );
 
