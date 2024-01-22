@@ -17,7 +17,7 @@ export function OverviewStats() {
 
   const totalCashFlows =
     cashFlows.filter((cashFlow) => {
-      const cashFlowDate = new Date(cashFlow.createdAt);
+      const cashFlowDate = new Date(cashFlow.date);
 
       const isBetween = isWithinInterval(startOfDay(cashFlowDate), {
         start: startOfDay(filter.startDate),
@@ -29,7 +29,7 @@ export function OverviewStats() {
 
   const totalEarnings = cashFlows
     .filter((cashFlow) => {
-      const cashFlowDate = new Date(cashFlow.createdAt);
+      const cashFlowDate = new Date(cashFlow.date);
 
       const isBetween = isWithinInterval(startOfDay(cashFlowDate), {
         start: startOfDay(filter.startDate),

@@ -38,7 +38,7 @@ export function ChartAnnualEarnings() {
   }));
 
   cashFlows.forEach((cashFlow) => {
-    const cashFlowDate = new Date(cashFlow.createdAt);
+    const cashFlowDate = new Date(cashFlow.date);
 
     if (cashFlowDate.getFullYear() === yearCurrent) {
       const month = cashFlowDate.getMonth();

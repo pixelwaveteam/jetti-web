@@ -25,7 +25,7 @@ export function RecentCashFlows() {
                   <p className='text-sm text-muted-foreground'>{cashFlow.operator}</p>
                 </div>
                 <div className='ml-auto font-medium'>
-                  {getDateFormatted(cashFlow.createdAt)}
+                  {getDateFormatted(cashFlow.date)}
                 </div>
               </div>
             ))}
