@@ -59,7 +59,6 @@ export default async function CashFlow({ params: { id } }: CashFlowProps) {
     cashIn: cashFlow.cashIn,
     cashOut: cashFlow.cashOut,
     net: cashFlow.net,
-    date: cashFlow.date,
   };
 
   const renderDescription = (
