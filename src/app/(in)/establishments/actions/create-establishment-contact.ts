@@ -8,7 +8,6 @@ interface CreateEstablishmentContact {
   establishmentId: string;
   name: string;
   phone: string;
-  email: string;
 }
 
 export async function createEstablishmentContact(
