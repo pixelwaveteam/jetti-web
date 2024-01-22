@@ -24,6 +24,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { X } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -31,7 +33,8 @@ interface DataTableProps<TData, TValue> {
   filterBy: {
     key: string;
     label: string;
-    isNumber?: boolean
+    isNumber?: boolean;
+    options?: {[value: string]: string};
   }[];
   globalFiltering?: boolean;
   children?: ReactNode;
@@ -80,6 +83,46 @@ export function DataTable<TData, TValue>({
         }
         {
           filterBy.map(filter => {
+            if(filter.options) {
+              return (
+                <div className='flex items-center gap-x-3' key={filter.key}>
+                  <Select
+                    value={ 
+                      (table.getColumn(filter.key)?.getFilterValue() as string) ?? ''
+                    }
+                    onValueChange={(event) =>
+                      table.getColumn(filter.key)?.setFilterValue(event)
+                    }
+                  >
+                    <SelectTrigger className='w-[24rem]'>
+                      <SelectValue placeholder='Filtrar por status...' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {
+                        Object.keys(filter.options).map(value => (
+                          <SelectItem value={value} key={value}>
+                            {filter.options?.[value]}
+                          </SelectItem>
+                        ))
+                      }
+                    </SelectContent>
+                  </Select>
+                    
+                  {
+                    <button
+                      onClick={() =>
+                        table.getColumn(filter.key)?.setFilterValue('')
+                      }
+                      className='w-fit aria-[hidden="true"]:invisible'
+                      aria-hidden={!table.getColumn(filter.key)?.getFilterValue()}
+                    >
+                      <X />
+                    </button>
+                  }
+                </div>
+              )
+            }
+
             if(filter.isNumber) {
               return (
                 <Input
