@@ -51,7 +51,7 @@ interface UserFormEditProps {
   user: User;
 }
 
-export function UserFormEdit({ user }: UserFormEditProps) {
+export function UserInfoFormEdit({ user }: UserFormEditProps) {
   const { toast } = useToast();
   const { setShow } = useContext(SheetContext);
   const { data: session } = useSession();
