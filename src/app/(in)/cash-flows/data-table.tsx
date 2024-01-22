@@ -18,7 +18,7 @@ export function CashFlowDataTable({ data }: CashFlowDataTableProps) {
       filterBy={[
         {
           key: 'terminal',
-          label: 'código',
+          label: 'código de terminal',
         },
         {
           key: 'createdAt',
