@@ -13,8 +13,12 @@ export function TerminalDataTable({ data }: TerminalDataTableProps) {
       columns={terminalColumns}
       data={data}
       filterBy={[{
-        key: 'code',
-        label: 'código',
+        key: 'isActive',
+        label: 'status',
+        options: {
+          Ativo: true,
+          Desativo: false
+        }
       }]}
       globalFiltering
     >
