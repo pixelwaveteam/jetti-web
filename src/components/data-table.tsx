@@ -114,7 +114,7 @@ export function DataTable<TData, TValue>({
                         table.getColumn(filter.key)?.setFilterValue('')
                       }
                       className='w-fit aria-[hidden="true"]:invisible'
-                      aria-hidden={!table.getColumn(filter.key)?.getFilterValue()}
+                      aria-hidden={table.getColumn(filter.key)?.getFilterValue() === undefined}
                     >
                       <X />
                     </button>
