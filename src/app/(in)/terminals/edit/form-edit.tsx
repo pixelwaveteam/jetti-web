@@ -34,8 +34,8 @@ import { SheetContext } from '@/providers/sheet-provider';
 import { TerminalContext } from '@/providers/terminal-provider';
 
 const TerminalFormEditSchema = z.object({
-  establishmentId: z.string(),
-  interfaceId: z.string(),
+  establishmentId: z.string({ required_error: 'Local não pode ser vazio.' }),
+  interfaceId: z.string({ required_error: 'Interface não pode ser vazia.' }),
   code: z
     .string({ required_error: 'Código não pode ser vazio.' })
     .min(3, 'Código deve ter pelo menos 3 caractere.')
