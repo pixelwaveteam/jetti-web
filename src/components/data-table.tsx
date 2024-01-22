@@ -25,13 +25,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { X } from 'lucide-react';
+import { DateRange } from 'react-day-picker';
+import { Calendar } from './ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 interface FilterBy  {
   key: string;
   label: string;
   isNumber?: boolean;
+  isDate?: boolean;
   options?: {[label: string]: any};
 }
 
@@ -84,6 +90,41 @@ const renderFilters: (table: TableType<any>, filterBy: FilterBy[]) => ReactNode 
             </button>
           }
         </div>
+      )
+    }
+
+    if(filter.isDate) {
+      const columnFilterDateRange = (columnFilterValue as DateRange) ?? ''
+
+      console.log({columnFilterDateRange})
+
+      const fromToDisplay = columnFilterDateRange.from && format(columnFilterDateRange.from, 'dd/MM/yyyy')
+
+      const toToDisplay = columnFilterDateRange.to && format(columnFilterDateRange.to, 'dd/MM/yyyy')
+
+      const dateToDisplay = (fromToDisplay && toToDisplay) ? 
+          `${fromToDisplay} até ${toToDisplay}` 
+        : fromToDisplay
+
+      return (
+        <Popover key={filter.key}>
+          <PopoverTrigger asChild>
+            <Input
+              placeholder={`Filtrar por ${filter.label}...`}
+              value={dateToDisplay}
+              className='max-w-xs'
+            />
+          </PopoverTrigger>
+          <PopoverContent>
+            <Calendar
+              locale={ptBR}
+              mode='range'
+              selected={(columnFilterValue as DateRange)}
+              onSelect={(range) => {table.getColumn(filter.key)?.setFilterValue(range)}}
+              key={filter.key}
+            />
+          </PopoverContent>
+        </Popover>
       )
     }
 
