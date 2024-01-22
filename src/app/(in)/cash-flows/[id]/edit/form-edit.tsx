@@ -10,6 +10,7 @@ import { updateCashFlow } from '@/app/(in)/cash-flows/actions/update-cash-flow';
 import { CashFlow } from '@/app/(in)/cash-flows/columns';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
   FormControl,
@@ -20,6 +21,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -31,6 +33,8 @@ import { useToast } from '@/hooks/use-toast';
 import { CashFlowContext } from '@/providers/cash-flow-provider';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
 
 const CashFlowFormEditSchema = z.object({
@@ -45,6 +49,7 @@ const CashFlowFormEditSchema = z.object({
 
     return cashOutCents;
   }),
+  date: z.date({ required_error: 'Data é obrigatória.' })
 });
 
 type CashFlowFormEditType = z.infer<typeof CashFlowFormEditSchema>;
@@ -65,16 +70,20 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
       terminalId: cashFlow.terminalId,
       cashIn: cashFlow.cashIn / 100,
       cashOut: cashFlow.cashOut / 100,
+      date: new Date(cashFlow.date),
     },
   });
 
   const { handleSubmit, control } = formMethods;
 
-  const onSubmit = async (data: CashFlowFormEditType) => {
+  const onSubmit = async ({date, ...data}: CashFlowFormEditType) => {
     try {
       await updateCashFlow({
         id: cashFlow.id,
-        data,
+        data: {
+          ...data, 
+          date: date.toISOString()
+        },
       });
 
       setShow(false);
@@ -181,7 +190,34 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
                 <FormMessage />
               </FormItem>
             )}
+          />  
+          <FormField
+            control={control}
+            name='date'
+            render={({ field: { value, onChange , ...field } }) => (
+              <Popover key={field.name}>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Input
+                      placeholder='--/--/----'
+                      value={value ? format(value, 'dd/MM/yyyy') : ''}
+                      className='max-w-xs'
+                      {...field}
+                    />
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Calendar
+                    locale={ptBR}
+                    mode='single'
+                    selected={value}
+                    onSelect={onChange}
+                  />
+                </PopoverContent>
+              </Popover>
+            )}
           />
+              
           <div className='flex gap-2'>
             <Button type='submit' className='w-full'>
               Alterar

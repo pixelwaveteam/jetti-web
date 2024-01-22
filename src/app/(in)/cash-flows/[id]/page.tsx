@@ -59,6 +59,7 @@ export default async function CashFlow({ params: { id } }: CashFlowProps) {
     cashIn: cashFlow.cashIn,
     cashOut: cashFlow.cashOut,
     net: cashFlow.net,
+    date: cashFlow.date,
   };
 
   const renderDescription = (
@@ -73,7 +74,7 @@ export default async function CashFlow({ params: { id } }: CashFlowProps) {
       </div>
       <div className='flex gap-1 items-center'>
         <Calendar size={16} />
-        <span>{getDateFormatted(cashFlow.createdAt)}</span>
+        <span>{getDateFormatted(cashFlow.date)}</span>
       </div>
     </div>
   );
