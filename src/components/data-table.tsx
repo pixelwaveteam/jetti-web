@@ -83,12 +83,14 @@ export function DataTable<TData, TValue>({
         }
         {
           filterBy.map(filter => {
+            const columnFilterValue = table.getColumn(filter.key)?.getFilterValue();
+
             if(filter.options) {
               return (
                 <div className='flex items-center gap-x-3' key={filter.key}>
                   <Select
                     value={ 
-                      (table.getColumn(filter.key)?.getFilterValue() as string) ?? ''
+                      (columnFilterValue as string) ?? ''
                     }
                     onValueChange={(event) =>
                       table.getColumn(filter.key)?.setFilterValue(event)
@@ -114,7 +116,7 @@ export function DataTable<TData, TValue>({
                         table.getColumn(filter.key)?.setFilterValue('')
                       }
                       className='w-fit aria-[hidden="true"]:invisible'
-                      aria-hidden={table.getColumn(filter.key)?.getFilterValue() === undefined}
+                      aria-hidden={columnFilterValue === undefined}
                     >
                       <X />
                     </button>
@@ -128,7 +130,7 @@ export function DataTable<TData, TValue>({
                 <Input
                   placeholder={`Min de ${filter.label}...`}
                   value={
-                    (table.getColumn(filter.key)?.getFilterValue() as [number, number])?.[0] ?? ''
+                    (columnFilterValue as [number, number])?.[0] ?? ''
                   }
                   onChange={(event) =>
                     table.getColumn(filter.key)?.setFilterValue([Number(event.target.value) > 0 ? Number(event.target.value) : undefined, Infinity])
@@ -139,11 +141,12 @@ export function DataTable<TData, TValue>({
                 />
               )
             }
+            
             return (
               <Input
                 placeholder={`Filtrar por ${filter.label}...`}
                 value={
-                  (table.getColumn(filter.key)?.getFilterValue() as string) ?? ''
+                  (columnFilterValue as string) ?? ''
                 }
                 onChange={(event) =>
                   table.getColumn(filter.key)?.setFilterValue(event.target.value)
