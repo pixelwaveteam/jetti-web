@@ -10,6 +10,7 @@ import Link from 'next/link';
 
 const CashFlowSchema = z.object({
   id: z.string(),
+  cashFlowCode: z.string(),
   terminalId: z.string(),
   operatorId: z.string(),
   cashIn: z.coerce.number(),
@@ -22,6 +23,7 @@ export type CashFlowData = z.infer<typeof CashFlowSchema>;
 
 export type CashFlowDataTable = {
   id: string;
+  cashFlowCode: string;
   terminal: string;
   operator: string;
   cashIn: number;
@@ -60,6 +62,29 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
         <div className='flex flex-col gap-2 items-start'>
           <span>{cashFlow.terminal}</span>
           <span className='text-xs text-gray-300'>{cashFlow.operator}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'cashFlowCode',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Código de Leitura
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{cashFlow.cashFlowCode}</span>
         </div>
       );
     },
