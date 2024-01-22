@@ -28,7 +28,13 @@ export default async function Terminals() {
       throw new Error(`No establishment found with id ${terminal.establishmentId}`)
     }
 
-    terminals.push({...terminal, establishment: establishment.name})
+    const interFace = interfaces.find(interFace => interFace.id === terminal.interfaceId)
+
+    if(!interFace) {
+      throw new Error(`No interface found with id ${terminal.interfaceId}`)
+    }
+
+    terminals.push({...terminal, establishment: establishment.name, interface: interFace.name})
   }
 
   return (
