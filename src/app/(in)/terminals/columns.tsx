@@ -16,6 +16,7 @@ const TerminalSchema = z.object({
   code: z.string(),
   isActive: z.boolean(),
   establishment: z.string(),
+  interface: z.string(),
 });
 
 export type TerminalData = z.infer<typeof TerminalSchema>;
@@ -26,6 +27,7 @@ export type Terminal = {
   code: string;
   isActive: boolean;
   establishment: string;
+  interface: string;
 };
 
 export const terminalColumns: ColumnDef<TerminalData>[] = [
@@ -91,6 +93,29 @@ export const terminalColumns: ColumnDef<TerminalData>[] = [
       return (
         <div className='flex gap-2 items-center'>
           <span className='truncate'>{terminal.establishment}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'interface',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Interfaces
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const terminal = row.original;
+
+      return (
+        <div className='flex gap-2 items-center'>
+          <span className='truncate'>{terminal.interface}</span>
         </div>
       );
     },
