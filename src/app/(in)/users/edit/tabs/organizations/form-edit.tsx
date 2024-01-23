@@ -1,9 +1,6 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useContext, useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
 
 import { User } from '@/app/(in)/users/columns';
 import { EmptyState } from '@/components/empty-state';
@@ -20,41 +17,67 @@ import { useToast } from '@/hooks/use-toast';
 import { SheetContext } from '@/providers/sheet-provider';
 import { UserContext } from '@/providers/user-provider';
 import { PopoverArrow } from '@radix-ui/react-popover';
-import { Eraser, Trash, Triangle } from 'lucide-react';
+import { Trash, Triangle } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { createUserOrganization } from '../../../actions/create-user-oganization';
+import { deleteUserOrganization } from '../../../actions/delete-user-organization';
 
-const UserFormEditSchema = z.object({
-  organizations: z.array(z.array(z.string())),
-});
-
-type UserFormEditType = z.infer<typeof UserFormEditSchema>;
+interface CreateUserOrganization {
+  organizationId: string;
+  userId: string;
+}
 
 interface UserFormEditProps {
   user: User;
 }
 
-export function UserOrganizationsFormEdit({ user }: UserFormEditProps) {
+interface UserOrganization  {
+  id: string;
+  userId: string;
+  organizationId: string;
+  organizationName: string;
+}
+
+type NewUserOrganization = UserOrganization | {
+  id: undefined;
+  userId: undefined;
+  organizationId: undefined;
+  organizationName: undefined;
+}
+
+export function UserOrganizationsFormEdit({ user: { id: userId, ...user } }: UserFormEditProps) {
+  const [organizationsQuery, setOrganizationsQuery] = useState<string | undefined>();
+  const [newOrganizations, setNewOrganizations] = useState<NewUserOrganization[]>([]);
   const { toast } = useToast();
   const { setShow } = useContext(SheetContext);
   const { organizations } = useContext(UserContext);
 
-  
-  const formMethods = useForm<UserFormEditType>({
-    resolver: zodResolver(UserFormEditSchema),
-    defaultValues: {
-      organizations: []
-    }
-  });
-  
-  const { handleSubmit, control, watch } = formMethods;
+  const userOrganizations = useMemo(() => 
+    user.userOrganizations.reduce((acc, userOrganization) => {
+      const organization = organizations.find(({ id }) => id === userOrganization.organizationId)
 
-  const onSubmit = async (data: UserFormEditType) => {
+      return organization ? [{...userOrganization, organizationName: organization.name}, ...acc] : acc
+    } ,[] as UserOrganization[]), 
+    [organizations, user.userOrganizations]
+  );
+
+  const orgs = useMemo(() => 
+  [...newOrganizations, ...userOrganizations],
+  [newOrganizations, userOrganizations]
+  )
+
+  const formMethods = useForm();
+
+  const onCreateUserOrganization = async (data: CreateUserOrganization, index: number) => {
     try {
-      setShow(false);
+      await createUserOrganization(data);
+
+      handleNewUserOrganizationDelete(index)
 
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Usuário alterado com sucesso.',
+        description: 'Organização adicionada com sucesso.',
         duration: 5000,
       });
     } catch {
@@ -67,14 +90,24 @@ export function UserOrganizationsFormEdit({ user }: UserFormEditProps) {
     }
   };
 
-  const handleDeleteUserOrganization = async () => {
+  function handleNewUserOrganizationDelete(index: number) {
+    setNewOrganizations(state => {
+      const fieldValue = [...state];
+                              
+      fieldValue.splice(index, 1)
+  
+      return fieldValue;
+    });
+  }
+
+  const handleDeleteUserOrganization = async (id: string) => {
     try {
-      setShow(false);
+      await deleteUserOrganization(id);
 
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Usuário excluida com sucesso.',
+        description: 'Organização excluída com sucesso do usuário.',
         duration: 5000,
       });
     } catch(err) {
@@ -100,66 +133,32 @@ export function UserOrganizationsFormEdit({ user }: UserFormEditProps) {
     }
   };
 
-  const [orgs, setOrgs] = useState<string[][]>([]);
-
-  const [organizationsQuery, setOrganizationsQuery] = useState<string | undefined>();
-
-  console.log({orgs})
-
   const filteredOrganizations = useMemo(() => 
     organizations.filter(({ id, name }) => 
       !orgs.find(org => 
-        name === org[1] && id === org[0]
+        name === org.organizationName && id === org.organizationId
       ) &&
         (organizationsQuery ? name.includes(organizationsQuery) : true)
     ),
     [orgs, organizations, organizationsQuery]
   )
 
-
   function handleNewOrg() {
-    setOrgs(state => [[], ...state])
-  }
-
-  function handleNewOrgChange(val: string, key: string, index: number) {
-    setOrgs(state => {
-      const fieldValue = [...state];
-                              
-      const newFieldValueItem = [key, val]
-      
-      fieldValue.splice(index, 1, newFieldValueItem)
-  
-      return fieldValue;
-    })
-  }
-
-  function handleNewOrgClean(index: number) {
-    setOrgs(state => {
-      const fieldValue = [...state];
-                              
-      fieldValue.splice(index, 1, [])
-  
-      return fieldValue;
-    })
-  }
-
-  function handleNewOrgDelete(index: number) {
-    setOrgs(state => {
-      const fieldValue = [...state];
-                              
-      fieldValue.splice(index, 1)
-  
-      return fieldValue;
-    });
+    setNewOrganizations(state => [
+      {
+      id: undefined, name: undefined, organizationId: undefined, organizationName: undefined, userId: undefined
+      },
+      ...state
+    ])
   }
 
   return (
     <div className='space-y-6'>
       <Form {...formMethods}>
-        <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
+        <form className='mt-4 space-y-4'>
           {
-            orgs.map((org, index) => (
-              <Popover key={org[0]} onOpenChange={() => setOrganizationsQuery(undefined)}>
+            orgs.map(({ id, organizationName }, index) => (
+              <Popover key={id} onOpenChange={() => setOrganizationsQuery(undefined)}>
                 <PopoverTrigger asChild>
                   <FormItem>
                     <FormControl>
@@ -168,13 +167,17 @@ export function UserOrganizationsFormEdit({ user }: UserFormEditProps) {
                           placeholder='Escolha a organização'
                           readOnly
                           className='data-[selected="true"]:bg-primary text-primary-foreground cursor-pointer text-center'
-                          value={org[1] || ''}
-                          data-selected={!!org[1]}
+                          value={organizationName || ''}
+                          data-selected={!!organizationName}
                         />
                         {
-                          org[1] && (
-                            <button onClick={() => handleNewOrgClean(index)} type='button' className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-sm hover:bg-black/5 transition-all'>
-                              <Eraser className='w-6 h-6 text-destructive' strokeWidth={2}/>
+                          organizationName ? (
+                            <button onClick={() => handleDeleteUserOrganization(id)} type='button' className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-sm hover:bg-black/5 transition-all'>
+                              <Trash className='w-6 h-6 text-destructive' strokeWidth={2}/>
+                            </button>
+                          ) : (
+                            <button onClick={() => handleNewUserOrganizationDelete(index)} type='button' className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-sm hover:bg-black/5 transition-all'>
+                              <Trash className='w-6 h-6 text-destructive' strokeWidth={2}/>
                             </button>
                           )
                         }
@@ -199,14 +202,14 @@ export function UserOrganizationsFormEdit({ user }: UserFormEditProps) {
                       <div className='flex flex-col gap-y-2 mb-4 max-h-[25rem] overflow-y-auto'>
                         {
                           filteredOrganizations
-                            .map(organization => (
+                            .map(({ id: organizationId, name: organizationName }) => (
                               <>
                                 <Button 
                                   className='w-full'
-                                  key={organization.id}
-                                  onClick={() => handleNewOrgChange(organization.name, organization.id, index)}
+                                  key={organizationId}
+                                  onClick={() => onCreateUserOrganization({ organizationId, userId }, index)}
                                 >
-                                  {organization.name}
+                                  {organizationName}
                                 </Button>
                               </>
                             ))
@@ -218,10 +221,6 @@ export function UserOrganizationsFormEdit({ user }: UserFormEditProps) {
                       </p>
                     )
                   }
-                  <Button variant='destructive' className='w-full' size='sm' onClick={() => handleNewOrgDelete(index)}>
-                    <Trash className='w-5 h-5 mr-2' strokeWidth={2} /> Remover campo
-                  </Button>
-
                   <PopoverArrow asChild>
                     <Triangle className='text-border rotate-180 w-14 h-5 fill-popover' strokeWidth={0.5} />
                   </PopoverArrow>

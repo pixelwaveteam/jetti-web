@@ -14,15 +14,28 @@ const UserSchema = z.object({
   role: z.enum(['ADMIN', 'OPERATOR'] as const),
   avatarId: z.string().optional(),
   isActive: z.boolean(),
+  userOrganizations: z.array(z.object({
+    id: z.string(),
+    organizationId: z.string(),
+    userId: z.string(),
+  }))
 });
 
+interface UserOrganizations {
+  id: string
+  organizationId: string;
+  userId: string;
+}
+
 export type UserData = z.infer<typeof UserSchema>;
+
 export type User = {
   id: string;
   name: string;
   role: 'ADMIN' | 'OPERATOR';
   avatarId?: string;
   isActive: boolean;
+  userOrganizations: UserOrganizations[];
 };
 
 export const userColumns: ColumnDef<UserData>[] = [
