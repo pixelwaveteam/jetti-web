@@ -55,7 +55,6 @@ export function UserFormCreate() {
     resolver: zodResolver(UserFormCreateSchema),
     defaultValues: {
       role: 'OPERATOR',
-      name: '',
     },
   });
 
