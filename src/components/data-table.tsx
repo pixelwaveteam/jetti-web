@@ -97,8 +97,6 @@ const renderFilters: (table: TableType<any>, filterBy: FilterBy[]) => ReactNode 
     if(filter.isDate) {
       const columnFilterDateRange = (columnFilterValue as DateRange) ?? ''
 
-      console.log({columnFilterDateRange})
-
       const fromToDisplay = columnFilterDateRange.from && format(columnFilterDateRange.from, 'dd/MM/yyyy')
 
       const toToDisplay = columnFilterDateRange.to && format(columnFilterDateRange.to, 'dd/MM/yyyy')

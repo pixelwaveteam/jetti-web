@@ -193,7 +193,7 @@ export function CashFlowFormCreate() {
         <FormField
           control={control}
           name='date'
-          render={({ field }) => {console.log({field}); return(
+          render={({ field }) => (
             <Popover key={field.name}>
               <PopoverTrigger asChild>
                 <FormItem>
@@ -216,7 +216,7 @@ export function CashFlowFormCreate() {
                 />
               </PopoverContent>
             </Popover>
-          )}}
+          )}
         />
 
         <CardPeriodCashFlow show={!!terminalId} />

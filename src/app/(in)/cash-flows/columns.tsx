@@ -170,8 +170,6 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
       
       const rowDate = new Date(splitDate[0], splitDate[1]-1, splitDate[2]);
 
-      console.log({rowDate})
-
       if(!value.from) { 
         return isSameDay(rowDate, value.to)
       }

@@ -20,8 +20,6 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Credenciais não informadas');
         }
 
-        console.log({credentials})
-
         const { name, password } = credentials;
 
         const response = await api('/sessions', {
