@@ -34,7 +34,6 @@ const ProfileFormEditSchema = z.object({
   name: z
     .string({ required_error: 'Nome não pode ser vazio.' })
     .max(50, 'Nome deve ter no máximo 50 caracteres.'),
-  email: z.string().email('Email inválido.'),
   role: z
     .enum(['ADMIN', 'OPERATOR'] as const)
     .refine((value) => value === 'ADMIN' || value === 'OPERATOR', {
@@ -57,7 +56,6 @@ export function ProfileFormEdit({ user }: ProfileFormEditProps) {
     resolver: zodResolver(ProfileFormEditSchema),
     defaultValues: {
       name: user.name,
-      email: user.email,
       role: user.role,
     },
   });
@@ -113,19 +111,6 @@ export function ProfileFormEdit({ user }: ProfileFormEditProps) {
                 <FormLabel>Nome</FormLabel>
                 <FormControl>
                   <Input placeholder='Nome do usuário' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name='email'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder='Email do usuário' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

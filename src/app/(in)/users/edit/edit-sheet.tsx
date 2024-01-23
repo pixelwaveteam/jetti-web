@@ -4,7 +4,7 @@ import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
 import { User } from '@/app/(in)/users/columns';
-import { UserFormEdit } from '@/app/(in)/users/edit/form-edit';
+import { UserInfoFormEdit } from '@/app/(in)/users/edit/tabs/Info/form-edit';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -13,7 +13,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SheetContext } from '@/providers/sheet-provider';
+import { useSession } from 'next-auth/react';
+import { UserOrganizationsFormEdit } from './tabs/organizations/form-edit';
 
 interface UserEditSheetProps {
   user: User;
@@ -21,6 +24,10 @@ interface UserEditSheetProps {
 
 export function UserEditSheet({ user }: UserEditSheetProps) {
   const { show, setShow } = useContext(SheetContext);
+  const { data: session } = useSession();
+
+  const role = session?.user?.role || 'OPERATOR';
+
 
   return (
     <Sheet open={show} onOpenChange={setShow}>
@@ -33,7 +40,28 @@ export function UserEditSheet({ user }: UserEditSheetProps) {
         <SheetHeader>
           <SheetTitle>Alterar Usuário</SheetTitle>
         </SheetHeader>
-        <UserFormEdit user={user} />
+        <Tabs defaultValue='info' className='w-full mt-4'>
+          <TabsList>
+            <TabsTrigger value='info'>Informações</TabsTrigger>
+            {
+              role === 'ADMIN' && (
+                <TabsTrigger value='organizations'>
+                  Organizações
+                </TabsTrigger>
+              )
+            }
+          </TabsList>
+          <TabsContent value='info'>
+            <UserInfoFormEdit user={user} />
+          </TabsContent>
+          {
+            role === 'ADMIN' && (
+              <TabsContent value='organizations'>
+                <UserOrganizationsFormEdit user={user} />
+              </TabsContent>
+            )
+          }
+        </Tabs>
       </SheetContent>
     </Sheet>
   );

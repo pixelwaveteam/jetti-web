@@ -20,7 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 const SignInFormSchema = z.object({
-  email: z.string().min(1, 'Email obrigatório').email('Email inválido'),
+  name: z.string({ required_error: 'Nome é obrigatório' }),
   password: z
     .string()
     .min(1, 'Senha obrigatória')
@@ -37,7 +37,6 @@ export const SignInForm = () => {
   const formMethods = useForm<SignInFormSchemaType>({
     resolver: zodResolver(SignInFormSchema),
     defaultValues: {
-      email: '',
       password: '',
     },
   });
@@ -48,19 +47,19 @@ export const SignInForm = () => {
     const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
 
     const response = await signIn('credentials', {
-      email: data.email,
+      name: data.name,
       password: data.password,
       redirect: false,
     });
 
     if (response?.error) {
-      // set focus to email input using react-hook-form
-      setFocus('email');
+      // set focus to name input using react-hook-form
+      setFocus('name');
 
       toast({
         variant: 'destructive',
         title: 'Erro',
-        description: 'Email ou senha incorretos. Favor tente novamente.',
+        description: 'Nome ou senha incorretos. Favor tente novamente.',
         duration: 5000,
       });
     }
@@ -76,13 +75,13 @@ export const SignInForm = () => {
         <div className='space-y-4'>
           <FormField
             control={control}
-            name='email'
+            name='name'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Nome</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder='mail@examplo.com'
+                    placeholder='John Doe'
                     {...field}
                     tabIndex={1}
                   />

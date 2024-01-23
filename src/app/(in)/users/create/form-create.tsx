@@ -31,7 +31,10 @@ const UserFormCreateSchema = z.object({
   name: z
     .string({ required_error: 'Nome não pode ser vazio.' })
     .max(50, 'Nome deve ter no máximo 50 caracteres.'),
-  email: z.string().email('Email inválido.'),
+  password: z
+    .string({ required_error: 'Senha é obrigatória.' })
+    .min(5, 'Senha deve ter pelo menos 6 caracteres.')
+    .max(15, 'Senha deve ter no máximo 15 caracteres.'),
   role: z
     .enum(['ADMIN', 'OPERATOR'] as const)
     .refine((value) => value === 'ADMIN' || value === 'OPERATOR', {
@@ -53,7 +56,6 @@ export function UserFormCreate() {
     defaultValues: {
       role: 'OPERATOR',
       name: '',
-      email: '',
     },
   });
 
@@ -61,11 +63,11 @@ export function UserFormCreate() {
 
   const onSubmit = async (data: UserFormCreateType) => {
     try {
-      const { name, email, role: roleUser } = data;
+      const { name, role: roleUser, password } = data;
 
       await createUser({
         name,
-        email,
+        password,
         role: roleUser,
       });
 
@@ -105,12 +107,12 @@ export function UserFormCreate() {
         />
         <FormField
           control={control}
-          name='email'
+          name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Senha</FormLabel>
               <FormControl>
-                <Input placeholder='Email do usuário' {...field} />
+                <Input placeholder='Senha do usuário' type='password' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
