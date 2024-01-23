@@ -6,7 +6,6 @@ import { api } from '@/lib/api';
 
 interface CreateUser {
   name: string;
-  email: string;
   role: 'ADMIN' | 'OPERATOR';
   password: string;
 }

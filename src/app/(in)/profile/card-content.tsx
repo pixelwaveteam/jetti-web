@@ -36,10 +36,6 @@ export function CardContentProfile() {
               <p className='text-gray-500'>{session.user.name}</p>
             </div>
             <div className='flex items-center gap-4'>
-              <h3 className='font-bold'>Email</h3>
-              <p className='text-gray-500'>{session.user.email}</p>
-            </div>
-            <div className='flex items-center gap-4'>
               <h3 className='font-bold'>Perfil</h3>
               <p className='text-gray-500'>{role}</p>
             </div>

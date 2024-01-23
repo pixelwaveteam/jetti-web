@@ -9,8 +9,8 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: {
-          label: 'Email',
+        name: {
+          label: 'Nome',
           type: 'text',
         },
         password: { label: 'Senha', type: 'password' },
@@ -20,12 +20,14 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Credenciais não informadas');
         }
 
-        const { email, password } = credentials;
+        console.log({credentials})
+
+        const { name, password } = credentials;
 
         const response = await api('/sessions', {
           method: 'POST',
           body: JSON.stringify({
-            email,
+            name,
             password,
           }),
         });
