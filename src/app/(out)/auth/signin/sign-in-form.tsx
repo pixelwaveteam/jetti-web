@@ -102,7 +102,7 @@ export const SignInForm = () => {
                     href='/auth/forgot-password'
                     tabIndex={3}
                   >
-                    Esquceu Senha?
+                    Esqueceu Senha?
                   </Link>
                 </FormLabel>
                 <FormControl>
