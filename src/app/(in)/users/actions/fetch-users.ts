@@ -1,10 +1,10 @@
 'use server';
 
-import { UserData } from '@/app/(in)/users/columns';
 import { api } from '@/lib/api';
+import { User } from '@/types/user';
 
 export async function fetchUsers() {
-  const response = await api<UserData[]>('/users', {
+  const response = await api<User[]>('/users', {
     next: {
       tags: ['users'],
     },

@@ -42,10 +42,7 @@ export function CardContentProfile() {
             <div className='flex items-center gap-4'>
               <SheetProvider>
                 <ProfileEditSheet
-                  user={{
-                    ...session.user,
-                    isActive: true,
-                  }}
+                  user={session.user}
                 />
               </SheetProvider>
               <SheetProvider>

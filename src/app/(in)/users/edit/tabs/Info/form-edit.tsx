@@ -7,7 +7,6 @@ import * as z from 'zod';
 
 import { deleteUser } from '@/app/(in)/users/actions/delete-user';
 import { updateUser } from '@/app/(in)/users/actions/update-user';
-import { User } from '@/app/(in)/users/columns';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -30,6 +29,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
+import { User } from '@/types/user';
 import { Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 

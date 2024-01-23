@@ -3,7 +3,6 @@
 import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
-import { User } from '@/app/(in)/users/columns';
 import { UserInfoFormEdit } from '@/app/(in)/users/edit/tabs/Info/form-edit';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,11 +14,22 @@ import {
 } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SheetContext } from '@/providers/sheet-provider';
+import { User } from '@/types/user';
 import { useSession } from 'next-auth/react';
 import { UserOrganizationsFormEdit } from './tabs/organizations/form-edit';
 
+interface UserOrganization {
+  id: string
+  organizationId: string;
+  userId: string;
+}
+
+export type UserWithItsOrganizations = User & {
+  organizations: UserOrganization[]
+}
+
 interface UserEditSheetProps {
-  user: User;
+  user: UserWithItsOrganizations;
 }
 
 export function UserEditSheet({ user }: UserEditSheetProps) {
@@ -27,7 +37,6 @@ export function UserEditSheet({ user }: UserEditSheetProps) {
   const { data: session } = useSession();
 
   const role = session?.user?.role || 'OPERATOR';
-
 
   return (
     <Sheet open={show} onOpenChange={setShow}>

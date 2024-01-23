@@ -4,7 +4,6 @@ import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
 import { ProfileFormEdit } from '@/app/(in)/profile/edit/form-edit';
-import { User } from '@/app/(in)/users/columns';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -16,7 +15,11 @@ import {
 import { SheetContext } from '@/providers/sheet-provider';
 
 interface ProfileEditSheetProps {
-  user: User;
+  user: {
+    id: string;
+    name: string;
+    role: 'ADMIN' | 'OPERATOR';
+  };
 }
 
 export function ProfileEditSheet({ user }: ProfileEditSheetProps) {

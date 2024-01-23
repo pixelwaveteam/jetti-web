@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { updateUser } from '@/app/(in)/users/actions/update-user';
-import { User } from '@/app/(in)/users/columns';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -44,7 +43,11 @@ const ProfileFormEditSchema = z.object({
 type ProfileFormEditType = z.infer<typeof ProfileFormEditSchema>;
 
 interface ProfileFormEditProps {
-  user: User;
+  user: {
+    id: string;
+    name: string;
+    role: 'ADMIN' | 'OPERATOR';
+  };
 }
 
 export function ProfileFormEdit({ user }: ProfileFormEditProps) {

@@ -2,7 +2,6 @@
 
 import { useContext, useMemo, useState } from 'react';
 
-import { User } from '@/app/(in)/users/columns';
 import { EmptyState } from '@/components/empty-state';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,6 +20,7 @@ import { Trash, Triangle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { createUserOrganization } from '../../../actions/create-user-oganization';
 import { deleteUserOrganization } from '../../../actions/delete-user-organization';
+import { UserWithItsOrganizations } from '../../edit-sheet';
 
 interface CreateUserOrganization {
   organizationId: string;
@@ -28,17 +28,17 @@ interface CreateUserOrganization {
 }
 
 interface UserFormEditProps {
-  user: User;
+  user: UserWithItsOrganizations
 }
 
-interface UserOrganization  {
+interface NamedUserOrganization  {
   id: string;
   userId: string;
   organizationId: string;
   organizationName: string;
 }
 
-type NewUserOrganization = UserOrganization | {
+type NewUserOrganization = NamedUserOrganization | {
   id: undefined;
   userId: undefined;
   organizationId: undefined;
@@ -53,12 +53,12 @@ export function UserOrganizationsFormEdit({ user: { id: userId, ...user } }: Use
   const { organizations } = useContext(UserContext);
 
   const userOrganizations = useMemo(() => 
-    user.userOrganizations.reduce((acc, userOrganization) => {
+    user.organizations.reduce((acc, userOrganization) => {
       const organization = organizations.find(({ id }) => id === userOrganization.organizationId)
 
       return organization ? [{...userOrganization, organizationName: organization.name}, ...acc] : acc
-    } ,[] as UserOrganization[]), 
-    [organizations, user.userOrganizations]
+    } ,[] as NamedUserOrganization[]), 
+    [organizations, user.organizations]
   );
 
   const orgs = useMemo(() => 
