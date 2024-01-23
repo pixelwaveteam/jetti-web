@@ -20,12 +20,20 @@ export default async function Establishments() {
 
   const establishments = []
 
-  for(const establishment of rawEstablishments) {
-    const {establishmentId: _, id: __,...establishmentAddress} = await fetchEstablishmentAddress(establishment.id);
+  for(const rawEstablishment of rawEstablishments) {
+    let establishment = {...rawEstablishment}
+    
+    const establishmentAddress = await fetchEstablishmentAddress(rawEstablishment.id);
 
-    const terminalsTotal = terminals.filter(terminal => terminal.establishmentId === establishment.id).length
+    if(establishmentAddress) {
+      const {establishmentId: _, id: __,...restructuredEstablishmentAddress} = establishmentAddress
+  
+      establishment = {...establishment, ...restructuredEstablishmentAddress}
+    }
 
-    establishments.push({...establishment, ...establishmentAddress, terminalsTotal})
+    const terminalsTotal = terminals.filter(terminal => terminal.establishmentId === rawEstablishment.id).length
+
+    establishments.push({...establishment, terminalsTotal})
   }
 
   const organizations = await fetchOrganizations();
