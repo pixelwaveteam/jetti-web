@@ -39,6 +39,7 @@ import { CashFlow } from '../../actions/fetch-cash-flow';
 
 const CashFlowFormEditSchema = z.object({
   terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
+  establishmentId: z.string({ required_error: 'Local é obrigatório.' }),
   cashIn: z.coerce.number().transform((val) => {
     const cashInCents = val * 100;
 
@@ -56,12 +57,12 @@ type CashFlowFormEditType = z.infer<typeof CashFlowFormEditSchema>;
 
 interface CashFlowFormEditProps {
   cashFlow: CashFlow & {
-    establishmentName: string;
+    establishmentId: string;
   };
 }
 
 export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
-  const { terminals } = useContext(CashFlowContext);
+  const { terminals, establishments } = useContext(CashFlowContext);
   const { toast } = useToast();
   const { setShow } = useContext(SheetContext);
   const router = useRouter();
@@ -70,15 +71,18 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
     resolver: zodResolver(CashFlowFormEditSchema),
     defaultValues: {
       terminalId: cashFlow.terminalId,
+      establishmentId: cashFlow.establishmentId,
       cashIn: cashFlow.cashIn / 100,
       cashOut: cashFlow.cashOut / 100,
       date: new Date(cashFlow.date),
     },
   });
 
-  const { handleSubmit, control } = formMethods;
+  const { handleSubmit, control, watch } = formMethods;
 
-  const onSubmit = async ({date, ...data}: CashFlowFormEditType) => {
+  const establishmentId = watch('establishmentId');
+
+  const onSubmit = async ({date, establishmentId, ...data}: CashFlowFormEditType) => {
     try {
       await updateCashFlow({
         id: cashFlow.id,
@@ -115,7 +119,7 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Leitura excluida com sucesso.',
+        description: 'Leitura excluída com sucesso.',
         duration: 5000,
       });
 
@@ -134,39 +138,55 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
     <div className='space-y-6'>
       <Form {...formMethods}>
         <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
-          <FormField
-            control={control}
-            name='terminalId'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Terminal</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder='Selecione...' />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {terminals.map((terminal) => (
-                      <SelectItem key={terminal.id} value={terminal.id}>
-                        {terminal.code}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={control}
+          name='establishmentId'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Local</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder='Selecione...' />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {establishments.map((establishment) => (
+                    <SelectItem key={establishment.id} value={establishment.id}>
+                      {establishment.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormItem>
-            <FormLabel>Local</FormLabel>
-              <Input disabled value={cashFlow.establishmentName} readOnly />
-            <FormMessage />
-          </FormItem>
+        <FormField
+          control={control}
+          name='terminalId'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Terminal</FormLabel>
+              <Select disabled={!establishmentId} onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder='Selecione...' />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {terminals.filter(terminal => terminal.establishmentId === establishmentId).map((terminal) => (
+                    <SelectItem key={terminal.id} value={terminal.id}>
+                      {terminal.code}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
           <FormField
             control={control}

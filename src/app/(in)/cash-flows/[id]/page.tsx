@@ -57,7 +57,7 @@ export default async function CashFlow({ params: { id } }: CashFlowProps) {
 
   const renderEditCashFlowButton = (
     <SheetProvider>
-      <CashFlowEditSheet cashFlow={{...cashFlow, establishmentName: establishment?.name || '' }} />
+      <CashFlowEditSheet cashFlow={{...cashFlow, establishmentId: establishment?.id || '' }} />
     </SheetProvider>
   );
 
