@@ -2,47 +2,16 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, ChevronRight } from 'lucide-react';
-import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { convertCentsToCurrency } from '@/utils/currency';
 import { getDateFormatted } from '@/utils/date';
 import { isSameDay, isWithinInterval } from 'date-fns';
 import Link from 'next/link';
+import { CashFlow as FetchCashFlow } from './actions/fetch-cash-flows';
 
-const CashFlowSchema = z.object({
-  id: z.string(),
-  cashFlowCode: z.string(),
-  terminalId: z.string(),
-  operatorId: z.string(),
-  cashIn: z.coerce.number(),
-  cashOut: z.coerce.number(),
-  net: z.coerce.number(),
-  date: z.date(),
-});
-
-export type CashFlowData = z.infer<typeof CashFlowSchema>;
-
-export type CashFlowDataTable = {
-  id: string;
+export type CashFlowDataTable = FetchCashFlow & {
   cashFlowCode: string;
-  terminal: string;
-  operator: string;
-  cashIn: number;
-  cashOut: number;
-  net: number;
-  date: Date;
-};
-
-export type CashFlow = {
-  id: string;
-  terminalId: string;
-  operatorId: string;
-  cashIn: number;
-  cashOut: number;
-  net: number;
-  date: Date;
-  establishmentName: string;
 };
 
 export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
@@ -65,7 +34,6 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
       return (
         <div className='flex flex-col gap-2 items-start'>
           <span>{cashFlow.terminal}</span>
-          <span className='text-xs text-gray-300'>{cashFlow.operator}</span>
         </div>
       );
     },
