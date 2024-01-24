@@ -116,7 +116,7 @@ function SearchableCheckComboboxValue({ placeholder, ...props }: InputHTMLAttrib
   const displayValue = checkedItems.length > 0 ? checkedItems.join(', ') : '';
 
   return (
-    <Input readOnly className='max-w-sm' value={displayValue} placeholder={placeholder} {...props} />
+    <Input readOnly value={displayValue} placeholder={placeholder} {...props} />
   )
 }
 
