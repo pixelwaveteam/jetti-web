@@ -32,6 +32,7 @@ import { CashFlowContext } from '@/providers/cash-flow-provider';
 import { SheetContext } from '@/providers/sheet-provider';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { fetchEstablishment } from '../../establishments/actions/fetch-establishment';
@@ -58,6 +59,9 @@ export function CashFlowFormCreate() {
   const { terminals, setPeriod } = useContext(CashFlowContext);
   const { setShow } = useContext(SheetContext);
   const { toast } = useToast();
+  const { data: session } = useSession();
+
+  const role = session ? session?.user.role : undefined;
 
   const [establishmentName, setEstablishmentName] = useState('');
 
@@ -212,7 +216,7 @@ export function CashFlowFormCreate() {
                   mode='single'
                   selected={field.value}
                   onSelect={field.onChange}
-                  
+                  disabled={role === "OPERATOR"}
                 />
               </PopoverContent>
             </Popover>
