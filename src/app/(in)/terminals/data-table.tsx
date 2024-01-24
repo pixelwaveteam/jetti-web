@@ -31,7 +31,7 @@ export function TerminalDataTable({ data }: TerminalDataTableProps) {
           label: 'código'
         },
         {
-          key: 'establishment',
+          key: 'establishmentState',
           label: 'estados',
           options: stateFilterOptions,
           searchableSelect: true

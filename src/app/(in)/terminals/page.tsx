@@ -24,18 +24,18 @@ export default async function Terminals() {
   const terminals = [];
 
   for(const rawTerminal of rawTerminals) {
-    let terminal: TerminalData = rawTerminal
-    
+    const terminal: TerminalData = {...rawTerminal, cashIn: 0, cashOut: 0};
+
     const establishmentAddress = await fetchEstablishmentAddress(rawTerminal.establishmentId)
 
     if(establishmentAddress) {
-      terminal.establishment = establishmentAddress.state
+      terminal.establishmentState = establishmentAddress.state
     }
 
     const interFace = interfaces.find(interFace => interFace.id === rawTerminal.interfaceId)
 
     if(interFace) {
-      terminal.interface = interFace.name
+      terminal.interfaceName = interFace.name
     }
 
     terminals.push(terminal)
