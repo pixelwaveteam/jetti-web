@@ -26,7 +26,7 @@ function useSearchableSelect() {
   const context = useContext(searchableSelectContext);
 
   if (!context) {
-    throw new Error('useFormField should be used within <FormField>');
+    throw new Error('useSearchableSelect should be used within <SearchableSelect>');
   }
   
   return context
