@@ -32,12 +32,14 @@ import { CashFlowContext } from '@/providers/cash-flow-provider';
 import { SheetContext } from '@/providers/sheet-provider';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { fetchEstablishment } from '../../establishments/actions/fetch-establishment';
 
 const CashFlowFormCreateSchema = z.object({
   terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
+  establishmentId: z.string({ required_error: 'Terminal é obrigatório.' }),
   cashIn: z.coerce.number().transform((val) => {
     const cashInCents = val * 100;
 
@@ -55,9 +57,12 @@ type CashFlowFormCreateType = z.infer<typeof CashFlowFormCreateSchema>;
 
 export function CashFlowFormCreate() {
   const router = useRouter();
-  const { terminals, setPeriod } = useContext(CashFlowContext);
+  const { terminals, setPeriod, establishments } = useContext(CashFlowContext);
   const { setShow } = useContext(SheetContext);
   const { toast } = useToast();
+  const { data: session } = useSession();
+
+  const role = session ? session?.user.role : undefined;
 
   const [establishmentName, setEstablishmentName] = useState('');
 
@@ -131,6 +136,37 @@ export function CashFlowFormCreate() {
       <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
         <FormField
           control={control}
+          name='establishmentId'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Local</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder='Selecione...' />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {establishments.map((establishment) => (
+                    <SelectItem key={establishment.id} value={establishment.id}>
+                      {establishment.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormItem>
+          <FormLabel>Local</FormLabel>
+            <Input value={establishmentName} readOnly />
+          <FormMessage />
+        </FormItem>
+
+        <FormField
+          control={control}
           name='terminalId'
           render={({ field }) => (
             <FormItem>
@@ -153,12 +189,6 @@ export function CashFlowFormCreate() {
             </FormItem>
           )}
         />
-
-        <FormItem>
-          <FormLabel>Local</FormLabel>
-            <Input value={establishmentName} readOnly />
-          <FormMessage />
-        </FormItem>
 
         <FormField
           control={control}
@@ -212,7 +242,7 @@ export function CashFlowFormCreate() {
                   mode='single'
                   selected={field.value}
                   onSelect={field.onChange}
-                  
+                  disabled={role === "OPERATOR"}
                 />
               </PopoverContent>
             </Popover>

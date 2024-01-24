@@ -109,7 +109,7 @@ const SearchableSelectContent = React.forwardRef<
         {...props}
       >
         <FormItem className="mb-2">
-          <Input placeholder={`Pesquisar ${label}`} onChange={handleQueryChange} value={itemsQuery} />
+          <Input autoComplete='off' placeholder={`Pesquisar ${label}`} onChange={handleQueryChange} value={itemsQuery} />
         </FormItem>
 
         <SelectScrollUpButton />

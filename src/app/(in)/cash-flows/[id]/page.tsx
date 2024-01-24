@@ -85,7 +85,7 @@ export default async function CashFlow({ params: { id } }: CashFlowProps) {
   );
 
   return (
-    <CashFlowProvider initialData={{ terminals }}>
+    <CashFlowProvider initialData={{ terminals, establishments }}>
       <PageContainer
         title={`Leitura`}
         description={renderDescription}

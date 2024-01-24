@@ -1,10 +1,16 @@
 'use server';
 
-import { EstablishmentData } from '@/app/(in)/establishments/columns';
 import { api } from '@/lib/api';
 
+export interface Establishment {
+  id: string;
+  organizationId: string;
+  name: string;
+  isActive: boolean;
+}
+
 export async function fetchEstablishments() {
-  const response = await api<EstablishmentData[]>('/establishments', {
+  const response = await api<Establishment[]>('/establishments', {
     next: {
       tags: ['establishments'],
     },

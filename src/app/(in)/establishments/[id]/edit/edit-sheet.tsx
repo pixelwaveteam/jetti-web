@@ -4,7 +4,6 @@ import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
 import { EstablishmentFormEdit } from '@/app/(in)/establishments/[id]/edit/form-edit';
-import { Establishment } from '@/app/(in)/establishments/columns';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -14,6 +13,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
+import { Establishment } from '../../actions/fetch-establishments';
 
 interface EstablishmentEditSheetProps {
   establishment: Establishment;

@@ -19,6 +19,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import braziliansCitiesByState from '@/data/brazilian-cities-by-state.json';
+import braziliansStates from '@/data/brazilian-states.json';
 import { useToast } from '@/hooks/use-toast';
 import { SheetContext } from '@/providers/sheet-provider';
 
@@ -44,6 +47,14 @@ interface EstablishmentAddressFormCreateProps {
   establishmentId: string;
 }
 
+const statesItems = braziliansStates.reduce((acc, state) => (
+  [ ...acc, [state.shortName, state.name] ]
+), [] as string[][])
+
+const cityItems = braziliansCitiesByState.estados.reduce((acc, state) => (
+  { ...acc, [state.sigla]: state.cidades }
+), {} as { [x: string]: string[] })
+
 export function EstablishmentAddressFormCreate({
   establishmentId,
 }: EstablishmentAddressFormCreateProps) {
@@ -58,6 +69,10 @@ export function EstablishmentAddressFormCreate({
     formMethods;
 
   const zipCode = watch('zipCode');
+
+  const state = watch('state');
+
+  const cityItemsByState = cityItems[state as keyof typeof cityItems] || undefined
 
   const onSubmit = async (data: EstablishmentAddressFormCreateType) => {
     try {
@@ -185,19 +200,7 @@ export function EstablishmentAddressFormCreate({
             </FormItem>
           )}
         />
-        <FormField
-          control={control}
-          name='city'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cidade</FormLabel>
-              <FormControl>
-                <Input placeholder='Cidade do local' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
         <FormField
           control={control}
           name='state'
@@ -205,7 +208,57 @@ export function EstablishmentAddressFormCreate({
             <FormItem>
               <FormLabel>Estado</FormLabel>
               <FormControl>
-                <Input placeholder='Estado do local' {...field} />
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder='Selecione...' />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {
+                      statesItems.map(item => (
+                        <SelectItem value={item[0]} key={item[0]}>
+                          {item[1]}
+                        </SelectItem>
+                      ))
+                    }
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name='city'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Cidade</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={!state}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder='Selecione...' />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {
+                      cityItemsByState && cityItemsByState.map(item => (
+                        <SelectItem value={item} key={item}>
+                          {item}
+                        </SelectItem>
+                      ))
+                    }
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>

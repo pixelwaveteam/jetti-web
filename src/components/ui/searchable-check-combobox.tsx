@@ -134,7 +134,7 @@ function SearchableCheckComboboxContent({children, label, ...props}: SearchableC
   return (
     <PopoverContent {...props}>
       <FormItem className="mb-2">
-        <Input placeholder={`Pesquisar ${label}`} onChange={handleQueryChange} value={itemsQuery} />
+        <Input autoComplete='off' placeholder={`Pesquisar ${label}`} onChange={handleQueryChange} value={itemsQuery} />
       </FormItem>
 
       <div className="flex flex-col w-full gap-y-1">

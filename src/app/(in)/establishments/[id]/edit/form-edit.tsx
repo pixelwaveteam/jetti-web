@@ -6,7 +6,6 @@ import * as z from 'zod';
 
 import { deleteEstablishment } from '@/app/(in)/establishments/actions/delete-establishment';
 import { updateEstablishment } from '@/app/(in)/establishments/actions/update-establishment';
-import { Establishment } from '@/app/(in)/establishments/columns';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -33,6 +32,7 @@ import { SheetContext } from '@/providers/sheet-provider';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
+import { Establishment } from '../../actions/fetch-establishments';
 
 const EstablishmentFormEditSchema = z.object({
   organizationId: z.string({ required_error: 'Selecione uma organização.' }),

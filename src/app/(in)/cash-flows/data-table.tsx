@@ -5,6 +5,7 @@ import {
 import { CashFlowCreateSheet } from '@/app/(in)/cash-flows/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
+import { endOfWeek, startOfWeek } from 'date-fns';
 import { fetchEstablishments } from '../establishments/actions/fetch-establishments';
 import { fetchUsers } from '../users/actions/fetch-users';
 
@@ -18,6 +19,10 @@ export async function CashFlowDataTable({ data }: CashFlowDataTableProps) {
   const operators = users.map(({name}) => name)
 
   const establishments = (await fetchEstablishments()).map(({ name }) => name)
+
+  const currentStartOfWeek = startOfWeek(new Date())
+
+  const currentEndOfWeek = endOfWeek(new Date())
 
   return (
     <DataTable
@@ -40,7 +45,8 @@ export async function CashFlowDataTable({ data }: CashFlowDataTableProps) {
         {
           key: 'date',
           label: 'intervalo',
-          isDate: true
+          isDate: true,
+          defaultValue: { from: currentStartOfWeek, to: currentEndOfWeek },
         },
         {
           key: 'operator',
