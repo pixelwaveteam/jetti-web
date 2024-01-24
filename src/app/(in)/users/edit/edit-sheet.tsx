@@ -17,6 +17,7 @@ import { SheetContext } from '@/providers/sheet-provider';
 import { User } from '@/types/user';
 import { useSession } from 'next-auth/react';
 import { UserOrganizationsFormEdit } from './tabs/organizations/form-edit';
+import { UserTerminalFormEdit } from './tabs/terminals/form-edit';
 
 interface UserOrganization {
   id: string
@@ -24,8 +25,15 @@ interface UserOrganization {
   userId: string;
 }
 
+interface UserTerminal {
+  id: string
+  terminalId: string;
+  userId: string;
+}
+
 export type UserRelations = User & {
   organizations: UserOrganization[]
+  terminals: UserTerminal[]
 }
 
 interface UserEditSheetProps {
@@ -54,9 +62,15 @@ export function UserEditSheet({ user }: UserEditSheetProps) {
             <TabsTrigger value='info'>Informações</TabsTrigger>
             {
               role === 'ADMIN' && (
-                <TabsTrigger value='organizations'>
-                  Organizações
-                </TabsTrigger>
+                <>
+                  <TabsTrigger value='organizations'>
+                    Organizações
+                  </TabsTrigger>
+
+                  <TabsTrigger value='terminals'>
+                    Terminais
+                  </TabsTrigger>
+                </>
               )
             }
           </TabsList>
@@ -65,9 +79,15 @@ export function UserEditSheet({ user }: UserEditSheetProps) {
           </TabsContent>
           {
             role === 'ADMIN' && (
-              <TabsContent value='organizations'>
-                <UserOrganizationsFormEdit user={user} />
-              </TabsContent>
+              <>
+                <TabsContent value='organizations'>
+                  <UserOrganizationsFormEdit user={user} />
+                </TabsContent>
+
+                <TabsContent value='terminal'>
+                  <UserTerminalFormEdit user={user} /> 
+                </TabsContent>
+              </>
             )
           }
         </Tabs>

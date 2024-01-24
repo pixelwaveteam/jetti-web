@@ -5,7 +5,9 @@ import { UserDataTable } from '@/app/(in)/users/data-table';
 import { PageContainer } from '@/components/page-container';
 import { UserProvider } from '@/providers/user-provider';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
+import { fetchTerminals } from '../terminals/actions/fetch-terminals';
 import { fetchUserOrganizations } from './actions/fetch-user-organizations';
+import { fetchUserTerminals } from './actions/fetch-user-terminals';
 import { UserData } from './columns';
 
 export const metadata: Metadata = {
@@ -16,15 +18,20 @@ export const metadata: Metadata = {
 export default async function Users() {
   const rawUsers = await fetchUsers();
   const organizations = await fetchOrganizations();
+  const terminals = await fetchTerminals();
 
   const users = []
 
   for(const rawUser of rawUsers) {
-    const user = rawUser as UserData;
+    const user = { } as UserData;
 
     const userOrganizations = (await fetchUserOrganizations(rawUser.id)).map(({ id, props: { organizationId, userId } }) => ({ id, organizationId, userId }));
 
     user.organizations = userOrganizations || []
+
+    const userTerminals = (await fetchUserTerminals(rawUser.id)).map(({ id, props: { terminalId, userId } }) => ({ id, terminalId, userId }));
+    
+    user.terminals = userTerminals || []
     
     users.push(user)
   }
@@ -32,7 +39,7 @@ export default async function Users() {
   return (
     <PageContainer title='Usuários'>
       <UserProvider
-        initialData={{ organizations }}
+        initialData={{ organizations, terminals }}
       >
         <UserDataTable data={users} />
       </UserProvider>

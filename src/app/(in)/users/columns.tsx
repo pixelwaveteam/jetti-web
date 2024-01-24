@@ -19,6 +19,11 @@ const UserSchema = z.object({
     organizationId: z.string(),
     userId: z.string(),
   })),
+  terminals: z.array(z.object({
+    id: z.string(),
+    terminalId: z.string(),
+    userId: z.string(),
+  })),
   password: z.string(),
 });
 
