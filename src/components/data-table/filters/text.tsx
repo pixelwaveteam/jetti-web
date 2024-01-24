@@ -19,7 +19,7 @@ export function TextFilter({ columnFilterValue, filter, handleFilterChange }: Te
       onChange={(event) =>
         handleFilterChange(event.target.value)
       }
-      className='max-w-sm'
+      className="flex-1 min-w-[15rem]"
       name='search'
       key={filter.key}
     />

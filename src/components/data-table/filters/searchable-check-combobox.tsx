@@ -52,8 +52,8 @@ export function SearchableCheckComboboxFilter({ columnFilterValue, filter, handl
   return (
     <div className='flex items-center gap-x-3' key={filter.label}>
       <SearchableCheckCombobox stickyCheckeds clean={clean} onClean={onClean}>
-        <SearchableCheckComboboxTrigger>
-          <SearchableCheckComboboxValue className="flex-1" placeholder={`Filtrar por ${filter.label}...`} />
+        <SearchableCheckComboboxTrigger className="flex-1 min-w-[15rem]">
+          <SearchableCheckComboboxValue placeholder={`Filtrar por ${filter.label}...`} />
         </SearchableCheckComboboxTrigger>
 
         <SearchableCheckComboboxContent label={filter.label}>

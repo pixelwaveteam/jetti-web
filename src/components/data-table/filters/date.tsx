@@ -33,7 +33,7 @@ export function DateFilter({ filter, columnFilterValue, handleFilterChange }: Da
           <Input
             placeholder={`Filtrar por ${filter.label}...`}
             value={dateToDisplay ?? ''}
-            className='max-w-xs'
+            className="flex-1 min-w-[15rem]"
             readOnly
           />
         </FormItem>
