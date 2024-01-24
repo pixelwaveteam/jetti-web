@@ -23,7 +23,7 @@ export default async function Users() {
   const users = []
 
   for(const rawUser of rawUsers) {
-    const user = { } as UserData;
+    const user = rawUser as UserData;
 
     const userOrganizations = await fetchUserOrganizations(rawUser.id)
 
