@@ -8,7 +8,6 @@ import * as z from 'zod';
 
 import { deleteOrganization } from '@/app/(in)/organizations/actions/delete-organization';
 import { updateOrganization } from '@/app/(in)/organizations/actions/update-organization';
-import { Organization } from '@/app/(in)/organizations/columns';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -24,6 +23,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
+import { Organization } from '../actions/fetch-organizations';
 
 const OrganizationFormEditSchema = z.object({
   name: z.string({ required_error: 'Nome não pode ser vazio.' }),
