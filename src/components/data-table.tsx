@@ -47,6 +47,19 @@ interface FilterBySelect {
   isDate?: undefined;
   options: {[label: string]: any};
   searchableSelect?: boolean;
+  dependency?: string;
+}
+
+interface FilterByDependentSelect {
+  isNumber?: undefined;
+  isDate?: undefined;
+  options: {
+    [dependency: string]: {
+      [label: string]: any
+    } | string[]
+  };
+  searchableSelect?: boolean;
+  dependency: string;
 }
 
 interface BaseFilterBy {
@@ -59,7 +72,7 @@ interface BaseFilterBy {
 type FilterBy = {
   key: string;
   label: string;
-} & (FilterByDate | FilterBySelect | BaseFilterBy)
+} & (FilterByDate | FilterBySelect | FilterByDependentSelect | BaseFilterBy)
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -75,6 +88,18 @@ const renderFilters: (table: TableType<any>, filterBy: FilterBy[]) => ReactNode 
 
     if(filter.options) {
       if(filter.searchableSelect) {
+        const dependencyTableFilterValue = filter.dependency ? table.getColumn(filter.dependency)?.getFilterValue() as string : undefined
+
+        const disableSelect = filter.dependency ? !dependencyTableFilterValue : false;
+
+        const filterOptionsRetrievedByDependency = dependencyTableFilterValue && filter.options[dependencyTableFilterValue];
+
+        const filterOptionsRetrievedByDependencyIsArray = filterOptionsRetrievedByDependency && filterOptionsRetrievedByDependency?.length
+
+        if(filter.dependency && !dependencyTableFilterValue && columnFilterValue) {
+          table.getColumn(filter.key)?.setFilterValue(undefined)
+        }
+
         return (
           <div className='flex items-center gap-x-3' key={filter.key}>
             <SearchableSelect
@@ -84,6 +109,7 @@ const renderFilters: (table: TableType<any>, filterBy: FilterBy[]) => ReactNode 
               onValueChange={(event) =>
                 table.getColumn(filter.key)?.setFilterValue(event)
               }
+              disabled={disableSelect}
             >
               <SearchableSelectTrigger>
                 <SelectValue placeholder={`Filtrar por ${filter.label}...`} />
@@ -91,11 +117,33 @@ const renderFilters: (table: TableType<any>, filterBy: FilterBy[]) => ReactNode 
 
               <SearchableSelectContent label={filter.label}>
                 {
-                  Object.keys(filter.options).map(label => (
-                    <SearchableSelectItem textValue={label} value={filter.options?.[label]} key={filter.options?.[label]}>
-                      {label}
-                    </SearchableSelectItem>
-                  ))
+                  dependencyTableFilterValue ? (
+                    <>
+                      {
+                        filterOptionsRetrievedByDependencyIsArray ? 
+                          filterOptionsRetrievedByDependency.map((label: string) => (
+                            <SearchableSelectItem textValue={label} value={label} key={label}>
+                              {label}
+                            </SearchableSelectItem>
+                          )) : 
+                          Object.keys(filterOptionsRetrievedByDependency).map((label: string) => (
+                            <SearchableSelectItem textValue={label} value={filter.options?.[label]} key={filter.options?.[label]}>
+                              {label}
+                            </SearchableSelectItem>
+                          ))
+                      }
+                    </>
+                  ) : (
+                    <>
+                      {
+                        Object.keys(filter.options).map(label => (
+                          <SearchableSelectItem textValue={label} value={filter.options?.[label]} key={filter.options?.[label]}>
+                            {label}
+                          </SearchableSelectItem>
+                        ))
+                      }
+                    </>
+                  )
                 }
               </SearchableSelectContent>
             </SearchableSelect>
