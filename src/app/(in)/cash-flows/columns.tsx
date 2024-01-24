@@ -24,7 +24,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Código do Terminal
+          Terminal
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
@@ -47,7 +47,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Código de Leitura
+          Leitura
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
