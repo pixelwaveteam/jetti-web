@@ -1,8 +1,7 @@
 import { Plus } from 'lucide-react';
 
-import { establishmentDistributionColumns } from '@/app/(in)/establishments/[id]/tabs/distribution/columns';
+import { EstablishmentDistributionData, establishmentDistributionColumns } from '@/app/(in)/establishments/[id]/tabs/distribution/columns';
 import { EstablishmentDistributionCreateSheet } from '@/app/(in)/establishments/[id]/tabs/distribution/create/create-sheet';
-import { EstablishmentDistributionData } from '@/app/(in)/establishments/actions/fetch-establishment-distributions';
 import { DataTable } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
