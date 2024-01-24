@@ -3,7 +3,6 @@
 import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
-import { Terminal } from '@/app/(in)/terminals/columns';
 import { TerminalFormEdit } from '@/app/(in)/terminals/edit/form-edit';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,6 +13,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
+import { Terminal } from '../actions/fetch-terminals';
 
 interface TerminalEditSheetProps {
   terminal: Terminal;

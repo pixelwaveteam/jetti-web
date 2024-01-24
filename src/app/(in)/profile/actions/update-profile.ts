@@ -4,7 +4,6 @@ import { api } from '@/lib/api';
 
 interface UpdateProfile {
   name: string;
-  email: string;
   role: 'ADMIN' | 'OPERATOR';
 }
 

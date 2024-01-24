@@ -2,47 +2,17 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, ChevronRight } from 'lucide-react';
-import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { convertCentsToCurrency } from '@/utils/currency';
 import { getDateFormatted } from '@/utils/date';
 import { isSameDay, isWithinInterval } from 'date-fns';
 import Link from 'next/link';
+import { CashFlows as FetchCashFlows } from './actions/fetch-cash-flows';
 
-const CashFlowSchema = z.object({
-  id: z.string(),
-  cashFlowCode: z.string(),
-  terminalId: z.string(),
-  operatorId: z.string(),
-  cashIn: z.coerce.number(),
-  cashOut: z.coerce.number(),
-  net: z.coerce.number(),
-  date: z.date(),
-});
-
-export type CashFlowData = z.infer<typeof CashFlowSchema>;
-
-export type CashFlowDataTable = {
-  id: string;
+export type CashFlowDataTable = FetchCashFlows & {
   cashFlowCode: string;
-  terminal: string;
-  operator: string;
-  cashIn: number;
-  cashOut: number;
-  net: number;
-  date: Date;
-};
-
-export type CashFlow = {
-  id: string;
-  terminalId: string;
-  operatorId: string;
-  cashIn: number;
-  cashOut: number;
-  net: number;
-  date: Date;
-  establishmentName: string;
+  establishment?: string;
 };
 
 export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
@@ -65,7 +35,6 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
       return (
         <div className='flex flex-col gap-2 items-start'>
           <span>{cashFlow.terminal}</span>
-          <span className='text-xs text-gray-300'>{cashFlow.operator}</span>
         </div>
       );
     },
@@ -94,14 +63,17 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
     },
   },
   {
-    accessorKey: 'cashIn',
+    accessorKey: 'operator',
+    filterFn: (row, id, value) => {      
+      return value.length > 0 ? value.includes(row.original.operator) : true
+    },
     header: ({ column }) => {
       return (
         <Button
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Entrada
+          Operador
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
@@ -111,20 +83,23 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{convertCentsToCurrency(cashFlow.cashIn)}</span>
+          <span>{cashFlow.operator}</span>
         </div>
       );
     },
   },
   {
-    accessorKey: 'cashOut',
+    accessorKey: 'establishment',
+    filterFn: (row, id, value) => {      
+      return value.length > 0 ? value.includes(row.original.establishment) : true
+    },
     header: ({ column }) => {
       return (
         <Button
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Saída
+          Local
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
@@ -134,7 +109,53 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>-{convertCentsToCurrency(cashFlow.cashOut)}</span>
+          <span>{cashFlow.establishment}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'gross',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Bruto
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{convertCentsToCurrency(cashFlow.cashIn - cashFlow.cashOut)}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'liquid',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Liquido
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{convertCentsToCurrency(cashFlow.cashIn - cashFlow.cashOut)}</span>
         </div>
       );
     },
@@ -169,8 +190,6 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
       const splitDate = (row.getValue(id) as string).slice(0, 10).split('-').map(part => Number(part))
       
       const rowDate = new Date(splitDate[0], splitDate[1]-1, splitDate[2]);
-
-      console.log({rowDate})
 
       if(!value.from) { 
         return isSameDay(rowDate, value.to)

@@ -7,7 +7,6 @@ import * as z from 'zod';
 
 import { deleteUser } from '@/app/(in)/users/actions/delete-user';
 import { updateUser } from '@/app/(in)/users/actions/update-user';
-import { User } from '@/app/(in)/users/columns';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -30,6 +29,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
+import { User } from '@/types/user';
 import { Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
@@ -37,7 +37,6 @@ const UserFormEditSchema = z.object({
   name: z
     .string({ required_error: 'Nome não pode ser vazio.' })
     .max(50, 'Nome deve ter no máximo 50 caracteres.'),
-  email: z.string().email('Email inválido.'),
   role: z
     .enum(['ADMIN', 'OPERATOR'] as const)
     .refine((value) => value === 'ADMIN' || value === 'OPERATOR', {
@@ -51,7 +50,7 @@ interface UserFormEditProps {
   user: User;
 }
 
-export function UserFormEdit({ user }: UserFormEditProps) {
+export function UserInfoFormEdit({ user }: UserFormEditProps) {
   const { toast } = useToast();
   const { setShow } = useContext(SheetContext);
   const { data: session } = useSession();
@@ -62,7 +61,6 @@ export function UserFormEdit({ user }: UserFormEditProps) {
     resolver: zodResolver(UserFormEditSchema),
     defaultValues: {
       name: user.name,
-      email: user.email,
       role: user.role,
     },
   });
@@ -141,19 +139,6 @@ export function UserFormEdit({ user }: UserFormEditProps) {
                 <FormLabel>Nome</FormLabel>
                 <FormControl>
                   <Input placeholder='Nome do usuário' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name='email'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder='Email do usuário' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

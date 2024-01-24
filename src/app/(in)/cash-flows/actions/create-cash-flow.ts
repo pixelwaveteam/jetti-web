@@ -2,8 +2,8 @@
 
 import { revalidateTag } from 'next/cache';
 
-import { CashFlowData } from '@/app/(in)/cash-flows/columns';
 import { api } from '@/lib/api';
+import { CashFlow } from './fetch-cash-flow';
 
 interface CreateCashFlow {
   terminalId: string;
@@ -13,7 +13,7 @@ interface CreateCashFlow {
 }
 
 export async function createCashFlow(data: CreateCashFlow) {
-  const response = await api<CashFlowData>('/cash-flows', {
+  const response = await api<CashFlow>('/cash-flows', {
     method: 'POST',
     body: JSON.stringify(data),
   });

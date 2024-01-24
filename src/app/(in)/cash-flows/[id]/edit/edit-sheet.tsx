@@ -4,7 +4,6 @@ import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
 import { CashFlowFormEdit } from '@/app/(in)/cash-flows/[id]/edit/form-edit';
-import { CashFlow } from '@/app/(in)/cash-flows/columns';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -14,9 +13,12 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
+import { CashFlow } from '../../actions/fetch-cash-flow';
 
 interface CashFlowEditSheetProps {
-  cashFlow: CashFlow;
+  cashFlow: CashFlow & {
+    establishmentName: string;
+  };
 }
 
 export function CashFlowEditSheet({ cashFlow }: CashFlowEditSheetProps) {

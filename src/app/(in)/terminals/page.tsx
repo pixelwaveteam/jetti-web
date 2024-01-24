@@ -7,6 +7,8 @@ import { fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
 import { TerminalDataTable } from '@/app/(in)/terminals/data-table';
 import { PageContainer } from '@/components/page-container';
 import { TerminalProvider } from '@/providers/terminal-provider';
+import { fetchEstablishmentAddress } from '../establishments/actions/fetch-establishment-address';
+import { TerminalData } from './columns';
 
 export const metadata: Metadata = {
   title: 'Terminais',
@@ -21,20 +23,22 @@ export default async function Terminals() {
 
   const terminals = [];
 
-  for(const terminal of rawTerminals) {
-    const establishment = establishments.find(establishment => establishment.id === terminal.establishmentId)
+  for(const rawTerminal of rawTerminals) {
+    const terminal: TerminalData = {...rawTerminal, cashIn: 0, cashOut: 0};
 
-    if(!establishment) {
-      throw new Error(`No establishment found with id ${terminal.establishmentId}`)
+    const establishmentAddress = await fetchEstablishmentAddress(rawTerminal.establishmentId)
+
+    if(establishmentAddress) {
+      terminal.establishmentState = establishmentAddress.state
     }
 
-    const interFace = interfaces.find(interFace => interFace.id === terminal.interfaceId)
+    const interFace = interfaces.find(interFace => interFace.id === rawTerminal.interfaceId)
 
-    if(!interFace) {
-      throw new Error(`No interface found with id ${terminal.interfaceId}`)
+    if(interFace) {
+      terminal.interfaceName = interFace.name
     }
 
-    terminals.push({...terminal, establishment: establishment.name, interface: interFace.name})
+    terminals.push(terminal)
   }
 
   return (

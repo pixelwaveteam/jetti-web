@@ -25,22 +25,64 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { X } from 'lucide-react';
-import { DateRange } from 'react-day-picker';
-import { Calendar } from './ui/calendar';
-import { FormItem } from './ui/form';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { DateFilter } from './filters/date';
+import { NumberFilter } from './filters/number';
+import { SearchableCheckComboboxFilter } from './filters/searchable-check-combobox';
+import { SearchableSelectFilter } from './filters/searchable-select';
+import { SelectFilter } from './filters/select';
+import { TextFilter } from './filters/text';
 
-interface FilterBy  {
+interface FilterByDate {
+  isNumber?: undefined;
+  isDate: true;
+  options?: undefined;
+  searchableSelect?: undefined;
+  items?: undefined;
+}
+
+interface FilterBySelect {
+  isNumber?: undefined;
+  isDate?: undefined;
+  options: {[label: string]: any};
+  searchableSelect?: boolean;
+  dependency?: string;
+  items?: undefined;
+}
+
+interface FilterByDependentSelect {
+  isNumber?: undefined;
+  isDate?: undefined;
+  options: {
+    [dependency: string]: {
+      [label: string]: string
+    } | string[]
+  };
+  searchableSelect?: boolean;
+  dependency: string;
+  items?: undefined;
+}
+
+interface FilterByCheckCombobox {
+  isNumber?: undefined;
+  isDate?: undefined;
+  options?: undefined;
+  items: string[];
+  searchableSelect?: undefined;
+  dependency?: undefined;
+}
+
+interface BaseFilterBy {
+  isNumber?: boolean;
+  isDate?: undefined;
+  items?: undefined;
+  options?: undefined;
+  searchableSelect?: undefined;
+}
+
+type FilterBy = {
   key: string;
   label: string;
-  isNumber?: boolean;
-  isDate?: boolean;
-  options?: {[label: string]: any};
-}
+} & (FilterByDate | FilterBySelect | FilterByDependentSelect | FilterByCheckCombobox | BaseFilterBy)
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -54,115 +96,35 @@ const renderFilters: (table: TableType<any>, filterBy: FilterBy[]) => ReactNode 
   return filterBy.map(filter => {
     const columnFilterValue = table.getColumn(filter.key)?.getFilterValue();
 
+    function handleFilterChange<K>(value: K) {
+      table.getColumn(filter.key)?.setFilterValue(value)
+    }
+
+    if(filter.items) {
+      const values = columnFilterValue instanceof Array ? columnFilterValue : []
+
+      return <SearchableCheckComboboxFilter columnFilterValue={values} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
+    }
+
     if(filter.options) {
-      return (
-        <div className='flex items-center gap-x-3' key={filter.key}>
-          <Select
-            value={ 
-              (columnFilterValue as string) ?? ''
-            }
-            onValueChange={(event) =>
-              table.getColumn(filter.key)?.setFilterValue(event)
-            }
-          >
-            <SelectTrigger className='w-[24rem]'>
-              <SelectValue placeholder={`Filtrar por ${filter.label}...`} />
-            </SelectTrigger>
-            <SelectContent>
-              {
-                Object.keys(filter.options).map(label => (
-                  <SelectItem value={filter.options?.[label]} key={filter.options?.[label]}>
-                    {label}
-                  </SelectItem>
-                ))
-              }
-            </SelectContent>
-          </Select>
-            
-          {
-            <button
-              onClick={() =>
-                table.getColumn(filter.key)?.setFilterValue('')
-              }
-              className='w-fit aria-[hidden="true"]:invisible'
-              aria-hidden={columnFilterValue === undefined}
-            >
-              <X />
-            </button>
-          }
-        </div>
-      )
+      if(filter.searchableSelect) {
+        const dependencyTableFilterValue = filter.dependency ? table.getColumn(filter.dependency)?.getFilterValue() as string : undefined
+
+        return <SearchableSelectFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} dependencyTableFilterValue={dependencyTableFilterValue} key={filter.label} />
+      }
+
+      return <SelectFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
     }
 
     if(filter.isDate) {
-      const columnFilterDateRange = (columnFilterValue as DateRange) ?? ''
-
-      console.log({columnFilterDateRange})
-
-      const fromToDisplay = columnFilterDateRange.from && format(columnFilterDateRange.from, 'dd/MM/yyyy')
-
-      const toToDisplay = columnFilterDateRange.to && format(columnFilterDateRange.to, 'dd/MM/yyyy')
-
-      const dateToDisplay = (fromToDisplay && toToDisplay) ? 
-          `${fromToDisplay} até ${toToDisplay}` 
-        : fromToDisplay
-
-      return (
-        <Popover key={filter.key}>
-          <PopoverTrigger asChild>
-            <FormItem>
-              <Input
-                placeholder={`Filtrar por ${filter.label}...`}
-                value={dateToDisplay ?? ''}
-                className='max-w-xs'
-                readOnly
-              />
-            </FormItem>
-          </PopoverTrigger>
-          <PopoverContent>
-            <Calendar
-              locale={ptBR}
-              mode='range'
-              selected={(columnFilterValue as DateRange)}
-              onSelect={(range) => {table.getColumn(filter.key)?.setFilterValue(range)}}
-              key={filter.key}
-            />
-          </PopoverContent>
-        </Popover>
-      )
+      return <DateFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
     }
 
     if(filter.isNumber) {
-      return (
-        <Input
-          placeholder={`Min de ${filter.label}...`}
-          value={
-            (columnFilterValue as [number, number])?.[0] ?? ''
-          }
-          onChange={(event) =>
-            table.getColumn(filter.key)?.setFilterValue([Number(event.target.value) > 0 ? Number(event.target.value) : undefined, Infinity])
-          }
-          className='max-w-[10rem]'
-          name='search'
-          key={filter.key}
-        />
-      )
+      return <NumberFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
     }
     
-    return (
-      <Input
-        placeholder={`Filtrar por ${filter.label}...`}
-        value={
-          (columnFilterValue as string) ?? ''
-        }
-        onChange={(event) =>
-          table.getColumn(filter.key)?.setFilterValue(event.target.value)
-        }
-        className='max-w-sm'
-        name='search'
-        key={filter.key}
-      />
-    )
+    return <TextFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
   })
 }
 
@@ -196,20 +158,22 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className='flex items-center justify-between gap-2 py-4'>
-        {
-          globalFiltering && (
-            <Input
-              placeholder='Filtrar por todos os campos...'
-              value={globalFilter ?? ''}
-              onChange={({ target: { value } }) => setGlobalFilter(value)}
-              className='max-w-sm'
-              name='globalSearch'
-            />
-          )
-        }
-        {
-          renderFilters(table, filterBy)
-        }
+        <div className='w-full flex flex-wrap gap-2'>
+          {
+            globalFiltering && (
+              <Input
+                placeholder='Filtrar por todos os campos...'
+                value={globalFilter ?? ''}
+                onChange={({ target: { value } }) => setGlobalFilter(value)}
+                className='max-w-sm'
+                name='globalSearch'
+              />
+            )
+          }
+          {
+            renderFilters(table, filterBy)
+          }
+        </div>
         {children}
       </div>
       <div className='rounded-md border'>

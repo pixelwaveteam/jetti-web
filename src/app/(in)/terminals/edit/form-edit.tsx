@@ -7,7 +7,6 @@ import * as z from 'zod';
 
 import { deleteTerminal } from '@/app/(in)/terminals/actions/delete-terminal';
 import { updateTerminal } from '@/app/(in)/terminals/actions/update-terminal';
-import { Terminal } from '@/app/(in)/terminals/columns';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,6 +31,7 @@ import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
 import { TerminalContext } from '@/providers/terminal-provider';
+import { Terminal } from '../actions/fetch-terminals';
 
 const TerminalFormEditSchema = z.object({
   establishmentId: z.string({ required_error: 'Local não pode ser vazio.' }),
