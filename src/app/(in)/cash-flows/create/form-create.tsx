@@ -19,7 +19,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -66,7 +70,7 @@ export function CashFlowFormCreate() {
   const formMethods = useForm<CashFlowFormCreateType>({
     resolver: zodResolver(CashFlowFormCreateSchema),
     defaultValues: {
-      date: new Date()
+      date: new Date(),
     },
   });
 
@@ -75,11 +79,15 @@ export function CashFlowFormCreate() {
   const terminalId = watch('terminalId');
   const establishmentId = watch('establishmentId');
 
-  const onSubmit = async ({date, establishmentId, ...data}: CashFlowFormCreateType) => {
+  const onSubmit = async ({
+    date,
+    establishmentId,
+    ...data
+  }: CashFlowFormCreateType) => {
     try {
       const cashFlowCreated = await createCashFlow({
         ...data,
-        date: date.toISOString()
+        date: date.toISOString(),
       });
 
       setShow(false);
@@ -118,7 +126,6 @@ export function CashFlowFormCreate() {
     }
   }, [setPeriod, terminalId]);
 
-
   return (
     <Form {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
@@ -153,18 +160,26 @@ export function CashFlowFormCreate() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Terminal</FormLabel>
-              <Select disabled={!establishmentId} onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                disabled={!establishmentId}
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder='Selecione...' />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {terminals.filter(terminal => terminal.establishmentId === establishmentId).map((terminal) => (
-                    <SelectItem key={terminal.id} value={terminal.id}>
-                      {terminal.code} - {terminal.interfaceName}
-                    </SelectItem>
-                  ))}
+                  {terminals
+                    .filter(
+                      (terminal) => terminal.establishmentId === establishmentId
+                    )
+                    .map((terminal) => (
+                      <SelectItem key={terminal.id} value={terminal.id}>
+                        {terminal.code} - {terminal.interfaceName}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -177,7 +192,7 @@ export function CashFlowFormCreate() {
           name='cashIn'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Entradas R$</FormLabel>
+              <FormLabel>Entradas</FormLabel>
               <FormControl>
                 <Input placeholder='Total de Entradas' {...field} />
               </FormControl>
@@ -193,7 +208,7 @@ export function CashFlowFormCreate() {
           name='cashOut'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Saídas R$</FormLabel>
+              <FormLabel>Saídas</FormLabel>
               <FormControl>
                 <Input placeholder='Total de Saídas' {...field} />
               </FormControl>
@@ -224,7 +239,7 @@ export function CashFlowFormCreate() {
                   mode='single'
                   selected={field.value}
                   onSelect={field.onChange}
-                  disabled={role === "OPERATOR"}
+                  disabled={role === 'OPERATOR'}
                 />
               </PopoverContent>
             </Popover>

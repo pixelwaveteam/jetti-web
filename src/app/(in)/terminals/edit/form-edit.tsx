@@ -67,7 +67,11 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
 
   const { handleSubmit, control } = formMethods;
 
-  const onSubmit = async ({ cashIn: _, cashOut: __, ...data}: TerminalFormEditType) => {
+  const onSubmit = async ({
+    cashIn: _,
+    cashOut: __,
+    ...data
+  }: TerminalFormEditType) => {
     try {
       await updateTerminal({
         id: terminal.id,
@@ -104,18 +108,19 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
         description: 'Terminal excluido com sucesso.',
         duration: 5000,
       });
-    } catch(err: unknown) {
-      if(err instanceof Error && err.message === "Terminal has dependents.") {
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message === 'Terminal has dependents.') {
         toast({
           variant: 'destructive',
           title: 'Erro',
-          description: 'Esse terminal tem registros associados à ele. Para exclui-lo, exclua suas associações antes!',
+          description:
+            'Esse terminal tem registros associados à ele. Para exclui-lo, exclua suas associações antes!',
           duration: 7000,
         });
 
         setShow(false);
 
-        return
+        return;
       }
 
       toast({
@@ -231,7 +236,7 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
             name='cashIn'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Entradas R$</FormLabel>
+                <FormLabel>Entradas</FormLabel>
                 <FormControl>
                   <Input placeholder='Entrada Inicial' {...field} />
                 </FormControl>
@@ -247,11 +252,13 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
             name='cashOut'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Saídas R$</FormLabel>
+                <FormLabel>Saídas</FormLabel>
                 <FormControl>
                   <Input placeholder='Total de Saídas' {...field} />
                 </FormControl>
-                <FormDescription>Total de saída no terminal inicialmente.</FormDescription>
+                <FormDescription>
+                  Total de saída no terminal inicialmente.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
