@@ -1,7 +1,7 @@
 'use server';
 
-import { CashFlowData } from '@/app/(in)/cash-flows/columns';
 import { api } from '@/lib/api';
+import { CashFlow } from './fetch-cash-flow';
 
 export async function fetchLastCashFlow(terminalId: string) {
   const response = await api(`/cash-flows/last/${terminalId}`);
@@ -10,5 +10,5 @@ export async function fetchLastCashFlow(terminalId: string) {
     throw new Error(response.message);
   }
 
-  return response as CashFlowData;
+  return response as CashFlow;
 }

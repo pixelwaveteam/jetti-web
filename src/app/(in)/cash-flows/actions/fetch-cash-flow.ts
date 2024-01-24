@@ -1,10 +1,19 @@
 'use server';
 
-import { CashFlowData } from '@/app/(in)/cash-flows/columns';
 import { api } from '@/lib/api';
 
+export interface CashFlow {
+  id: string;
+  terminalId: string;
+  operatorId: string;
+  cashIn: number;
+  cashOut: number;
+  net: number;
+  date: string;
+}
+
 export async function fetchCashFlow(id: string) {
-  const response = await api<CashFlowData>(`/cash-flows/${id}`);
+  const response = await api<CashFlow>(`/cash-flows/${id}`);
 
   return response;
 }

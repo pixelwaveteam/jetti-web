@@ -3,12 +3,12 @@
 import { subDays } from 'date-fns';
 import { ReactNode, createContext, useCallback, useState } from 'react';
 
-import { CashFlowDataTable as CashFlowData } from '@/app/(in)/cash-flows/columns';
+import { CashFlows } from '@/app/(in)/cash-flows/actions/fetch-cash-flows';
 import { EstablishmentData } from '@/app/(in)/establishments/columns';
 import { TerminalData } from '@/app/(in)/terminals/columns';
 
 interface DashboardContextValues {
-  cashFlows: CashFlowData[];
+  cashFlows: CashFlows[];
   terminals: TerminalData[];
   establishments: EstablishmentData[];
   filter: {
@@ -25,7 +25,7 @@ export const DashboardContext = createContext<DashboardContextValues>(
 interface DashboardProviderProps {
   children: ReactNode;
   initialData: {
-    cashFlows: CashFlowData[];
+    cashFlows: CashFlows[];
     terminals: TerminalData[];
     establishments: EstablishmentData[];
   };

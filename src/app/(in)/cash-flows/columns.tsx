@@ -8,9 +8,9 @@ import { convertCentsToCurrency } from '@/utils/currency';
 import { getDateFormatted } from '@/utils/date';
 import { isSameDay, isWithinInterval } from 'date-fns';
 import Link from 'next/link';
-import { CashFlow as FetchCashFlow } from './actions/fetch-cash-flows';
+import { CashFlows as FetchCashFlows } from './actions/fetch-cash-flows';
 
-export type CashFlowDataTable = FetchCashFlow & {
+export type CashFlowDataTable = FetchCashFlows & {
   cashFlowCode: string;
   establishment?: string;
 };

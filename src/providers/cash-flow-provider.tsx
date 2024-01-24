@@ -10,7 +10,7 @@ interface CashFlowContextValues {
     startDate: Date;
     endDate: Date;
   } | null;
-  setPeriod: (lastDate: Date | null) => void;
+  setPeriod: (lastDate: string | null) => void;
 }
 
 export const CashFlowContext = createContext<CashFlowContextValues>(
@@ -35,7 +35,7 @@ export function CashFlowProvider({
 
   const terminals = initialData.terminals;
 
-  const handlePeriodChange = useCallback((lastDate: Date | null) => {
+  const handlePeriodChange = useCallback((lastDate: string | null) => {
     if (!lastDate) {
       setPeriod(null);
       return;

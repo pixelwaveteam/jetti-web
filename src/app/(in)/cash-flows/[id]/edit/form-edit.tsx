@@ -7,7 +7,6 @@ import * as z from 'zod';
 
 import { deleteCashFlow } from '@/app/(in)/cash-flows/actions/delete-cash-flow';
 import { updateCashFlow } from '@/app/(in)/cash-flows/actions/update-cash-flow';
-import { CashFlow } from '@/app/(in)/cash-flows/columns';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -36,6 +35,7 @@ import { SheetContext } from '@/providers/sheet-provider';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
+import { CashFlow } from '../../actions/fetch-cash-flow';
 
 const CashFlowFormEditSchema = z.object({
   terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
@@ -55,7 +55,9 @@ const CashFlowFormEditSchema = z.object({
 type CashFlowFormEditType = z.infer<typeof CashFlowFormEditSchema>;
 
 interface CashFlowFormEditProps {
-  cashFlow: CashFlow;
+  cashFlow: CashFlow & {
+    establishmentName: string;
+  };
 }
 
 export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
