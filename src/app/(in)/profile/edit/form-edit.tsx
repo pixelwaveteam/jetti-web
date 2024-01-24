@@ -33,6 +33,9 @@ const ProfileFormEditSchema = z.object({
   name: z
     .string({ required_error: 'Nome não pode ser vazio.' })
     .max(50, 'Nome deve ter no máximo 50 caracteres.'),
+  username: z
+    .string({ required_error: 'Username não pode ser vazio.' })
+    .max(15, 'Nome deve ter no máximo 15 caracteres.'),
   role: z
     .enum(['ADMIN', 'OPERATOR'] as const)
     .refine((value) => value === 'ADMIN' || value === 'OPERATOR', {
@@ -46,6 +49,7 @@ interface ProfileFormEditProps {
   user: {
     id: string;
     name: string;
+    username: string;
     role: 'ADMIN' | 'OPERATOR';
   };
 }
@@ -59,6 +63,7 @@ export function ProfileFormEdit({ user }: ProfileFormEditProps) {
     resolver: zodResolver(ProfileFormEditSchema),
     defaultValues: {
       name: user.name,
+      username: user.username,
       role: user.role,
     },
   });
@@ -81,6 +86,7 @@ export function ProfileFormEdit({ user }: ProfileFormEditProps) {
         user: {
           ...session.user,
           name: data.name,
+          username: data.username,
         },
       });
 
@@ -114,6 +120,19 @@ export function ProfileFormEdit({ user }: ProfileFormEditProps) {
                 <FormLabel>Nome</FormLabel>
                 <FormControl>
                   <Input placeholder='Nome do usuário' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name='username'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nome</FormLabel>
+                <FormControl>
+                  <Input placeholder='Username do usuário' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

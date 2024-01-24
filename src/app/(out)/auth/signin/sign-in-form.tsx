@@ -20,7 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 const SignInFormSchema = z.object({
-  name: z.string({ required_error: 'Nome é obrigatório' }),
+  username: z.string({ required_error: 'Username é obrigatório' }),
   password: z
     .string()
     .min(1, 'Senha obrigatória')
@@ -47,14 +47,14 @@ export const SignInForm = () => {
     const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
 
     const response = await signIn('credentials', {
-      name: data.name,
+      username: data.username,
       password: data.password,
       redirect: false,
     });
 
     if (response?.error) {
       // set focus to name input using react-hook-form
-      setFocus('name');
+      setFocus('username');
 
       toast({
         variant: 'destructive',
@@ -75,16 +75,12 @@ export const SignInForm = () => {
         <div className='space-y-4'>
           <FormField
             control={control}
-            name='name'
+            name='username'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nome</FormLabel>
+                <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder='John Doe'
-                    {...field}
-                    tabIndex={1}
-                  />
+                  <Input placeholder='johndoe' {...field} tabIndex={1} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
