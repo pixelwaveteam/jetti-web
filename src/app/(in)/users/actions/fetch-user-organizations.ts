@@ -10,7 +10,6 @@ export interface UserOrganization {
 
 export async function fetchUserOrganizations(id: string) {
   const response = await api<UserOrganization[]>(`/users/organizations/${id}`);
-  console.log({response})
 
   return response;
 }
