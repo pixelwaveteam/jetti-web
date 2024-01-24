@@ -8,7 +8,6 @@ import * as z from 'zod';
 
 import { deleteInterface } from '@/app/(in)/interfaces/actions/delete-interface';
 import { updateInterface } from '@/app/(in)/interfaces/actions/update-interface';
-import { Interface } from '@/app/(in)/interfaces/columns';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -24,6 +23,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
+import { Interface } from '../actions/fetch-interfaces';
 
 const InterfaceFormEditSchema = z.object({
   name: z.string({ required_error: 'Nome não pode ser vazio.' }),

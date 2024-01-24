@@ -3,7 +3,6 @@
 import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
-import { Interface } from '@/app/(in)/interfaces/columns';
 import { InterfaceFormEdit } from '@/app/(in)/interfaces/edit/form-edit';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,6 +13,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
+import { Interface } from '../actions/fetch-interfaces';
 
 interface InterfaceEditSheetProps {
   interfaceTerminal: Interface;

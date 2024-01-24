@@ -2,22 +2,13 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import * as z from 'zod';
 
 import { InterfaceEditSheet } from '@/app/(in)/interfaces/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
+import { Interface } from './actions/fetch-interfaces';
 
-const InterfaceSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-});
-
-export type InterfaceData = z.infer<typeof InterfaceSchema>;
-export type Interface = {
-  id: string;
-  name: string;
-};
+export type InterfaceData = Interface;
 
 export const interfaceColumns: ColumnDef<InterfaceData>[] = [
   {
