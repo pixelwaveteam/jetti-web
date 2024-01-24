@@ -25,11 +25,11 @@ export default async function Users() {
   for(const rawUser of rawUsers) {
     const user = { } as UserData;
 
-    const userOrganizations = (await fetchUserOrganizations(rawUser.id)).map(({ id, props: { organizationId, userId } }) => ({ id, organizationId, userId }));
+    const userOrganizations = await fetchUserOrganizations(rawUser.id)
 
     user.organizations = userOrganizations || []
 
-    const userTerminals = (await fetchUserTerminals(rawUser.id)).map(({ id, props: { terminalId, userId } }) => ({ id, terminalId, userId }));
+    const userTerminals = await fetchUserTerminals(rawUser.id)
     
     user.terminals = userTerminals || []
     
