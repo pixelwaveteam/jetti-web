@@ -115,6 +115,52 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
     },
   },
   {
+    accessorKey: 'gross',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Bruto
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{convertCentsToCurrency(cashFlow.cashIn - cashFlow.cashOut)}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'liquid',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Liquido
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{convertCentsToCurrency(cashFlow.cashIn - cashFlow.cashOut)}</span>
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: 'total',
     header: ({ column }) => {
       return (
