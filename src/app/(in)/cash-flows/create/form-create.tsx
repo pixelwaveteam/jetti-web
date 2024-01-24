@@ -162,7 +162,7 @@ export function CashFlowFormCreate() {
                 <SelectContent>
                   {terminals.filter(terminal => terminal.establishmentId === establishmentId).map((terminal) => (
                     <SelectItem key={terminal.id} value={terminal.id}>
-                      {terminal.code}
+                      {terminal.code} - {terminal.interfaceName}
                     </SelectItem>
                   ))}
                 </SelectContent>
