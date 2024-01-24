@@ -20,11 +20,11 @@ export default async function Users() {
 
   for(const user of rawUsers) {
     try {
-      const userOrganizations = await fetchUserOrganizations(user.id);
+      const organizations = await fetchUserOrganizations(user.id);
   
-      users.push({ ...user, userOrganizations })
+      users.push({ ...user, organizations })
     } catch {
-      users.push({ ...user, userOrganizations: [] })
+      users.push({ ...user, organizations: [] })
     }
   }
 
