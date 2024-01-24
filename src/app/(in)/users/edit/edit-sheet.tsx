@@ -15,21 +15,11 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SheetContext } from '@/providers/sheet-provider';
 import { useSession } from 'next-auth/react';
+import { UserOrganization } from '../actions/fetch-user-organizations';
+import { UserTerminal } from '../actions/fetch-user-terminals';
 import { User } from '../actions/fetch-users';
 import { UserOrganizationsFormEdit } from './tabs/organizations/form-edit';
 import { UserTerminalFormEdit } from './tabs/terminals/form-edit';
-
-interface UserOrganization {
-  id: string
-  organizationId: string;
-  userId: string;
-}
-
-interface UserTerminal {
-  id: string
-  terminalId: string;
-  userId: string;
-}
 
 export type UserRelations = User & {
   organizations: UserOrganization[]
