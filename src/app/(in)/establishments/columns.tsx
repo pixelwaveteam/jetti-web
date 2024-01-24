@@ -56,7 +56,7 @@ export const establishmentColumns: ColumnDef<EstablishmentData>[] = [
       if(establishment.state) {
         return (
           <div className='flex gap-2 items-center'>
-            <span className='truncate'>{establishment.state}</span>
+            <span className='truncate'>{establishment.state || '-'}</span>
           </div>
         )
       }
@@ -81,7 +81,7 @@ export const establishmentColumns: ColumnDef<EstablishmentData>[] = [
       if(establishment.city) {
         return (
           <div className='flex gap-2 items-center'>
-            <span className='truncate'>{establishment.city}</span>
+            <span className='truncate'>{establishment.city || '-'}</span>
           </div>
         )
       }

@@ -79,7 +79,7 @@ export const terminalColumns: ColumnDef<TerminalData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{terminal.establishmentState}</span>
+          <span className='truncate'>{terminal.establishmentState || '-'}</span>
         </div>
       );
     },
@@ -102,7 +102,7 @@ export const terminalColumns: ColumnDef<TerminalData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{terminal.interfaceName}</span>
+          <span className='truncate'>{terminal.interfaceName || '-'}</span>
         </div>
       );
     },

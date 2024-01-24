@@ -109,7 +109,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.establishment}</span>
+          <span>{cashFlow.establishment  || '-'}</span>
         </div>
       );
     },
