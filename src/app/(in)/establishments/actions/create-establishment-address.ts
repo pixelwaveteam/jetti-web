@@ -2,8 +2,8 @@
 
 import { revalidateTag } from 'next/cache';
 
-import { EstablishmentAddressData } from '@/app/(in)/establishments/actions/fetch-establishment-address';
 import { api } from '@/lib/api';
+import { EstablishmentAddress } from './fetch-establishment-address';
 
 interface CreateEstablishmentAddress {
   establishmentId: string;
@@ -19,7 +19,7 @@ interface CreateEstablishmentAddress {
 export async function createEstablishmentAddress(
   data: CreateEstablishmentAddress
 ) {
-  const response = await api<EstablishmentAddressData>(
+  const response = await api<EstablishmentAddress>(
     '/establishment-adresses',
     {
       method: 'POST',

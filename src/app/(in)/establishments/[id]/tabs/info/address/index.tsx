@@ -1,6 +1,6 @@
 import { EstablishmentAddressCreateSheet } from '@/app/(in)/establishments/[id]/tabs/info/address/create/create-sheet';
 import { EstablishmentAddressEditSheet } from '@/app/(in)/establishments/[id]/tabs/info/address/edit/edit-sheet';
-import { EstablishmentAddressData } from '@/app/(in)/establishments/actions/fetch-establishment-address';
+import { EstablishmentAddress } from '@/app/(in)/establishments/actions/fetch-establishment-address';
 import { EmptyState } from '@/components/empty-state';
 import {
   Card,
@@ -13,7 +13,7 @@ import { SheetProvider } from '@/providers/sheet-provider';
 
 interface EstablishmentAddressProps {
   establishmentId: string;
-  establishmentAddress?: EstablishmentAddressData;
+  establishmentAddress?: EstablishmentAddress;
 }
 
 export function EstablishmentAddress({
