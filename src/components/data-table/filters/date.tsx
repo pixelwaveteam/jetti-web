@@ -29,11 +29,12 @@ export function DateFilter({ filter, columnFilterValue, handleFilterChange }: Da
   return (
     <Popover key={filter.key}>
       <PopoverTrigger asChild>
-        <FormItem>
+        <FormItem
+        className="flex-1 min-w-[15rem]">
           <Input
             placeholder={`Filtrar por ${filter.label}...`}
             value={dateToDisplay ?? ''}
-            className="flex-1 min-w-[15rem]"
+            
             readOnly
           />
         </FormItem>
