@@ -6,6 +6,7 @@ import { PageContainer } from '@/components/page-container';
 import { UserProvider } from '@/providers/user-provider';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
 import { fetchUserOrganizations } from './actions/fetch-user-organizations';
+import { UserData } from './columns';
 
 export const metadata: Metadata = {
   title: 'Usuários',
@@ -18,14 +19,14 @@ export default async function Users() {
 
   const users = []
 
-  for(const user of rawUsers) {
-    try {
-      const organizations = await fetchUserOrganizations(user.id);
-  
-      users.push({ ...user, organizations })
-    } catch {
-      users.push({ ...user, organizations: [] })
-    }
+  for(const rawUser of rawUsers) {
+    const user = rawUser as UserData;
+
+    const userOrganizations = (await fetchUserOrganizations(rawUser.id)).map(({ id, props: { organizationId, userId } }) => ({ id, organizationId, userId }));
+
+    user.organizations = userOrganizations || []
+    
+    users.push(user)
   }
 
   return (
