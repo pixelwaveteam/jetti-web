@@ -81,13 +81,15 @@ export function SearchableSelectFilter({ columnFilterValue, filter, handleFilter
           }
         </SearchableSelectContent>
       </SearchableSelect>
-
+      
+      
       <button
         onClick={() =>
           handleFilterChange('')
         }
-        className='w-fit aria-[hidden="true"]:invisible'
-        aria-hidden={columnFilterValue === undefined}
+        className='w-fit disabled:opacity-40 disabled:cursor-not-allowed aria-hidden:invisible'
+        disabled={columnFilterValue === undefined}
+        aria-hidden={disableSelect}
       >
         <X />
       </button>
