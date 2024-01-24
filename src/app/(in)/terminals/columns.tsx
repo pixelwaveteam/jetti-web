@@ -15,7 +15,7 @@ const TerminalSchema = z.object({
   interfaceId: z.string(),
   code: z.string(),
   isActive: z.boolean(),
-  establishment: z.string(),
+  establishment: z.string().optional(),
   interface: z.string(),
 });
 
@@ -26,7 +26,7 @@ export type Terminal = {
   interfaceId: string;
   code: string;
   isActive: boolean;
-  establishment: string;
+  establishment?: string;
   interface: string;
 };
 
@@ -83,7 +83,7 @@ export const terminalColumns: ColumnDef<TerminalData>[] = [
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Local
+          Estado
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
