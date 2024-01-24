@@ -84,7 +84,7 @@ export function UserEditSheet({ user }: UserEditSheetProps) {
                   <UserOrganizationsFormEdit user={user} />
                 </TabsContent>
 
-                <TabsContent value='terminal'>
+                <TabsContent value='terminals'>
                   <UserTerminalFormEdit user={user} /> 
                 </TabsContent>
               </>
