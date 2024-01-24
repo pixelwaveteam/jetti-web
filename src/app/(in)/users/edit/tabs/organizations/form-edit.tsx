@@ -20,7 +20,7 @@ import { Trash, Triangle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { createUserOrganization } from '../../../actions/create-user-oganization';
 import { deleteUserOrganization } from '../../../actions/delete-user-organization';
-import { UserWithItsOrganizations } from '../../edit-sheet';
+import { UserRelations } from '../../edit-sheet';
 
 interface CreateUserOrganization {
   organizationId: string;
@@ -28,7 +28,7 @@ interface CreateUserOrganization {
 }
 
 interface UserFormEditProps {
-  user: UserWithItsOrganizations
+  user: UserRelations
 }
 
 interface NamedUserOrganization  {

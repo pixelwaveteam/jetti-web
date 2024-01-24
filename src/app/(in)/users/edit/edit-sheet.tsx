@@ -24,12 +24,12 @@ interface UserOrganization {
   userId: string;
 }
 
-export type UserWithItsOrganizations = User & {
+export type UserRelations = User & {
   organizations: UserOrganization[]
 }
 
 interface UserEditSheetProps {
-  user: UserWithItsOrganizations;
+  user: UserRelations;
 }
 
 export function UserEditSheet({ user }: UserEditSheetProps) {
