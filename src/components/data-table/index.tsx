@@ -82,6 +82,7 @@ interface BaseFilterBy {
 type FilterBy = {
   key: string;
   label: string;
+  defaultValue?: any;
 } & (FilterByDate | FilterBySelect | FilterByDependentSelect | FilterByCheckCombobox | BaseFilterBy)
 
 interface DataTableProps<TData, TValue> {
@@ -135,8 +136,9 @@ export function DataTable<TData, TValue>({
   children,
   globalFiltering,
 }: DataTableProps<TData, TValue>) {
+  const defaultFilters = filterBy.filter(filter => filter.defaultValue).map(({ key, defaultValue }) => ({ id: key, value: defaultValue }))
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(defaultFilters);
   const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
@@ -148,6 +150,7 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+
     state: {
       sorting,
       columnFilters,
