@@ -7,6 +7,7 @@ import { TerminalEditSheet } from '@/app/(in)/terminals/edit/edit-sheet';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
+import { convertCentsToCurrency } from '@/utils/currency';
 import { Terminal } from './actions/fetch-terminals';
 
 export type TerminalData = Terminal & {
@@ -103,6 +104,52 @@ export const terminalColumns: ColumnDef<TerminalData>[] = [
       return (
         <div className='flex gap-2 items-center'>
           <span className='truncate'>{terminal.interfaceName}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'cashIn',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Entrada
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{convertCentsToCurrency(cashFlow.cashIn || 0)}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'cashOut',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Saída
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>-{convertCentsToCurrency(cashFlow.cashOut || 0)}</span>
         </div>
       );
     },
