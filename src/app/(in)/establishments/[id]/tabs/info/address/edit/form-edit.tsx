@@ -4,8 +4,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+import { deleteEstablishmentAddress } from '@/app/(in)/establishments/actions/delete-establishment-address';
 import { EstablishmentAddressData } from '@/app/(in)/establishments/actions/fetch-establishment-address';
 import { updateEstablishmentAddress } from '@/app/(in)/establishments/actions/update-establishment-address';
+import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -17,7 +19,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import braziliansCitiesByState from '@/data/brazilian-cities-by-state.json';
+import braziliansStates from '@/data/brazilian-states.json';
 import { useToast } from '@/hooks/use-toast';
+import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
 import { Loader2 } from 'lucide-react';
 import { useContext } from 'react';
@@ -44,6 +50,14 @@ interface EstablishmentAddressFormEditProps {
   establishmentAddress: EstablishmentAddressData;
 }
 
+const statesItems = braziliansStates.reduce((acc, state) => (
+  [ ...acc, [state.shortName, state.name] ]
+), [] as string[][])
+
+const cityItems = braziliansCitiesByState.estados.reduce((acc, state) => (
+  { ...acc, [state.sigla]: state.cidades }
+), {} as { [x: string]: string[] })
+
 export function EstablishmentAddressFormEdit({
   establishmentAddress,
 }: EstablishmentAddressFormEditProps) {
@@ -63,7 +77,11 @@ export function EstablishmentAddressFormEdit({
     },
   });
 
-  const { handleSubmit, formState, control } = formMethods;
+  const { handleSubmit, formState, control, watch } = formMethods;
+
+  const state = watch('state');
+
+  const cityItemsByState = cityItems[state as keyof typeof cityItems] || undefined
 
   const onSubmit = async (data: EstablishmentAddressFormEditType) => {
     try {
@@ -92,6 +110,28 @@ export function EstablishmentAddressFormEdit({
       });
     }
   };
+
+  async function handleDelete() {
+    try {
+      await deleteEstablishmentAddress(establishmentAddress.id)
+
+      setShow(false);
+
+      toast({
+        variant: 'default',
+        title: 'Sucesso',
+        description: 'Endereço do Local excluído com sucesso.',
+        duration: 5000,
+      });
+    } catch {
+      toast({
+        variant: 'destructive',
+        title: 'Erro',
+        description: 'Favor tente novamente mais tarde.',
+        duration: 5000,
+      });
+    }
+  }
 
   return (
     <div className='space-y-6'>
@@ -178,31 +218,91 @@ export function EstablishmentAddressFormEdit({
               </FormItem>
             )}
           />
-          <FormField
-            control={control}
-            name='state'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Estado</FormLabel>
-                <FormControl>
-                  <Input placeholder='Estado do local' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
-          <Button
-            type='submit'
-            disabled={formState.isSubmitting}
-            className='w-full'
-          >
-            {formState.isSubmitting ? (
-              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-            ) : (
-              'Alterar'
-            )}
-          </Button>
+          <FormField
+          control={control}
+          name='state'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Estado</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder='Selecione...' />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {
+                      statesItems.map(item => (
+                        <SelectItem value={item[0]} key={item[0]}>
+                          {item[1]}
+                        </SelectItem>
+                      ))
+                    }
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={control}
+          name='city'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Cidade</FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  disabled={!state}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder='Selecione...' />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {
+                      cityItemsByState && cityItemsByState.map(item => (
+                        <SelectItem value={item} key={item}>
+                          {item}
+                        </SelectItem>
+                      ))
+                    }
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+          <div className='flex gap-2'>
+            <Button
+              type='submit'
+              disabled={formState.isSubmitting}
+              className='w-full'
+            >
+              {formState.isSubmitting ? (
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              ) : (
+                'Alterar'
+              )}
+            </Button>
+            <DialogProvider>
+              <ConfirmDeletionDialog onConfirm={handleDelete}>
+                <Button type='button' variant='destructive' className='w-full'>
+                  Excluir
+                </Button>
+              </ConfirmDeletionDialog>
+            </DialogProvider>
+          </div>
         </form>
       </Form>
     </div>
