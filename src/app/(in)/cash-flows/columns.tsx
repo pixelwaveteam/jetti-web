@@ -12,6 +12,7 @@ import { CashFlow as FetchCashFlow } from './actions/fetch-cash-flows';
 
 export type CashFlowDataTable = FetchCashFlow & {
   cashFlowCode: string;
+  establishment?: string;
 };
 
 export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
@@ -57,6 +58,58 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
       return (
         <div className='flex flex-col gap-2 items-start'>
           <span>{cashFlow.cashFlowCode}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'operator',
+    filterFn: (row, id, value) => {      
+      return value.length > 0 ? value.includes(row.original.operator) : true
+    },
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Operador
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{cashFlow.operator}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'establishment',
+    filterFn: (row, id, value) => {      
+      return value.length > 0 ? value.includes(row.original.establishment) : true
+    },
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Local
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{cashFlow.establishment}</span>
         </div>
       );
     },
