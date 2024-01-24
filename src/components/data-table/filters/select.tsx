@@ -36,17 +36,15 @@ export function SelectFilter({ columnFilterValue, filter, handleFilterChange }: 
         </SelectContent>
       </Select>
         
-      {
-        <button
-          onClick={() =>
-            handleFilterChange('')
-          }
-          className='w-fit aria-[hidden="true"]:invisible'
-          aria-hidden={columnFilterValue === undefined}
-        >
-          <X />
-        </button>
-      }
+      <button
+        onClick={() =>
+          handleFilterChange('')
+        }
+        className='w-fit disabled:opacity-60'
+        disabled={columnFilterValue === undefined}
+      >
+        <X />
+      </button>
     </div>
   )
 }
