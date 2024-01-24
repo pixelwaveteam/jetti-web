@@ -2,28 +2,14 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import * as z from 'zod';
 
 import { EstablishmentContactEditSheet } from '@/app/(in)/establishments/[id]/tabs/info/contacts/edit/edit-sheet';
+import { EstablishmentContact } from '@/app/(in)/establishments/actions/fetch-establishment-contacts';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 
-const EstablishmentContactSchema = z.object({
-  id: z.string(),
-  establishmentId: z.string(),
-  name: z.string(),
-  phone: z.string(),
-});
 
-export type EstablishmentContactData = z.infer<
-  typeof EstablishmentContactSchema
->;
-export type EstablishmentContact = {
-  id: string;
-  establishmentId: string;
-  name: string;
-  phone: string;
-};
+export type EstablishmentContactData = EstablishmentContact
 
 export const establishmentContactColumns: ColumnDef<EstablishmentContactData>[] =
   [

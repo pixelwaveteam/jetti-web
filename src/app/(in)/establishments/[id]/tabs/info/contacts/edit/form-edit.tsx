@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { deleteEstablishmentContact } from '@/app/(in)/establishments/actions/delete-establishment-contact';
-import { EstablishmentContactData } from '@/app/(in)/establishments/actions/fetch-establishment-contacts';
 import { updateEstablishmentContact } from '@/app/(in)/establishments/actions/update-establishment-contact';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
@@ -23,6 +22,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
+import { EstablishmentContactData } from '../columns';
 
 const EstablishmentContactFormEditSchema = z.object({
   name: z.string({ required_error: 'Nome não pode ser vazio.' }),

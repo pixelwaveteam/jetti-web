@@ -4,7 +4,6 @@ import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
 import { EstablishmentContactFormEdit } from '@/app/(in)/establishments/[id]/tabs/info/contacts/edit/form-edit';
-import { EstablishmentContactData } from '@/app/(in)/establishments/actions/fetch-establishment-contacts';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -14,6 +13,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
+import { EstablishmentContactData } from '../columns';
 
 interface EstablishmentContactEditSheetProps {
   establishmentContact: EstablishmentContactData;

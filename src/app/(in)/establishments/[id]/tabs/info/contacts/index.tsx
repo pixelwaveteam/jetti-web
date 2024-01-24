@@ -1,6 +1,5 @@
 import { EstablishmentContactCreateSheet } from '@/app/(in)/establishments/[id]/tabs/info/contacts/create/create-sheet';
 import { EstablishmentContactDataTable } from '@/app/(in)/establishments/[id]/tabs/info/contacts/data-table';
-import { EstablishmentContactData } from '@/app/(in)/establishments/actions/fetch-establishment-contacts';
 import { EmptyState } from '@/components/empty-state';
 import {
   Card,
@@ -10,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { SheetProvider } from '@/providers/sheet-provider';
+import { EstablishmentContactData } from './columns';
 
 interface EstablishmentAddressProps {
   establishmentId: string;
