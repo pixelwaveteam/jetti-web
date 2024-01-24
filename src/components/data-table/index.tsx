@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/table';
 import { DateFilter } from './filters/date';
 import { NumberFilter } from './filters/number';
+import { SearchableCheckComboboxFilter } from './filters/searchable-check-combobox';
 import { SearchableSelectFilter } from './filters/searchable-select';
 import { SelectFilter } from './filters/select';
 import { TextFilter } from './filters/text';
@@ -36,6 +37,7 @@ interface FilterByDate {
   isDate: true;
   options?: undefined;
   searchableSelect?: undefined;
+  items?: undefined;
 }
 
 interface FilterBySelect {
@@ -44,6 +46,7 @@ interface FilterBySelect {
   options: {[label: string]: any};
   searchableSelect?: boolean;
   dependency?: string;
+  items?: undefined;
 }
 
 interface FilterByDependentSelect {
@@ -56,11 +59,22 @@ interface FilterByDependentSelect {
   };
   searchableSelect?: boolean;
   dependency: string;
+  items?: undefined;
+}
+
+interface FilterByCheckCombobox {
+  isNumber?: undefined;
+  isDate?: undefined;
+  options?: undefined;
+  items: string[];
+  searchableSelect?: undefined;
+  dependency?: undefined;
 }
 
 interface BaseFilterBy {
   isNumber?: boolean;
   isDate?: undefined;
+  items?: undefined;
   options?: undefined;
   searchableSelect?: undefined;
 }
@@ -68,7 +82,7 @@ interface BaseFilterBy {
 type FilterBy = {
   key: string;
   label: string;
-} & (FilterByDate | FilterBySelect | FilterByDependentSelect | BaseFilterBy)
+} & (FilterByDate | FilterBySelect | FilterByDependentSelect | FilterByCheckCombobox | BaseFilterBy)
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -86,25 +100,31 @@ const renderFilters: (table: TableType<any>, filterBy: FilterBy[]) => ReactNode 
       table.getColumn(filter.key)?.setFilterValue(value)
     }
 
+    if(filter.items) {
+      const values = columnFilterValue instanceof Array ? columnFilterValue : []
+
+      return <SearchableCheckComboboxFilter columnFilterValue={values} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
+    }
+
     if(filter.options) {
       if(filter.searchableSelect) {
         const dependencyTableFilterValue = filter.dependency ? table.getColumn(filter.dependency)?.getFilterValue() as string : undefined
 
-        return <SearchableSelectFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} dependencyTableFilterValue={dependencyTableFilterValue} key={filter.key} />
+        return <SearchableSelectFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} dependencyTableFilterValue={dependencyTableFilterValue} key={filter.label} />
       }
 
-      return <SelectFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.key} />
+      return <SelectFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
     }
 
     if(filter.isDate) {
-      return <DateFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.key} />
+      return <DateFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
     }
 
     if(filter.isNumber) {
-      return <NumberFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.key} />
+      return <NumberFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
     }
     
-    return <TextFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.key} />
+    return <TextFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
   })
 }
 
