@@ -20,7 +20,7 @@ export default async function InLayout({ children }: InLayoutProps) {
       <SideBar />
       <div className='flex flex-col flex-1'>
         <HeaderDashLayout />
-        <main className='flex flex-1 mt-8 overflow-y-auto mx-auto w-full max-w-6xl px-4'>
+        <main className='flex flex-1 mt-8 overflow-y-auto mx-auto w-full max-w-7xl px-4'>
           {children}
         </main>
       </div>

@@ -17,7 +17,7 @@ import { CashFlow } from '../../actions/fetch-cash-flow';
 
 interface CashFlowEditSheetProps {
   cashFlow: CashFlow & {
-    establishmentName: string;
+    establishmentId: string;
   };
 }
 

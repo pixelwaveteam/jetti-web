@@ -25,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { DateFilter } from './filters/date';
 import { NumberFilter } from './filters/number';
 import { SearchableCheckComboboxFilter } from './filters/searchable-check-combobox';
@@ -160,26 +161,33 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className='flex justify-between gap-2 py-4'>
-        <div className='w-full flex flex-wrap gap-2'>
+      <div className='flex flex-col gap-2 py-4'>
+        <Card className='w-full'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>Filtros</CardTitle>
+          </CardHeader>
+          <CardContent className='w-full gap-2 flex flex-wrap'>
+            {
+              renderFilters(table, filterBy)
+            }
+          </CardContent>
+        </Card>
+        <div className='flex w-full justify-end gap-2'>
           {
             globalFiltering && (
               <Input
                 placeholder='Filtrar por todos os campos...'
                 value={globalFilter ?? ''}
                 onChange={({ target: { value } }) => setGlobalFilter(value)}
-                className='max-w-sm'
                 name='globalSearch'
               />
             )
           }
-          {
-            renderFilters(table, filterBy)
-          }
+
+          {children}
         </div>
-        {children}
       </div>
-      <div className='rounded-md border'>
+      <div className='rounded-md border overflow-x-auto'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

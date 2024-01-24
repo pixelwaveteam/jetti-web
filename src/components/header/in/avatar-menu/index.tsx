@@ -58,7 +58,7 @@ export function HeaderAvatarMenu() {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56'>
-        <DropdownMenuLabel>Ruver Dornelas</DropdownMenuLabel>
+        <DropdownMenuLabel>{session?.user?.name || ''}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem

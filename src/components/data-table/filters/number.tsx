@@ -19,7 +19,7 @@ export function NumberFilter({ columnFilterValue, filter, handleFilterChange }: 
       onChange={(event) =>
         handleFilterChange([Number(event.target.value) > 0 ? Number(event.target.value) : undefined, Infinity])
       }
-      className='max-w-[10rem]'
+      className="flex-1 min-w-[15rem]"
       name='search'
       key={filter.key}
     />
