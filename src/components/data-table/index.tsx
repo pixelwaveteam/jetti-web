@@ -29,11 +29,11 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { X } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
-import { Calendar } from './ui/calendar';
-import { FormItem } from './ui/form';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { SearchableSelect, SearchableSelectContent, SearchableSelectItem, SearchableSelectTrigger } from './ui/searchable-select';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Calendar } from '../ui/calendar';
+import { FormItem } from '../ui/form';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { SearchableSelect, SearchableSelectContent, SearchableSelectItem, SearchableSelectTrigger } from '../ui/searchable-select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 interface FilterByDate {
   isNumber?: undefined;
