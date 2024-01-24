@@ -160,7 +160,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className='flex items-center justify-between gap-2 py-4'>
+      <div className='flex justify-between gap-2 py-4'>
         <div className='w-full flex flex-wrap gap-2'>
           {
             globalFiltering && (
