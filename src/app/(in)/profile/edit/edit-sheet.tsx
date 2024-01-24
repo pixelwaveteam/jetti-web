@@ -18,6 +18,7 @@ interface ProfileEditSheetProps {
   user: {
     id: string;
     name: string;
+    username: string;
     role: 'ADMIN' | 'OPERATOR';
   };
 }
