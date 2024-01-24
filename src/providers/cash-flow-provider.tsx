@@ -2,10 +2,12 @@
 
 import { ReactNode, createContext, useCallback, useState } from 'react';
 
-import { TerminalData } from '@/app/(in)/terminals/columns';
+import { Establishment } from '@/app/(in)/establishments/actions/fetch-establishments';
+import { Terminal } from '@/app/(in)/terminals/actions/fetch-terminals';
 
 interface CashFlowContextValues {
-  terminals: TerminalData[];
+  terminals: Terminal[];
+  establishments: Establishment[];
   period: {
     startDate: Date;
     endDate: Date;
@@ -20,7 +22,8 @@ export const CashFlowContext = createContext<CashFlowContextValues>(
 interface CashFlowProviderProps {
   children: ReactNode;
   initialData: {
-    terminals: TerminalData[];
+    terminals: Terminal[];
+    establishments: Establishment[];
   };
 }
 
@@ -34,6 +37,8 @@ export function CashFlowProvider({
   } | null>(null);
 
   const terminals = initialData.terminals;
+
+  const establishments = initialData.establishments
 
   const handlePeriodChange = useCallback((lastDate: string | null) => {
     if (!lastDate) {
@@ -49,7 +54,7 @@ export function CashFlowProvider({
 
   return (
     <CashFlowContext.Provider
-      value={{ period, setPeriod: handlePeriodChange, terminals }}
+      value={{ period, setPeriod: handlePeriodChange, terminals, establishments }}
     >
       {children}
     </CashFlowContext.Provider>

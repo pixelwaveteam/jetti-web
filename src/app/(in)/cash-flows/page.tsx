@@ -6,6 +6,7 @@ import { fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
 import { PageContainer } from '@/components/page-container';
 import { CashFlowProvider } from '@/providers/cash-flow-provider';
 import { fetchEstablishment } from '../establishments/actions/fetch-establishment';
+import { fetchEstablishments } from '../establishments/actions/fetch-establishments';
 import { CashFlowDataTable as CashFlowDataTableType } from './columns';
 
 export const metadata: Metadata = {
@@ -14,9 +15,10 @@ export const metadata: Metadata = {
 };
 
 export default async function CashFlows() {
-  const [rawCashFlows, terminals] = await Promise.all([
+  const [rawCashFlows, terminals, establishments] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
+    fetchEstablishments()
   ]); 
 
   const cashFlows = []
@@ -37,7 +39,7 @@ export default async function CashFlows() {
 
   return (
     <PageContainer title='Leituras'>
-      <CashFlowProvider initialData={{ terminals }}>
+      <CashFlowProvider initialData={{ terminals, establishments }}>
         <CashFlowDataTable data={cashFlows} />
       </CashFlowProvider>
     </PageContainer>

@@ -2,26 +2,15 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, ChevronRight } from 'lucide-react';
-import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { Establishment } from './actions/fetch-establishments';
 
-const EstablishmentSchema = z.object({
-  id: z.string(),
-  organizationId: z.string(),
-  name: z.string(),
-  state: z.string().optional(),
-  city: z.string().optional(),
-  terminalsTotal: z.number().optional().default(0),
-});
-
-export type EstablishmentData = z.infer<typeof EstablishmentSchema>;
-export type Establishment = {
-  id: string;
-  organizationId: string;
-  name: string;
+export type EstablishmentData = Establishment & {
   state?: string;
+  city?: string;
+  terminalsTotal?: number;
 };
 
 export const establishmentColumns: ColumnDef<EstablishmentData>[] = [
@@ -114,13 +103,11 @@ export const establishmentColumns: ColumnDef<EstablishmentData>[] = [
     cell: ({ row }) => {
       const establishment = row.original;
 
-      if(establishment.terminalsTotal) {
-        return (
-          <div className='flex gap-2 items-center'>
-            <span className='truncate'>{establishment.terminalsTotal}</span>
-          </div>
-        )
-      }
+      return (
+        <div className='flex gap-2 items-center'>
+          <span className='truncate'>{establishment.terminalsTotal || 0}</span>
+        </div>
+      )
     },
   },
   {
