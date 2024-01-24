@@ -2,15 +2,16 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import * as z from 'zod';
 
 import { UserEditSheet } from '@/app/(in)/users/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
+import { z } from 'zod';
 
 const UserSchema = z.object({
   id: z.string(),
   name: z.string(),
+  username: z.string(),
   role: z.enum(['ADMIN', 'OPERATOR'] as const),
   avatarId: z.string().optional(),
   isActive: z.boolean(),

@@ -14,8 +14,8 @@ import {
 } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SheetContext } from '@/providers/sheet-provider';
-import { User } from '@/types/user';
 import { useSession } from 'next-auth/react';
+import { User } from '../actions/fetch-users';
 import { UserOrganizationsFormEdit } from './tabs/organizations/form-edit';
 import { UserTerminalFormEdit } from './tabs/terminals/form-edit';
 
