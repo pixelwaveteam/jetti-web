@@ -138,20 +138,22 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className='flex items-center justify-between gap-2 py-4'>
-        {
-          globalFiltering && (
-            <Input
-              placeholder='Filtrar por todos os campos...'
-              value={globalFilter ?? ''}
-              onChange={({ target: { value } }) => setGlobalFilter(value)}
-              className='max-w-sm'
-              name='globalSearch'
-            />
-          )
-        }
-        {
-          renderFilters(table, filterBy)
-        }
+        <div className='w-full flex flex-wrap gap-2'>
+          {
+            globalFiltering && (
+              <Input
+                placeholder='Filtrar por todos os campos...'
+                value={globalFilter ?? ''}
+                onChange={({ target: { value } }) => setGlobalFilter(value)}
+                className='max-w-sm'
+                name='globalSearch'
+              />
+            )
+          }
+          {
+            renderFilters(table, filterBy)
+          }
+        </div>
         {children}
       </div>
       <div className='rounded-md border'>
