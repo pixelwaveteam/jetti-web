@@ -45,7 +45,7 @@ export function SearchableSelectFilter({ columnFilterValue, filter, handleFilter
         }
         disabled={disableSelect}
       >
-        <SearchableSelectTrigger>
+        <SearchableSelectTrigger className="w-[15rem]">
           <SearchableSelectValue placeholder={`Filtrar por ${filter.label}...`} />
         </SearchableSelectTrigger>
 
