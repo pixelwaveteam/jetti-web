@@ -6,29 +6,14 @@ import { ArrowUpDown } from 'lucide-react';
 import { UserEditSheet } from '@/app/(in)/users/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
-import { z } from 'zod';
+import { UserOrganization } from './actions/fetch-user-organizations';
+import { UserTerminal } from './actions/fetch-user-terminals';
+import { User } from './actions/fetch-users';
 
-const UserSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  username: z.string(),
-  role: z.enum(['ADMIN', 'OPERATOR'] as const),
-  avatarId: z.string().optional(),
-  isActive: z.boolean(),
-  organizations: z.array(z.object({
-    id: z.string(),
-    organizationId: z.string(),
-    userId: z.string(),
-  })),
-  terminals: z.array(z.object({
-    id: z.string(),
-    terminalId: z.string(),
-    userId: z.string(),
-  })),
-  password: z.string(),
-});
-
-export type UserData = z.infer<typeof UserSchema>;
+export interface UserData extends User {
+  organizations: UserOrganization[]
+  terminals: UserTerminal[]
+}
 
 export const userColumns: ColumnDef<UserData>[] = [
   {
