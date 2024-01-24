@@ -25,15 +25,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { X } from 'lucide-react';
-import { DateRange } from 'react-day-picker';
-import { Calendar } from '../ui/calendar';
-import { FormItem } from '../ui/form';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { SearchableSelect, SearchableSelectContent, SearchableSelectItem, SearchableSelectTrigger } from '../ui/searchable-select';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { DateFilter } from './filters/date';
+import { NumberFilter } from './filters/number';
+import { SearchableSelectFilter } from './filters/searchable-select';
+import { SelectFilter } from './filters/select';
+import { TextFilter } from './filters/text';
 
 interface FilterByDate {
   isNumber?: undefined;
@@ -55,7 +51,7 @@ interface FilterByDependentSelect {
   isDate?: undefined;
   options: {
     [dependency: string]: {
-      [label: string]: any
+      [label: string]: string
     } | string[]
   };
   searchableSelect?: boolean;
@@ -86,187 +82,29 @@ const renderFilters: (table: TableType<any>, filterBy: FilterBy[]) => ReactNode 
   return filterBy.map(filter => {
     const columnFilterValue = table.getColumn(filter.key)?.getFilterValue();
 
+    function handleFilterChange<K>(value: K) {
+      table.getColumn(filter.key)?.setFilterValue(value)
+    }
+
     if(filter.options) {
       if(filter.searchableSelect) {
         const dependencyTableFilterValue = filter.dependency ? table.getColumn(filter.dependency)?.getFilterValue() as string : undefined
 
-        const disableSelect = filter.dependency ? !dependencyTableFilterValue : false;
-
-        const filterOptionsRetrievedByDependency = dependencyTableFilterValue && filter.options[dependencyTableFilterValue];
-
-        const filterOptionsRetrievedByDependencyIsArray = filterOptionsRetrievedByDependency && filterOptionsRetrievedByDependency?.length
-
-        if(filter.dependency && !dependencyTableFilterValue && columnFilterValue) {
-          table.getColumn(filter.key)?.setFilterValue(undefined)
-        }
-
-        return (
-          <div className='flex items-center gap-x-3' key={filter.key}>
-            <SearchableSelect
-              value={ 
-                (columnFilterValue as string) ?? ''
-              }
-              onValueChange={(event) =>
-                table.getColumn(filter.key)?.setFilterValue(event)
-              }
-              disabled={disableSelect}
-            >
-              <SearchableSelectTrigger>
-                <SelectValue placeholder={`Filtrar por ${filter.label}...`} />
-              </SearchableSelectTrigger>
-
-              <SearchableSelectContent label={filter.label}>
-                {
-                  dependencyTableFilterValue ? (
-                    <>
-                      {
-                        filterOptionsRetrievedByDependencyIsArray ? 
-                          filterOptionsRetrievedByDependency.map((label: string) => (
-                            <SearchableSelectItem textValue={label} value={label} key={label}>
-                              {label}
-                            </SearchableSelectItem>
-                          )) : 
-                          Object.keys(filterOptionsRetrievedByDependency).map((label: string) => (
-                            <SearchableSelectItem textValue={label} value={filter.options?.[label]} key={filter.options?.[label]}>
-                              {label}
-                            </SearchableSelectItem>
-                          ))
-                      }
-                    </>
-                  ) : (
-                    <>
-                      {
-                        Object.keys(filter.options).map(label => (
-                          <SearchableSelectItem textValue={label} value={filter.options?.[label]} key={filter.options?.[label]}>
-                            {label}
-                          </SearchableSelectItem>
-                        ))
-                      }
-                    </>
-                  )
-                }
-              </SearchableSelectContent>
-            </SearchableSelect>
-
-            <button
-              onClick={() =>
-                table.getColumn(filter.key)?.setFilterValue('')
-              }
-              className='w-fit aria-[hidden="true"]:invisible'
-              aria-hidden={columnFilterValue === undefined}
-            >
-              <X />
-            </button>
-          </div>
-        )
+        return <SearchableSelectFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} dependencyTableFilterValue={dependencyTableFilterValue} key={filter.key} />
       }
 
-      return (
-        <div className='flex items-center gap-x-3' key={filter.key}>
-          <Select
-            value={ 
-              (columnFilterValue as string) ?? ''
-            }
-            onValueChange={(event) =>
-              table.getColumn(filter.key)?.setFilterValue(event)
-            }
-          >
-            <SelectTrigger className='w-[24rem]'>
-              <SelectValue placeholder={`Filtrar por ${filter.label}...`} />
-            </SelectTrigger>
-            <SelectContent>
-              {
-                Object.keys(filter.options).map(label => (
-                  <SelectItem value={filter.options?.[label]} key={filter.options?.[label]}>
-                    {label}
-                  </SelectItem>
-                ))
-              }
-            </SelectContent>
-          </Select>
-            
-          {
-            <button
-              onClick={() =>
-                table.getColumn(filter.key)?.setFilterValue('')
-              }
-              className='w-fit aria-[hidden="true"]:invisible'
-              aria-hidden={columnFilterValue === undefined}
-            >
-              <X />
-            </button>
-          }
-        </div>
-      )
+      return <SelectFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.key} />
     }
 
     if(filter.isDate) {
-      const columnFilterDateRange = (columnFilterValue as DateRange) ?? ''
-
-      const fromToDisplay = columnFilterDateRange.from && format(columnFilterDateRange.from, 'dd/MM/yyyy')
-
-      const toToDisplay = columnFilterDateRange.to && format(columnFilterDateRange.to, 'dd/MM/yyyy')
-
-      const dateToDisplay = (fromToDisplay && toToDisplay) ? 
-          `${fromToDisplay} até ${toToDisplay}` 
-        : fromToDisplay
-
-      return (
-        <Popover key={filter.key}>
-          <PopoverTrigger asChild>
-            <FormItem>
-              <Input
-                placeholder={`Filtrar por ${filter.label}...`}
-                value={dateToDisplay ?? ''}
-                className='max-w-xs'
-                readOnly
-              />
-            </FormItem>
-          </PopoverTrigger>
-          <PopoverContent>
-            <Calendar
-              locale={ptBR}
-              mode='range'
-              selected={(columnFilterValue as DateRange)}
-              onSelect={(range) => {table.getColumn(filter.key)?.setFilterValue(range)}}
-              key={filter.key}
-            />
-          </PopoverContent>
-        </Popover>
-      )
+      return <DateFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.key} />
     }
 
     if(filter.isNumber) {
-      return (
-        <Input
-          placeholder={`Min de ${filter.label}...`}
-          value={
-            (columnFilterValue as [number, number])?.[0] ?? ''
-          }
-          onChange={(event) =>
-            table.getColumn(filter.key)?.setFilterValue([Number(event.target.value) > 0 ? Number(event.target.value) : undefined, Infinity])
-          }
-          className='max-w-[10rem]'
-          name='search'
-          key={filter.key}
-        />
-      )
+      return <NumberFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.key} />
     }
     
-    return (
-      <Input
-        placeholder={`Filtrar por ${filter.label}...`}
-        value={
-          (columnFilterValue as string) ?? ''
-        }
-        onChange={(event) =>
-          table.getColumn(filter.key)?.setFilterValue(event.target.value)
-        }
-        className='max-w-sm'
-        name='search'
-        key={filter.key}
-      />
-    )
+    return <TextFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.key} />
   })
 }
 
