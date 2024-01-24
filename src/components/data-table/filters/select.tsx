@@ -22,7 +22,7 @@ export function SelectFilter({ columnFilterValue, filter, handleFilterChange }: 
           handleFilterChange(event)
         }
       >
-        <SelectTrigger className="w-[15rem]">
+        <SelectTrigger className="flex-1 min-w-[15rem]">
           <SelectValue placeholder={`Filtrar por ${filter.label}...`} />
         </SelectTrigger>
         <SelectContent>

@@ -34,12 +34,11 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useContext, useEffect, useState } from 'react';
-import { fetchEstablishment } from '../../establishments/actions/fetch-establishment';
+import { useContext, useEffect } from 'react';
 
 const CashFlowFormCreateSchema = z.object({
   terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
-  establishmentId: z.string({ required_error: 'Terminal é obrigatório.' }),
+  establishmentId: z.string({ required_error: 'Local é obrigatório.' }),
   cashIn: z.coerce.number().transform((val) => {
     const cashInCents = val * 100;
 
@@ -64,8 +63,6 @@ export function CashFlowFormCreate() {
 
   const role = session ? session?.user.role : undefined;
 
-  const [establishmentName, setEstablishmentName] = useState('');
-
   const formMethods = useForm<CashFlowFormCreateType>({
     resolver: zodResolver(CashFlowFormCreateSchema),
     defaultValues: {
@@ -76,8 +73,9 @@ export function CashFlowFormCreate() {
   const { control, handleSubmit, watch } = formMethods;
 
   const terminalId = watch('terminalId');
+  const establishmentId = watch('establishmentId');
 
-  const onSubmit = async ({date, ...data}: CashFlowFormCreateType) => {
+  const onSubmit = async ({date, establishmentId, ...data}: CashFlowFormCreateType) => {
     try {
       const cashFlowCreated = await createCashFlow({
         ...data,
@@ -121,16 +119,6 @@ export function CashFlowFormCreate() {
   }, [setPeriod, terminalId]);
 
 
-  useEffect(() => {
-    if(terminals.length > 0) {
-      const terminal = terminals.find(terminalItem => terminalItem.id === terminalId)
-
-      if(terminal) {
-        fetchEstablishment(terminal.establishmentId).then(establishment => setEstablishmentName(establishment.name))
-      }
-    }
-  }, [terminals, terminalId])
-
   return (
     <Form {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
@@ -159,28 +147,22 @@ export function CashFlowFormCreate() {
           )}
         />
 
-        <FormItem>
-          <FormLabel>Local</FormLabel>
-            <Input value={establishmentName} readOnly />
-          <FormMessage />
-        </FormItem>
-
         <FormField
           control={control}
           name='terminalId'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Terminal</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select disabled={!establishmentId} onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder='Selecione...' />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {terminals.map((terminal) => (
+                  {terminals.filter(terminal => terminal.establishmentId === establishmentId).map((terminal) => (
                     <SelectItem key={terminal.id} value={terminal.id}>
-                      {terminal.code}
+                      {terminal.code} - {terminal.interfaceName}
                     </SelectItem>
                   ))}
                 </SelectContent>

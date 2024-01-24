@@ -35,7 +35,7 @@ export function SearchableSelectFilter({ columnFilterValue, filter, handleFilter
   }
 
   return (
-    <div className='flex items-center gap-x-3' key={filter.key}>
+    <div className='flex items-center gap-x-3 flex-1 min-w-[15rem]' key={filter.key}>
       <SearchableSelect
         value={ 
           (columnFilterValue as string) ?? ''
@@ -45,7 +45,7 @@ export function SearchableSelectFilter({ columnFilterValue, filter, handleFilter
         }
         disabled={disableSelect}
       >
-        <SearchableSelectTrigger className="w-[15rem]">
+        <SearchableSelectTrigger>
           <SearchableSelectValue placeholder={`Filtrar por ${filter.label}...`} />
         </SearchableSelectTrigger>
 

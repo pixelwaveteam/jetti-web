@@ -2,11 +2,12 @@ import { Metadata } from 'next';
 
 import { fetchCashFlows } from '@/app/(in)/cash-flows/actions/fetch-cash-flows';
 import { CashFlowDataTable } from '@/app/(in)/cash-flows/data-table';
-import { fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
+import { Terminal, fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
 import { PageContainer } from '@/components/page-container';
 import { CashFlowProvider } from '@/providers/cash-flow-provider';
 import { fetchEstablishment } from '../establishments/actions/fetch-establishment';
 import { fetchEstablishments } from '../establishments/actions/fetch-establishments';
+import { fetchInterface } from '../interfaces/actions/fetch-interface';
 import { CashFlowDataTable as CashFlowDataTableType } from './columns';
 
 export const metadata: Metadata = {
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CashFlows() {
-  const [rawCashFlows, terminals, establishments] = await Promise.all([
+  const [rawCashFlows, rawTerminals, establishments] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
     fetchEstablishments()
@@ -26,7 +27,7 @@ export default async function CashFlows() {
   for(const rawCashFlow of rawCashFlows) {
     let cashFlow: CashFlowDataTableType = {...rawCashFlow, cashFlowCode: rawCashFlow.id.slice(0, 8) };
 
-    const cashFlowEstablishmentId = terminals.find(({ code }) => code === rawCashFlow.terminal)?.establishmentId
+    const cashFlowEstablishmentId = rawTerminals.find(({ code }) => code === rawCashFlow.terminal)?.establishmentId
 
     if(cashFlowEstablishmentId) {
       const { name: establishmentName } = await fetchEstablishment(cashFlowEstablishmentId)
@@ -35,6 +36,22 @@ export default async function CashFlows() {
     }
 
     cashFlows.push(cashFlow)
+  }
+
+  const terminals = [];
+
+  for(const rawTerminal of rawTerminals) {
+    const terminal = rawTerminal as (Terminal & {
+      interfaceName?: string;
+    })
+
+    const fetchedInterface = await fetchInterface(rawTerminal.interfaceId);
+
+    if(fetchedInterface) {
+      terminal.interfaceName = fetchedInterface.name
+    }
+
+    terminals.push(terminal)
   }
 
   return (

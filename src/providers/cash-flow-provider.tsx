@@ -6,7 +6,9 @@ import { Establishment } from '@/app/(in)/establishments/actions/fetch-establish
 import { Terminal } from '@/app/(in)/terminals/actions/fetch-terminals';
 
 interface CashFlowContextValues {
-  terminals: Terminal[];
+  terminals: (Terminal & {
+    interfaceName?: string;
+  })[];
   establishments: Establishment[];
   period: {
     startDate: Date;
@@ -22,7 +24,9 @@ export const CashFlowContext = createContext<CashFlowContextValues>(
 interface CashFlowProviderProps {
   children: ReactNode;
   initialData: {
-    terminals: Terminal[];
+    terminals: (Terminal & {
+      interfaceName?: string;
+    })[];
     establishments: Establishment[];
   };
 }

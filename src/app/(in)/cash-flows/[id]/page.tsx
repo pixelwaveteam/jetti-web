@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 
 import { fetchCashFlow } from '@/app/(in)/cash-flows/actions/fetch-cash-flow';
 import { fetchNetDistributions } from '@/app/(in)/cash-flows/actions/fetch-net-distributions';
-import { fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
+import { Terminal, fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
 import { fetchUser } from '@/app/(in)/users/actions/fetch-user';
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { PageContainer } from '@/components/page-container';
@@ -20,6 +20,7 @@ import { SheetProvider } from '@/providers/sheet-provider';
 import { getDateFormatted } from '@/utils/date';
 
 import { fetchEstablishments } from '../../establishments/actions/fetch-establishments';
+import { fetchInterface } from '../../interfaces/actions/fetch-interface';
 import { ChartDistribution } from './chart-distribution';
 import { CashFlowEditSheet } from './edit/edit-sheet';
 import { ListDistribution } from './list-distribution';
@@ -43,13 +44,29 @@ export default async function CashFlow({ params: { id } }: CashFlowProps) {
 
   const cashFlow = await fetchCashFlow(id);
   const establishments = await fetchEstablishments();
-  const terminals = await fetchTerminals();
+  const rawTerminals = await fetchTerminals();
   const operator = await fetchUser(cashFlow.operatorId);
   const netDistributions = await fetchNetDistributions(cashFlow.id);
 
-  const terminal = terminals.find(
+  const terminal = rawTerminals.find(
     (terminalItem) => terminalItem.id === cashFlow.terminalId
   );
+
+  const terminals = [];
+
+  for(const rawTerminal of rawTerminals) {
+    const terminal = rawTerminal as (Terminal & {
+      interfaceName?: string;
+    })
+
+    const fetchedInterface = await fetchInterface(rawTerminal.interfaceId);
+
+    if(fetchedInterface) {
+      terminal.interfaceName = fetchedInterface.name
+    }
+
+    terminals.push(terminal)
+  }
 
   const establishment = establishments.find(
     establishmentItem => establishmentItem.id === terminal?.establishmentId
@@ -57,7 +74,7 @@ export default async function CashFlow({ params: { id } }: CashFlowProps) {
 
   const renderEditCashFlowButton = (
     <SheetProvider>
-      <CashFlowEditSheet cashFlow={{...cashFlow, establishmentName: establishment?.name || '' }} />
+      <CashFlowEditSheet cashFlow={{...cashFlow, establishmentId: establishment?.id || '' }} />
     </SheetProvider>
   );
 
