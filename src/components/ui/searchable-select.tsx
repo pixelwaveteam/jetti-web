@@ -7,6 +7,10 @@ import { FormItem } from "./form";
 import { Input } from "./input";
 import { Select, SelectItem, SelectScrollDownButton, SelectScrollUpButton, SelectTrigger } from "./select";
 
+const SearchableSelectValue = SelectPrimitive.Value;
+
+const SearchableSelectTrigger = SelectTrigger;
+
 interface SearchableSelectContextValue {
   items: string[];
   originalItems: string[];
@@ -33,9 +37,10 @@ interface SearchableSelectProps extends SelectPrimitive.SelectProps {
   placeholder?: string;
 }
 
-export function SearchableSelect({children, ...props}: SearchableSelectProps) {
+function SearchableSelect({children, ...props}: SearchableSelectProps) {
   const [itemsQuery, setItemsQuery] = useState('');
   const [originalItems, setOriginalItems] = useState<string[]>([]);
+  const [isOpen, setIsOpen]= useState(false);
 
   const isItemsQueryEmpty = useMemo(() => itemsQuery.length === 0, [itemsQuery.length])
 
@@ -52,6 +57,12 @@ export function SearchableSelect({children, ...props}: SearchableSelectProps) {
     setOriginalItems(state => [...state, item])
   }
 
+  useEffect(() => {
+    if(!isOpen) {
+      setItemsQuery('')
+    }
+  }, [isOpen])
+
   return (
     <searchableSelectContext.Provider value={{
       items,
@@ -61,20 +72,19 @@ export function SearchableSelect({children, ...props}: SearchableSelectProps) {
       isItemsQueryEmpty,
       addItemToOriginalItems,
     }}>
-      <Select {...props}>
+      <Select {...props} onOpenChange={() => setIsOpen(state => !state)} open={isOpen}>
         {children}
       </Select>
     </searchableSelectContext.Provider>
   )
 }
 
-export const SearchableSelectTrigger = SelectTrigger
 
 interface SearchableSelectContentProps extends SelectPrimitive.SelectContentProps {
   label: string;
 }
 
-export const SearchableSelectContent = React.forwardRef<
+const SearchableSelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   SearchableSelectContentProps
 >(({ className, children, position = 'popper', label,...props }, ref) => {
@@ -83,7 +93,6 @@ export const SearchableSelectContent = React.forwardRef<
   function handleQueryChange(e: ChangeEvent<HTMLInputElement>) {
     queryItems(e.target.value)
   }
-
 
   return (
     <SelectPrimitive.Portal>
@@ -96,14 +105,16 @@ export const SearchableSelectContent = React.forwardRef<
           className
         )}
         position={position}
+        
         {...props}
       >
         <FormItem className="mb-2">
-          <Input placeholder={`Filtrar ${label}`} onChange={handleQueryChange} value={itemsQuery} />
+          <Input placeholder={`Pesquisar ${label}`} onChange={handleQueryChange} value={itemsQuery} />
         </FormItem>
 
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport
+        autoFocus={false}
           className={cn(
             'p-1',
             position === 'popper' &&
@@ -122,7 +133,7 @@ SearchableSelectContent.displayName = "SearchableSelectContent"
 type SearchableSelectItemProps = Omit<SelectPrimitive.SelectItemProps, 'textValue'> & {
   textValue: string;
 } 
-export function SearchableSelectItem({children,...props}: SearchableSelectItemProps) {
+function SearchableSelectItem({children,...props}: SearchableSelectItemProps) {
   const { items, isItemsQueryEmpty, addItemToOriginalItems, originalItems } = useSearchableSelect()
   
   const { textValue } = props;
@@ -143,3 +154,10 @@ export function SearchableSelectItem({children,...props}: SearchableSelectItemPr
 
   return undefined;
 } 
+
+export {
+  SearchableSelect, SearchableSelectContent,
+  SearchableSelectItem, SearchableSelectTrigger,
+  SearchableSelectValue
+};
+
