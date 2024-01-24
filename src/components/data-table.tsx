@@ -32,15 +32,34 @@ import { DateRange } from 'react-day-picker';
 import { Calendar } from './ui/calendar';
 import { FormItem } from './ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { SearchableSelect, SearchableSelectContent, SearchableSelectItem, SearchableSelectTrigger } from './ui/searchable-select';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
-interface FilterBy  {
+interface FilterByDate {
+  isNumber?: undefined;
+  isDate: true;
+  options?: undefined;
+  searchableSelect?: undefined;
+}
+
+interface FilterBySelect {
+  isNumber?: undefined;
+  isDate?: undefined;
+  options: {[label: string]: any};
+  searchableSelect?: boolean;
+}
+
+interface BaseFilterBy {
+  isNumber?: boolean;
+  isDate?: undefined;
+  options?: undefined;
+  searchableSelect?: undefined;
+}
+
+type FilterBy = {
   key: string;
   label: string;
-  isNumber?: boolean;
-  isDate?: boolean;
-  options?: {[label: string]: any};
-}
+} & (FilterByDate | FilterBySelect | BaseFilterBy)
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -55,6 +74,45 @@ const renderFilters: (table: TableType<any>, filterBy: FilterBy[]) => ReactNode 
     const columnFilterValue = table.getColumn(filter.key)?.getFilterValue();
 
     if(filter.options) {
+      if(filter.searchableSelect) {
+        return (
+          <div className='flex items-center gap-x-3' key={filter.key}>
+            <SearchableSelect
+              value={ 
+                (columnFilterValue as string) ?? ''
+              }
+              onValueChange={(event) =>
+                table.getColumn(filter.key)?.setFilterValue(event)
+              }
+            >
+              <SearchableSelectTrigger>
+                <SelectValue placeholder={`Filtrar por ${filter.label}...`} />
+              </SearchableSelectTrigger>
+
+              <SearchableSelectContent label={filter.label}>
+                {
+                  Object.keys(filter.options).map(label => (
+                    <SearchableSelectItem textValue={label} value={filter.options?.[label]} key={filter.options?.[label]}>
+                      {label}
+                    </SearchableSelectItem>
+                  ))
+                }
+              </SearchableSelectContent>
+            </SearchableSelect>
+
+            <button
+              onClick={() =>
+                table.getColumn(filter.key)?.setFilterValue('')
+              }
+              className='w-fit aria-[hidden="true"]:invisible'
+              aria-hidden={columnFilterValue === undefined}
+            >
+              <X />
+            </button>
+          </div>
+        )
+      }
+
       return (
         <div className='flex items-center gap-x-3' key={filter.key}>
           <Select
