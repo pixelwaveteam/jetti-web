@@ -8,10 +8,16 @@ interface TerminalDataTableProps {
   data: TerminalData[];
 }
 
-export function TerminalDataTable({ data }: TerminalDataTableProps) {
-  const stateFilterOptions = braziliansStates.reduce((acc, state) => (
-    { ...acc, [state.name]: state.shortName }
-  ), {} as { [x: string]: string; })
+export async function TerminalDataTable({ data }: TerminalDataTableProps) {
+  const establishmentsState = data.reduce((acc, { establishmentState }) => 
+    (!establishmentState || acc.includes(establishmentState)) ? acc : [...acc, establishmentState] 
+  , [] as string[])
+
+  const stateFilterOptions = braziliansStates
+    .filter(state => establishmentsState.includes(state.shortName))
+    .reduce((acc, state) => (
+      { ...acc, [state.name]: state.shortName }
+    ), {} as { [x: string]: string; })
 
   return (
     <DataTable
