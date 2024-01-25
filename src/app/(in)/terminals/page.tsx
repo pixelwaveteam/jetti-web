@@ -33,6 +33,13 @@ export default async function Terminals() {
       terminal.establishmentState = establishmentAddress.state
     }
 
+    const establishmentName = establishments.find(establishment => establishment.id === rawTerminal.establishmentId)?.name
+
+    if(establishmentName) {
+      terminal.establishmentName = establishmentName
+    }
+
+
     const interFace = interfaces.find(interFace => interFace.id === rawTerminal.interfaceId)
 
     if(interFace) {
