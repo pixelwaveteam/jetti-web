@@ -49,7 +49,7 @@ export default async function Establishment({
           <TabsList>
             <TabsTrigger value='info'>Informações</TabsTrigger>
             <TabsTrigger value='distribution'>
-              Distribuição de Lucros
+              Parceiros
             </TabsTrigger>
           </TabsList>
           <TabsContent value='info'>

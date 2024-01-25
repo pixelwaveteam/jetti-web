@@ -55,7 +55,11 @@ export function TerminalFormCreate() {
 
   const { control, handleSubmit } = formMethods;
 
-  const onSubmit = async ({ cashIn: _, cashOut: __, ...data}: TerminalFormCreateType) => {
+  const onSubmit = async ({
+    cashIn: _,
+    cashOut: __,
+    ...data
+  }: TerminalFormCreateType) => {
     try {
       await createTerminal({
         ...data,
@@ -149,7 +153,7 @@ export function TerminalFormCreate() {
           name='cashIn'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Entradas R$</FormLabel>
+              <FormLabel>Entradas</FormLabel>
               <FormControl>
                 <Input placeholder='Entrada Inicial' {...field} />
               </FormControl>
@@ -165,11 +169,13 @@ export function TerminalFormCreate() {
           name='cashOut'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Saídas R$</FormLabel>
+              <FormLabel>Saídas</FormLabel>
               <FormControl>
                 <Input placeholder='Total de Saídas' {...field} />
               </FormControl>
-              <FormDescription>Total de saída no terminal inicialmente.</FormDescription>
+              <FormDescription>
+                Total de saída no terminal inicialmente.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

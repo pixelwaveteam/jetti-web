@@ -44,7 +44,7 @@ interface FilterByDate {
 interface FilterBySelect {
   isNumber?: undefined;
   isDate?: undefined;
-  options: {[label: string]: any};
+  options: { [label: string]: any };
   searchableSelect?: boolean;
   dependency?: string;
   items?: undefined;
@@ -54,9 +54,11 @@ interface FilterByDependentSelect {
   isNumber?: undefined;
   isDate?: undefined;
   options: {
-    [dependency: string]: {
-      [label: string]: string
-    } | string[]
+    [dependency: string]:
+      | {
+          [label: string]: string;
+        }
+      | string[];
   };
   searchableSelect?: boolean;
   dependency: string;
@@ -84,7 +86,13 @@ type FilterBy = {
   key: string;
   label: string;
   defaultValue?: any;
-} & (FilterByDate | FilterBySelect | FilterByDependentSelect | FilterByCheckCombobox | BaseFilterBy)
+} & (
+  | FilterByDate
+  | FilterBySelect
+  | FilterByDependentSelect
+  | FilterByCheckCombobox
+  | BaseFilterBy
+);
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -94,41 +102,90 @@ interface DataTableProps<TData, TValue> {
   children?: ReactNode;
 }
 
-const renderFilters: (table: TableType<any>, filterBy: FilterBy[]) => ReactNode = (table, filterBy) => {
-  return filterBy.map(filter => {
+const renderFilters: (
+  table: TableType<any>,
+  filterBy: FilterBy[]
+) => ReactNode = (table, filterBy) => {
+  return filterBy.map((filter) => {
     const columnFilterValue = table.getColumn(filter.key)?.getFilterValue();
 
     function handleFilterChange<K>(value: K) {
-      table.getColumn(filter.key)?.setFilterValue(value)
+      table.getColumn(filter.key)?.setFilterValue(value);
     }
 
-    if(filter.items) {
-      const values = columnFilterValue instanceof Array ? columnFilterValue : []
+    if (filter.items) {
+      const values =
+        columnFilterValue instanceof Array ? columnFilterValue : [];
 
-      return <SearchableCheckComboboxFilter columnFilterValue={values} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
+      return (
+        <SearchableCheckComboboxFilter
+          columnFilterValue={values}
+          filter={filter}
+          handleFilterChange={handleFilterChange}
+          key={filter.label}
+        />
+      );
     }
 
-    if(filter.options) {
-      if(filter.searchableSelect) {
-        const dependencyTableFilterValue = filter.dependency ? table.getColumn(filter.dependency)?.getFilterValue() as string : undefined
+    if (filter.options) {
+      if (filter.searchableSelect) {
+        const dependencyTableFilterValue = filter.dependency
+          ? (table.getColumn(filter.dependency)?.getFilterValue() as string)
+          : undefined;
 
-        return <SearchableSelectFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} dependencyTableFilterValue={dependencyTableFilterValue} key={filter.label} />
+        return (
+          <SearchableSelectFilter
+            columnFilterValue={columnFilterValue}
+            filter={filter}
+            handleFilterChange={handleFilterChange}
+            dependencyTableFilterValue={dependencyTableFilterValue}
+            key={filter.label}
+          />
+        );
       }
 
-      return <SelectFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
+      return (
+        <SelectFilter
+          columnFilterValue={columnFilterValue}
+          filter={filter}
+          handleFilterChange={handleFilterChange}
+          key={filter.label}
+        />
+      );
     }
 
-    if(filter.isDate) {
-      return <DateFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
+    if (filter.isDate) {
+      return (
+        <DateFilter
+          columnFilterValue={columnFilterValue}
+          filter={filter}
+          handleFilterChange={handleFilterChange}
+          key={filter.label}
+        />
+      );
     }
 
-    if(filter.isNumber) {
-      return <NumberFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
+    if (filter.isNumber) {
+      return (
+        <NumberFilter
+          columnFilterValue={columnFilterValue}
+          filter={filter}
+          handleFilterChange={handleFilterChange}
+          key={filter.label}
+        />
+      );
     }
-    
-    return <TextFilter columnFilterValue={columnFilterValue} filter={filter} handleFilterChange={handleFilterChange} key={filter.label} />
-  })
-}
+
+    return (
+      <TextFilter
+        columnFilterValue={columnFilterValue}
+        filter={filter}
+        handleFilterChange={handleFilterChange}
+        key={filter.label}
+      />
+    );
+  });
+};
 
 export function DataTable<TData, TValue>({
   columns,
@@ -137,9 +194,12 @@ export function DataTable<TData, TValue>({
   children,
   globalFiltering,
 }: DataTableProps<TData, TValue>) {
-  const defaultFilters = filterBy.filter(filter => filter.defaultValue).map(({ key, defaultValue }) => ({ id: key, value: defaultValue }))
+  const defaultFilters = filterBy
+    .filter((filter) => filter.defaultValue)
+    .map(({ key, defaultValue }) => ({ id: key, value: defaultValue }));
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(defaultFilters);
+  const [columnFilters, setColumnFilters] =
+    useState<ColumnFiltersState>(defaultFilters);
   const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
@@ -167,22 +227,18 @@ export function DataTable<TData, TValue>({
             <CardTitle className='text-sm font-medium'>Filtros</CardTitle>
           </CardHeader>
           <CardContent className='w-full gap-2 flex flex-wrap'>
-            {
-              renderFilters(table, filterBy)
-            }
+            {renderFilters(table, filterBy)}
           </CardContent>
         </Card>
         <div className='flex w-full justify-end gap-2'>
-          {
-            globalFiltering && (
-              <Input
-                placeholder='Filtrar por todos os campos...'
-                value={globalFilter ?? ''}
-                onChange={({ target: { value } }) => setGlobalFilter(value)}
-                name='globalSearch'
-              />
-            )
-          }
+          {globalFiltering && (
+            <Input
+              placeholder='Filtrar por todos os campos...'
+              value={globalFilter ?? ''}
+              onChange={({ target: { value } }) => setGlobalFilter(value)}
+              name='globalSearch'
+            />
+          )}
 
           {children}
         </div>
@@ -215,7 +271,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className='py-2'>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -239,13 +295,14 @@ export function DataTable<TData, TValue>({
       </div>
       <div className='flex items-center justify-end space-x-2 py-4'>
         <div className='flex-1 text-sm text-muted-foreground'>
-          Exibindo {table.getRowModel().rows?.length} registro{table.getRowModel().rows?.length > 1 && 's'} de{' '}
+          Exibindo {table.getRowModel().rows?.length} registro
+          {table.getRowModel().rows?.length > 1 && 's'} de{' '}
           {table.getCoreRowModel().rows.length}
         </div>
 
         <div className='flex items-center gap-x-6'>
           <div className='flex-1 text-sm text-muted-foreground'>
-            Página {table.getState().pagination.pageIndex + 1} de{' '} 
+            Página {table.getState().pagination.pageIndex + 1} de{' '}
             {table.getPageCount()}
           </div>
           <div className='space-x-2'>

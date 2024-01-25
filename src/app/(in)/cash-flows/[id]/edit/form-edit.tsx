@@ -20,7 +20,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -50,7 +54,7 @@ const CashFlowFormEditSchema = z.object({
 
     return cashOutCents;
   }),
-  date: z.date({ required_error: 'Data é obrigatória.' })
+  date: z.date({ required_error: 'Data é obrigatória.' }),
 });
 
 type CashFlowFormEditType = z.infer<typeof CashFlowFormEditSchema>;
@@ -82,13 +86,17 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
 
   const establishmentId = watch('establishmentId');
 
-  const onSubmit = async ({date, establishmentId, ...data}: CashFlowFormEditType) => {
+  const onSubmit = async ({
+    date,
+    establishmentId,
+    ...data
+  }: CashFlowFormEditType) => {
     try {
       await updateCashFlow({
         id: cashFlow.id,
         data: {
-          ...data, 
-          date: date.toISOString()
+          ...data,
+          date: date.toISOString(),
         },
       });
 
@@ -138,62 +146,77 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
     <div className='space-y-6'>
       <Form {...formMethods}>
         <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
-        <FormField
-          control={control}
-          name='establishmentId'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Local</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder='Selecione...' />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {establishments.map((establishment) => (
-                    <SelectItem key={establishment.id} value={establishment.id}>
-                      {establishment.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={control}
+            name='establishmentId'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Local</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Selecione...' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {establishments.map((establishment) => (
+                      <SelectItem
+                        key={establishment.id}
+                        value={establishment.id}
+                      >
+                        {establishment.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={control}
-          name='terminalId'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Terminal</FormLabel>
-              <Select disabled={!establishmentId} onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder='Selecione...' />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {terminals.filter(terminal => terminal.establishmentId === establishmentId).map((terminal) => (
-                    <SelectItem key={terminal.id} value={terminal.id}>
-                      {terminal.code} - {terminal.interfaceName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={control}
+            name='terminalId'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Terminal</FormLabel>
+                <Select
+                  disabled={!establishmentId}
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Selecione...' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {terminals
+                      .filter(
+                        (terminal) =>
+                          terminal.establishmentId === establishmentId
+                      )
+                      .map((terminal) => (
+                        <SelectItem key={terminal.id} value={terminal.id}>
+                          {terminal.code} - {terminal.interfaceName}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={control}
             name='cashIn'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Entradas R$</FormLabel>
+                <FormLabel>Entradas</FormLabel>
                 <FormControl>
                   <Input placeholder='Total de Entradas' {...field} />
                 </FormControl>
@@ -209,7 +232,7 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
             name='cashOut'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Saídas R$</FormLabel>
+                <FormLabel>Saídas</FormLabel>
                 <FormControl>
                   <Input placeholder='Total de Saídas' {...field} />
                 </FormControl>
@@ -219,11 +242,11 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
                 <FormMessage />
               </FormItem>
             )}
-          />  
+          />
           <FormField
             control={control}
             name='date'
-            render={({ field: { value, onChange , ...field } }) => (
+            render={({ field: { value, onChange, ...field } }) => (
               <Popover key={field.name}>
                 <PopoverTrigger asChild>
                   <FormItem>
@@ -250,7 +273,7 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
               </Popover>
             )}
           />
-              
+
           <div className='flex gap-2'>
             <Button type='submit' className='w-full'>
               Alterar
