@@ -28,6 +28,7 @@ import { SheetContext } from '@/providers/sheet-provider';
 import { TerminalContext } from '@/providers/terminal-provider';
 import { getRandomString } from '@/utils/text';
 import { useContext } from 'react';
+import { createCashFlow } from '../../cash-flows/actions/create-cash-flow';
 
 const TerminalFormCreateSchema = z.object({
   establishmentId: z.string({ required_error: 'Local não pode ser vazio.' }),
@@ -56,15 +57,22 @@ export function TerminalFormCreate() {
   const { control, handleSubmit } = formMethods;
 
   const onSubmit = async ({
-    cashIn: _,
-    cashOut: __,
+    cashIn,
+    cashOut,
     ...data
   }: TerminalFormCreateType) => {
     try {
-      await createTerminal({
+      const { id: terminalId } = await createTerminal({
         ...data,
         isActive: true,
       });
+
+      await createCashFlow({
+        terminalId,
+        cashIn,
+        cashOut,
+        date: new Date(0).toISOString(),
+      })
 
       setShow(false);
 
