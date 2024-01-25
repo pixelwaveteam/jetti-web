@@ -48,14 +48,12 @@ export default async function Terminals() {
         terminal.cashIn = initialCashFlow.cashIn;
         terminal.cashOut = initialCashFlow.cashOut;
       }
-    } catch {
-      console.log('erorr')
+    } catch(err) {
+      console.error({err})
     }
 
     terminals.push(terminal)
   }
-
-  console.log({terminals})
 
   return (
     <PageContainer title='Terminais'>

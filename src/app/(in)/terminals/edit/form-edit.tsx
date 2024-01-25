@@ -113,8 +113,6 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
         duration: 5000,
       });
     } catch(err) {
-      console.log({err})
-
       toast({
         variant: 'destructive',
         title: 'Erro',

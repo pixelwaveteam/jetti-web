@@ -243,7 +243,7 @@ export function EstablishmentAddressFormCreate({
         <FormField
           control={control}
           name='city'
-          render={({ field }) => {console.log({field, cityItemsByState}); console.log(!!cityItemsByState); return(
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Cidade</FormLabel>
               <FormControl>
@@ -269,7 +269,7 @@ export function EstablishmentAddressFormCreate({
               </FormControl>
               <FormMessage />
             </FormItem>
-          )}}
+          )}
         />
 
         <Button
