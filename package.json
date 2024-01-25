@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typing": "tsc --noEmit"
+    "debug:typing": "tsc -w --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
