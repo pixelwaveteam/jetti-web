@@ -35,7 +35,7 @@ interface NamedUserTerminal  {
   id: string;
   userId: string;
   terminalId: string;
-  terminalName: string;
+  terminalName: number;
 }
 
 type NewUserTerminal = NamedUserTerminal | {
@@ -53,10 +53,10 @@ export function UserTerminalFormEdit({ user: { id: userId, ...user } }: UserForm
   const { terminals } = useContext(UserContext);
 
   const userTerminal = useMemo(() => 
-    user.terminals.reduce((acc, userTerminal) => {
-      const terminal = terminals.find(({ id }) => id === userTerminal.terminalId)
+    user.terminals.reduce((acc, rawTerminal) => {
+      const terminal = terminals.find(({ id }) => id === rawTerminal.terminalId)
 
-      return terminal ? [{...userTerminal, terminalName: terminal.code}, ...acc] : acc
+      return terminal ? [{...rawTerminal, terminalName: terminal.code}, ...acc] : acc
     } ,[] as NamedUserTerminal[]), 
     [terminals, user.terminals]
   );
@@ -125,7 +125,7 @@ export function UserTerminalFormEdit({ user: { id: userId, ...user } }: UserForm
       !userTerminals.find(terminal => 
         code === terminal.terminalName && id === terminal.terminalId
       ) &&
-        (terminalsQuery ? code.includes(terminalsQuery) : true)
+        (terminalsQuery ? String(code).includes(terminalsQuery) : true)
     ),
     [userTerminals, terminals, terminalsQuery]
   )
