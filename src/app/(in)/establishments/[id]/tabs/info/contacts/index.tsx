@@ -9,11 +9,11 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { SheetProvider } from '@/providers/sheet-provider';
-import { EstablishmentContactData } from './columns';
+import { EstablishmentContactDataTableData } from './columns';
 
 interface EstablishmentAddressProps {
   establishmentId: string;
-  establishmentContacts?: EstablishmentContactData[];
+  establishmentContacts?: EstablishmentContactDataTableData[];
 }
 
 export function EstablishmentContacts({

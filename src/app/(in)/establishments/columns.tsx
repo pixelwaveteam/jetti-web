@@ -7,13 +7,13 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Establishment } from './actions/fetch-establishments';
 
-export type EstablishmentData = Establishment & {
+export type EstablishmentDataTableData = Establishment & {
   state?: string;
   city?: string;
   terminalsTotal?: number;
 };
 
-export const establishmentColumns: ColumnDef<EstablishmentData>[] = [
+export const establishmentColumns: ColumnDef<EstablishmentDataTableData>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {

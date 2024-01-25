@@ -8,9 +8,9 @@ import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 import { Organization } from './actions/fetch-organizations';
 
-export type OrganizationData = Organization;
+export type OrganizationDataTableData = Organization;
 
-export const organizationColumns: ColumnDef<OrganizationData>[] = [
+export const organizationColumns: ColumnDef<OrganizationDataTableData>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {

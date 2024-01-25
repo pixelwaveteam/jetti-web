@@ -1,10 +1,10 @@
-import { UserData, userColumns } from '@/app/(in)/users/columns';
+import { UserDataTableData, userColumns } from '@/app/(in)/users/columns';
 import { UserCreateSheet } from '@/app/(in)/users/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 interface UserDataTableProps {
-  data: UserData[];
+  data: UserDataTableData[];
 }
 
 export function UserDataTable({ data }: UserDataTableProps) {

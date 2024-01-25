@@ -1,14 +1,14 @@
 import { Metadata } from 'next';
 
 import { fetchUsers } from '@/app/(in)/users/actions/fetch-users';
-import { UserDataTable } from '@/app/(in)/users/data-table';
 import { PageContainer } from '@/components/page-container';
 import { UserProvider } from '@/providers/user-provider';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
 import { fetchTerminals } from '../terminals/actions/fetch-terminals';
 import { fetchUserOrganizations } from './actions/fetch-user-organizations';
 import { fetchUserTerminals } from './actions/fetch-user-terminals';
-import { UserData } from './columns';
+import { UserDataTableData } from './columns';
+import { UserDataTable } from './data-table';
 
 export const metadata: Metadata = {
   title: 'Usuários',
@@ -23,7 +23,7 @@ export default async function Users() {
   const users = []
 
   for(const rawUser of rawUsers) {
-    const user = rawUser as UserData;
+    const user = rawUser as UserDataTableData;
 
     const userOrganizations = await fetchUserOrganizations(rawUser.id)
 

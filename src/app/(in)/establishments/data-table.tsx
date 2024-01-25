@@ -1,6 +1,6 @@
 import {
-  EstablishmentData,
-  establishmentColumns,
+  EstablishmentDataTableData,
+  establishmentColumns
 } from '@/app/(in)/establishments/columns';
 import { EstablishmentCreateSheet } from '@/app/(in)/establishments/create/create-sheet';
 import { DataTable } from '@/components/data-table';
@@ -9,7 +9,7 @@ import braziliansStates from '@/data/brazilian-states.json';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 interface EstablishmentDataTableProps {
-  data: EstablishmentData[];
+  data: EstablishmentDataTableData[];
 }
 
 export function EstablishmentDataTable({ data }: EstablishmentDataTableProps) {

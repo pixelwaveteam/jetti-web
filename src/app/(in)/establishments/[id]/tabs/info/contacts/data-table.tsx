@@ -1,4 +1,4 @@
-import { EstablishmentContactData, establishmentContactColumns } from '@/app/(in)/establishments/[id]/tabs/info/contacts/columns';
+import { EstablishmentContactDataTableData, establishmentContactColumns } from '@/app/(in)/establishments/[id]/tabs/info/contacts/columns';
 import { EstablishmentContactCreateSheet } from '@/app/(in)/establishments/[id]/tabs/info/contacts/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { Button } from '@/components/ui/button';
@@ -6,7 +6,7 @@ import { SheetProvider } from '@/providers/sheet-provider';
 import { Plus } from 'lucide-react';
 
 interface EstablishmentContactDataTableProps {
-  data: EstablishmentContactData[];
+  data: EstablishmentContactDataTableData[];
 }
 
 export function EstablishmentContactDataTable({

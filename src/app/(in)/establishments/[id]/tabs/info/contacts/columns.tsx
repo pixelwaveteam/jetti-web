@@ -9,9 +9,9 @@ import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 
-export type EstablishmentContactData = EstablishmentContact
+export type EstablishmentContactDataTableData = EstablishmentContact
 
-export const establishmentContactColumns: ColumnDef<EstablishmentContactData>[] =
+export const establishmentContactColumns: ColumnDef<EstablishmentContactDataTableData>[] =
   [
     {
       accessorKey: 'name',

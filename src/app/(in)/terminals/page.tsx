@@ -8,7 +8,7 @@ import { TerminalDataTable } from '@/app/(in)/terminals/data-table';
 import { PageContainer } from '@/components/page-container';
 import { TerminalProvider } from '@/providers/terminal-provider';
 import { fetchEstablishmentAddress } from '../establishments/actions/fetch-establishment-address';
-import { TerminalData } from './columns';
+import { TerminalDataTableData } from './columns';
 
 export const metadata: Metadata = {
   title: 'Terminais',
@@ -24,7 +24,7 @@ export default async function Terminals() {
   const terminals = [];
 
   for(const rawTerminal of rawTerminals) {
-    const terminal: TerminalData = {...rawTerminal, cashIn: 0, cashOut: 0};
+    const terminal: TerminalDataTableData = {...rawTerminal, cashIn: 0, cashOut: 0};
 
     const establishmentAddress = await fetchEstablishmentAddress(rawTerminal.establishmentId)
 

@@ -8,9 +8,9 @@ import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 import { Interface } from './actions/fetch-interfaces';
 
-export type InterfaceData = Interface;
+export type InterfaceDataTableData = Interface;
 
-export const interfaceColumns: ColumnDef<InterfaceData>[] = [
+export const interfaceColumns: ColumnDef<InterfaceDataTableData>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {

@@ -8,7 +8,7 @@ import { CashFlowProvider } from '@/providers/cash-flow-provider';
 import { fetchEstablishment } from '../establishments/actions/fetch-establishment';
 import { fetchEstablishments } from '../establishments/actions/fetch-establishments';
 import { fetchInterface } from '../interfaces/actions/fetch-interface';
-import { CashFlowDataTable as CashFlowDataTableType } from './columns';
+import { CashFlowDataTableData } from './columns';
 
 export const metadata: Metadata = {
   title: 'Leituras',
@@ -25,7 +25,7 @@ export default async function CashFlows() {
   const cashFlows = []
 
   for(const rawCashFlow of rawCashFlows) {
-    let cashFlow: CashFlowDataTableType = {...rawCashFlow, cashFlowCode: rawCashFlow.id.slice(0, 8) };
+    let cashFlow: CashFlowDataTableData = {...rawCashFlow, cashFlowCode: rawCashFlow.id.slice(0, 8) };
 
     const cashFlowEstablishmentId = rawTerminals.find(({ code }) => code === rawCashFlow.terminal)?.establishmentId
 

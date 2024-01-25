@@ -9,9 +9,9 @@ import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 import { EstablishmentDistribution } from '../../../actions/fetch-establishment-distributions';
 
-export type EstablishmentDistributionData = EstablishmentDistribution;
+export type EstablishmentDistributionDataTableData = EstablishmentDistribution;
 
-export const establishmentDistributionColumns: ColumnDef<EstablishmentDistributionData>[] =
+export const establishmentDistributionColumns: ColumnDef<EstablishmentDistributionDataTableData>[] =
   [
     {
       accessorKey: 'name',

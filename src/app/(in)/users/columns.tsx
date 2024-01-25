@@ -10,12 +10,12 @@ import { UserOrganization } from './actions/fetch-user-organizations';
 import { UserTerminal } from './actions/fetch-user-terminals';
 import { User } from './actions/fetch-users';
 
-export interface UserData extends User {
+export interface UserDataTableData extends User {
   organizations: UserOrganization[]
   terminals: UserTerminal[]
 }
 
-export const userColumns: ColumnDef<UserData>[] = [
+export const userColumns: ColumnDef<UserDataTableData>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {
