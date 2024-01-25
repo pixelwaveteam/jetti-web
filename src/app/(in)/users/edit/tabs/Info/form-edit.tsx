@@ -29,9 +29,9 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
-import { User } from '@/types/user';
 import { Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { User } from '../../../actions/fetch-users';
 
 const UserFormEditSchema = z.object({
   name: z
@@ -101,7 +101,7 @@ export function UserInfoFormEdit({ user }: UserFormEditProps) {
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Usuário excluida com sucesso.',
+        description: 'Usuário excluído com sucesso.',
         duration: 5000,
       });
     } catch(err) {

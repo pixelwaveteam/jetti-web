@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { deleteEstablishmentAddress } from '@/app/(in)/establishments/actions/delete-establishment-address';
-import { EstablishmentAddressData } from '@/app/(in)/establishments/actions/fetch-establishment-address';
+import { EstablishmentAddress } from '@/app/(in)/establishments/actions/fetch-establishment-address';
 import { updateEstablishmentAddress } from '@/app/(in)/establishments/actions/update-establishment-address';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
@@ -47,7 +47,7 @@ type EstablishmentAddressFormEditType = z.infer<
 >;
 
 interface EstablishmentAddressFormEditProps {
-  establishmentAddress: EstablishmentAddressData;
+  establishmentAddress: EstablishmentAddress;
 }
 
 const statesItems = braziliansStates.reduce((acc, state) => (
@@ -73,7 +73,7 @@ export function EstablishmentAddressFormEdit({
       district: establishmentAddress.district,
       city: establishmentAddress.city,
       state: establishmentAddress.state,
-      zipCode: establishmentAddress.zipCode,
+      zipCode: establishmentAddress.zipCode ?? '',
     },
   });
 

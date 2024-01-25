@@ -2,29 +2,20 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import * as z from 'zod';
 
 import { UserEditSheet } from '@/app/(in)/users/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
+import { UserOrganization } from './actions/fetch-user-organizations';
+import { UserTerminal } from './actions/fetch-user-terminals';
+import { User } from './actions/fetch-users';
 
-const UserSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  role: z.enum(['ADMIN', 'OPERATOR'] as const),
-  avatarId: z.string().optional(),
-  isActive: z.boolean(),
-  organizations: z.array(z.object({
-    id: z.string(),
-    organizationId: z.string(),
-    userId: z.string(),
-  })),
-  password: z.string(),
-});
+export interface UserDataTableData extends User {
+  organizations: UserOrganization[]
+  terminals: UserTerminal[]
+}
 
-export type UserData = z.infer<typeof UserSchema>;
-
-export const userColumns: ColumnDef<UserData>[] = [
+export const userColumns: ColumnDef<UserDataTableData>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {

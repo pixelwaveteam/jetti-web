@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { deleteEstablishmentDistribution } from '@/app/(in)/establishments/actions/delete-establishment-distribution';
-import { EstablishmentDistributionData } from '@/app/(in)/establishments/actions/fetch-establishment-distributions';
+import { EstablishmentDistribution } from '@/app/(in)/establishments/actions/fetch-establishment-distributions';
 import { updateEstablishmentDistribution } from '@/app/(in)/establishments/actions/update-establishment-distribution';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
@@ -46,7 +46,7 @@ type EstablishmentDistributionFormEditType = z.infer<
 >;
 
 interface EstablishmentDistributionFormEditProps {
-  establishmentDistribution: EstablishmentDistributionData;
+  establishmentDistribution: EstablishmentDistribution;
 }
 
 export function EstablishmentDistributionFormEdit({
@@ -81,7 +81,7 @@ export function EstablishmentDistributionFormEdit({
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Distribuição alterado com sucesso.',
+        description: 'Distribuição alterada com sucesso.',
         duration: 5000,
       });
     } catch {
@@ -103,7 +103,7 @@ export function EstablishmentDistributionFormEdit({
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Distribuição excluida com sucesso.',
+        description: 'Distribuição excluída com sucesso.',
         duration: 5000,
       });
     } catch {

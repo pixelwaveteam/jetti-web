@@ -2,7 +2,6 @@ import { EstablishmentAddress } from '@/app/(in)/establishments/[id]/tabs/info/a
 import { EstablishmentContacts } from '@/app/(in)/establishments/[id]/tabs/info/contacts';
 import { fetchEstablishmentAddress } from '@/app/(in)/establishments/actions/fetch-establishment-address';
 import { fetchEstablishmentContacts } from '@/app/(in)/establishments/actions/fetch-establishment-contacts';
-import { EstablishmentData } from '@/app/(in)/establishments/columns';
 import {
   Card,
   CardContent,
@@ -10,9 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Establishment } from '../../../actions/fetch-establishments';
 
 interface TabInfoProps {
-  establishment: EstablishmentData;
+  establishment: Establishment;
 }
 
 export async function TabInfo({ establishment }: TabInfoProps) {

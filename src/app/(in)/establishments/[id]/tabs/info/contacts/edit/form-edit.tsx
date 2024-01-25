@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { deleteEstablishmentContact } from '@/app/(in)/establishments/actions/delete-establishment-contact';
-import { EstablishmentContactData } from '@/app/(in)/establishments/actions/fetch-establishment-contacts';
+import { EstablishmentContact } from '@/app/(in)/establishments/actions/fetch-establishment-contacts';
 import { updateEstablishmentContact } from '@/app/(in)/establishments/actions/update-establishment-contact';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
@@ -34,7 +34,7 @@ type EstablishmentContactFormEditType = z.infer<
 >;
 
 interface EstablishmentContactFormEditProps {
-  establishmentContact: EstablishmentContactData;
+  establishmentContact: EstablishmentContact;
 }
 
 export function EstablishmentContactFormEdit({
@@ -90,7 +90,7 @@ export function EstablishmentContactFormEdit({
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Contato do local excluida com sucesso.',
+        description: 'Contato do local excluído com sucesso.',
         duration: 5000,
       });
     } catch {

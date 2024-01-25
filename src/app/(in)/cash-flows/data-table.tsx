@@ -1,6 +1,6 @@
 import {
-  CashFlowDataTable,
-  cashFlowColumns,
+  CashFlowDataTableData,
+  cashFlowColumns
 } from '@/app/(in)/cash-flows/columns';
 import { CashFlowCreateSheet } from '@/app/(in)/cash-flows/create/create-sheet';
 import { DataTable } from '@/components/data-table';
@@ -10,7 +10,7 @@ import { fetchEstablishments } from '../establishments/actions/fetch-establishme
 import { fetchUsers } from '../users/actions/fetch-users';
 
 interface CashFlowDataTableProps {
-  data: CashFlowDataTable[];
+  data: CashFlowDataTableData[];
 }
 
 export async function CashFlowDataTable({ data }: CashFlowDataTableProps) {

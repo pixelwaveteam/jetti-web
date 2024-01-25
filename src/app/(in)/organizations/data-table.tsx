@@ -1,13 +1,13 @@
 import {
-  OrganizationData,
-  organizationColumns,
+  OrganizationDataTableData,
+  organizationColumns
 } from '@/app/(in)/organizations/columns';
 import { OrganizationCreateSheet } from '@/app/(in)/organizations/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { SheetProvider } from '@/providers/sheet-provider';
 
 interface OrganizationDataTableProps {
-  data: OrganizationData[];
+  data: OrganizationDataTableData[];
 }
 
 export async function OrganizationDataTable({

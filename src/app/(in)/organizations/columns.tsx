@@ -2,24 +2,15 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import * as z from 'zod';
 
 import { OrganizationEditSheet } from '@/app/(in)/organizations/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
+import { Organization } from './actions/fetch-organizations';
 
-const OrganizationSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-});
+export type OrganizationDataTableData = Organization;
 
-export type OrganizationData = z.infer<typeof OrganizationSchema>;
-export type Organization = {
-  id: string;
-  name: string;
-};
-
-export const organizationColumns: ColumnDef<OrganizationData>[] = [
+export const organizationColumns: ColumnDef<OrganizationDataTableData>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {

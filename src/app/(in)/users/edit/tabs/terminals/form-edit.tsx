@@ -18,12 +18,12 @@ import { UserContext } from '@/providers/user-provider';
 import { PopoverArrow } from '@radix-ui/react-popover';
 import { Trash, Triangle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { createUserOrganization } from '../../../actions/create-user-oganization';
-import { deleteUserOrganization } from '../../../actions/delete-user-organization';
+import { createUserTerminal } from '../../../actions/create-user-terminal';
+import { deleteUserTerminal } from '../../../actions/delete-user-terminal';
 import { UserRelations } from '../../edit-sheet';
 
-interface CreateUserOrganization {
-  organizationId: string;
+interface CreateUserTerminal {
+  terminalId: string;
   userId: string;
 }
 
@@ -31,53 +31,53 @@ interface UserFormEditProps {
   user: UserRelations
 }
 
-interface NamedUserOrganization  {
+interface NamedUserTerminal  {
   id: string;
   userId: string;
-  organizationId: string;
-  organizationName: string;
+  terminalId: string;
+  terminalName: string;
 }
 
-type NewUserOrganization = NamedUserOrganization | {
+type NewUserTerminal = NamedUserTerminal | {
   id: undefined;
   userId: undefined;
-  organizationId: undefined;
-  organizationName: undefined;
+  terminalId: undefined;
+  terminalName: undefined;
 }
 
-export function UserOrganizationsFormEdit({ user: { id: userId, ...user } }: UserFormEditProps) {
-  const [organizationsQuery, setOrganizationsQuery] = useState<string | undefined>();
-  const [newOrganizations, setNewOrganizations] = useState<NewUserOrganization[]>([]);
+export function UserTerminalFormEdit({ user: { id: userId, ...user } }: UserFormEditProps) {
+  const [terminalsQuery, setTerminalQuery] = useState<string | undefined>();
+  const [newTerminal, setNewTerminal] = useState<NewUserTerminal[]>([]);
   const { toast } = useToast();
   const { setShow } = useContext(SheetContext);
-  const { organizations } = useContext(UserContext);
+  const { terminals } = useContext(UserContext);
 
-  const userOrganizations = useMemo(() => 
-    user.organizations.reduce((acc, userOrganization) => {
-      const organization = organizations.find(({ id }) => id === userOrganization.organizationId)
+  const userTerminal = useMemo(() => 
+    user.terminals.reduce((acc, userTerminal) => {
+      const terminal = terminals.find(({ id }) => id === userTerminal.terminalId)
 
-      return organization ? [{...userOrganization, organizationName: organization.name}, ...acc] : acc
-    } ,[] as NamedUserOrganization[]), 
-    [organizations, user.organizations]
+      return terminal ? [{...userTerminal, terminalName: terminal.code}, ...acc] : acc
+    } ,[] as NamedUserTerminal[]), 
+    [terminals, user.terminals]
   );
 
-  const orgs = useMemo(() => 
-  [...newOrganizations, ...userOrganizations],
-  [newOrganizations, userOrganizations]
+  const userTerminals = useMemo(() => 
+    [...newTerminal, ...userTerminal],
+    [newTerminal, userTerminal]
   )
 
   const formMethods = useForm();
 
-  const onCreateUserOrganization = async (data: CreateUserOrganization, index: number) => {
+  const onCreateUserTerminal = async (data: CreateUserTerminal, index: number) => {
     try {
-      await createUserOrganization(data);
+      await createUserTerminal(data);
 
-      handleNewUserOrganizationDelete(index)
+      handleNewUserTerminalDelete(index)
 
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Organização adicionada com sucesso.',
+        description: 'Terminal adicionado com sucesso.',
         duration: 5000,
       });
     } catch {
@@ -90,8 +90,8 @@ export function UserOrganizationsFormEdit({ user: { id: userId, ...user } }: Use
     }
   };
 
-  function handleNewUserOrganizationDelete(index: number) {
-    setNewOrganizations(state => {
+  function handleNewUserTerminalDelete(index: number) {
+    setNewTerminal(state => {
       const fieldValue = [...state];
                               
       fieldValue.splice(index, 1)
@@ -100,14 +100,14 @@ export function UserOrganizationsFormEdit({ user: { id: userId, ...user } }: Use
     });
   }
 
-  const handleDeleteUserOrganization = async (id: string) => {
+  const handleDeleteUserTerminal = async (id: string) => {
     try {
-      await deleteUserOrganization(id);
+      await deleteUserTerminal(id);
 
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Organização excluída com sucesso do usuário.',
+        description: 'Terminal excluído com sucesso do usuário.',
         duration: 5000,
       });
     } catch(err) {
@@ -120,20 +120,20 @@ export function UserOrganizationsFormEdit({ user: { id: userId, ...user } }: Use
     }
   };
 
-  const filteredOrganizations = useMemo(() => 
-    organizations.filter(({ id, name }) => 
-      !orgs.find(org => 
-        name === org.organizationName && id === org.organizationId
+  const filteredTerminal = useMemo(() => 
+    terminals.filter(({ id, code }) => 
+      !userTerminals.find(terminal => 
+        code === terminal.terminalName && id === terminal.terminalId
       ) &&
-        (organizationsQuery ? name.includes(organizationsQuery) : true)
+        (terminalsQuery ? code.includes(terminalsQuery) : true)
     ),
-    [orgs, organizations, organizationsQuery]
+    [userTerminals, terminals, terminalsQuery]
   )
 
-  function handleNewOrg() {
-    setNewOrganizations(state => [
+  function handleNewUserTerminal() {
+    setNewTerminal(state => [
       {
-      id: undefined, name: undefined, organizationId: undefined, organizationName: undefined, userId: undefined
+      id: undefined, code: undefined, terminalId: undefined, terminalName: undefined, userId: undefined
       },
       ...state
     ])
@@ -144,26 +144,26 @@ export function UserOrganizationsFormEdit({ user: { id: userId, ...user } }: Use
       <Form {...formMethods}>
         <form className='mt-4 space-y-4'>
           {
-            orgs.map(({ id, organizationName }, index) => (
-              <Popover key={id} onOpenChange={() => setOrganizationsQuery(undefined)}>
+            userTerminals.map(({ id, terminalName }, index) => (
+              <Popover key={id} onOpenChange={() => setTerminalQuery(undefined)}>
                 <PopoverTrigger asChild>
                   <FormItem>
                     <FormControl>
                       <div className='relative'>
                         <Input 
-                          placeholder='Escolha a organização'
+                          placeholder='Escolha o terminal'
                           readOnly
                           className='data-[selected="true"]:bg-primary text-primary-foreground cursor-pointer text-center'
-                          value={organizationName || ''}
-                          data-selected={!!organizationName}
+                          value={terminalName || ''}
+                          data-selected={!!terminalName}
                         />
                         {
-                          organizationName ? (
-                            <button onClick={() => handleDeleteUserOrganization(id)} type='button' className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-sm hover:bg-black/5 transition-all'>
+                          terminalName ? (
+                            <button onClick={() => handleDeleteUserTerminal(id)} type='button' className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-sm hover:bg-black/5 transition-all'>
                               <Trash className='w-6 h-6 text-destructive' strokeWidth={2}/>
                             </button>
                           ) : (
-                            <button onClick={() => handleNewUserOrganizationDelete(index)} type='button' className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-sm hover:bg-black/5 transition-all'>
+                            <button onClick={() => handleNewUserTerminalDelete(index)} type='button' className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-sm hover:bg-black/5 transition-all'>
                               <Trash className='w-6 h-6 text-destructive' strokeWidth={2}/>
                             </button>
                           )
@@ -175,28 +175,28 @@ export function UserOrganizationsFormEdit({ user: { id: userId, ...user } }: Use
                 </PopoverTrigger>
                 <PopoverContent onCloseAutoFocus={(e) => e.preventDefault()} sideOffset={-10}>
                   {
-                    (!!organizationsQuery || filteredOrganizations.length > 0) && (
+                    (!!terminalsQuery || filteredTerminal.length > 0) && (
                       <Input 
-                        placeholder='Busque organizações'
-                        value={organizationsQuery}
-                        onChange={({ target: { value } }) => setOrganizationsQuery(value)}
+                        placeholder='Busque terminais'
+                        value={terminalsQuery}
+                        onChange={({ target: { value } }) => setTerminalQuery(value)}
                         className='mb-4'
                       />
                     )
                   }
                   {
-                    filteredOrganizations.length > 0 ? (
+                    filteredTerminal.length > 0 ? (
                       <div className='flex flex-col gap-y-2 mb-4 max-h-[25rem] overflow-y-auto'>
                         {
-                          filteredOrganizations
-                            .map(({ id: organizationId, name: organizationName }) => (
+                          filteredTerminal
+                            .map(({ id: terminalId, code: terminalCode }) => (
                               <>
                                 <Button 
                                   className='w-full'
-                                  key={organizationId}
-                                  onClick={() => onCreateUserOrganization({ organizationId, userId }, index)}
+                                  key={terminalId}
+                                  onClick={() => onCreateUserTerminal({ terminalId, userId }, index)}
                                 >
-                                  {organizationName}
+                                  {terminalCode}
                                 </Button>
                               </>
                             ))
@@ -204,7 +204,7 @@ export function UserOrganizationsFormEdit({ user: { id: userId, ...user } }: Use
                       </div>
                     ) : (
                       <p className='text-muted-foreground text-center text-sm'>
-                        {organizationsQuery ? 'Nenhuma organização encontrada.' : 'Todas organizações foram escolhidas.'}
+                        {terminalsQuery ? 'Nenhum terminal encontrada.' : 'Todos terminais foram escolhidos.'}
                       </p>
                     )
                   }
@@ -216,7 +216,7 @@ export function UserOrganizationsFormEdit({ user: { id: userId, ...user } }: Use
             ))
           }
 
-          <EmptyState label='Nova organização' className='py-4' onClick={handleNewOrg} />
+          <EmptyState label='Novo terminal' className='py-4' onClick={handleNewUserTerminal} />
         </form>
       </Form>
     </div>

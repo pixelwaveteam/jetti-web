@@ -7,13 +7,13 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Establishment } from './actions/fetch-establishments';
 
-export type EstablishmentData = Establishment & {
+export type EstablishmentDataTableData = Establishment & {
   state?: string;
   city?: string;
   terminalsTotal?: number;
 };
 
-export const establishmentColumns: ColumnDef<EstablishmentData>[] = [
+export const establishmentColumns: ColumnDef<EstablishmentDataTableData>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {
@@ -56,7 +56,7 @@ export const establishmentColumns: ColumnDef<EstablishmentData>[] = [
       if(establishment.state) {
         return (
           <div className='flex gap-2 items-center'>
-            <span className='truncate'>{establishment.state}</span>
+            <span className='truncate'>{establishment.state || '-'}</span>
           </div>
         )
       }
@@ -81,7 +81,7 @@ export const establishmentColumns: ColumnDef<EstablishmentData>[] = [
       if(establishment.city) {
         return (
           <div className='flex gap-2 items-center'>
-            <span className='truncate'>{establishment.city}</span>
+            <span className='truncate'>{establishment.city || '-'}</span>
           </div>
         )
       }

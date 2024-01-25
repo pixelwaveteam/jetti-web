@@ -4,7 +4,7 @@ import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
 import { EstablishmentAddressFormEdit } from '@/app/(in)/establishments/[id]/tabs/info/address/edit/form-edit';
-import { EstablishmentAddressData } from '@/app/(in)/establishments/actions/fetch-establishment-address';
+import { EstablishmentAddress } from '@/app/(in)/establishments/actions/fetch-establishment-address';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -16,7 +16,7 @@ import {
 import { SheetContext } from '@/providers/sheet-provider';
 
 interface EstablishmentAddressEditSheetProps {
-  establishmentAddress: EstablishmentAddressData;
+  establishmentAddress: EstablishmentAddress;
 }
 
 export function EstablishmentAddressEditSheet({

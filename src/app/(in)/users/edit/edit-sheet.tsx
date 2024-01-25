@@ -14,22 +14,21 @@ import {
 } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SheetContext } from '@/providers/sheet-provider';
-import { User } from '@/types/user';
 import { useSession } from 'next-auth/react';
+import { UserOrganization } from '../actions/fetch-user-organizations';
+import { UserTerminal } from '../actions/fetch-user-terminals';
+import { User } from '../actions/fetch-users';
+import { UserPasswordFormEdit } from './tabs/change-password';
 import { UserOrganizationsFormEdit } from './tabs/organizations/form-edit';
+import { UserTerminalFormEdit } from './tabs/terminals/form-edit';
 
-interface UserOrganization {
-  id: string
-  organizationId: string;
-  userId: string;
-}
-
-export type UserWithItsOrganizations = User & {
+export type UserRelations = User & {
   organizations: UserOrganization[]
+  terminals: UserTerminal[]
 }
 
 interface UserEditSheetProps {
-  user: UserWithItsOrganizations;
+  user: UserRelations;
 }
 
 export function UserEditSheet({ user }: UserEditSheetProps) {
@@ -54,9 +53,18 @@ export function UserEditSheet({ user }: UserEditSheetProps) {
             <TabsTrigger value='info'>Informações</TabsTrigger>
             {
               role === 'ADMIN' && (
-                <TabsTrigger value='organizations'>
-                  Organizações
-                </TabsTrigger>
+                <>
+                  <TabsTrigger value='organizations'>
+                    Organizações
+                  </TabsTrigger>
+
+                  <TabsTrigger value='terminals'>
+                    Terminais
+                  </TabsTrigger>
+                  <TabsTrigger value='password'>
+                    Senha
+                  </TabsTrigger>
+                </>
               )
             }
           </TabsList>
@@ -65,9 +73,19 @@ export function UserEditSheet({ user }: UserEditSheetProps) {
           </TabsContent>
           {
             role === 'ADMIN' && (
-              <TabsContent value='organizations'>
-                <UserOrganizationsFormEdit user={user} />
-              </TabsContent>
+              <>
+                <TabsContent value='organizations'>
+                  <UserOrganizationsFormEdit user={user} />
+                </TabsContent>
+
+                <TabsContent value='terminals'>
+                  <UserTerminalFormEdit user={user} /> 
+                </TabsContent>
+
+                <TabsContent value='password'>
+                  <UserPasswordFormEdit /> 
+                </TabsContent>
+              </>
             )
           }
         </Tabs>

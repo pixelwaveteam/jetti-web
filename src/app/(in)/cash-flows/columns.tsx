@@ -10,12 +10,12 @@ import { isSameDay, isWithinInterval } from 'date-fns';
 import Link from 'next/link';
 import { CashFlows as FetchCashFlows } from './actions/fetch-cash-flows';
 
-export type CashFlowDataTable = FetchCashFlows & {
+export type CashFlowDataTableData = FetchCashFlows & {
   cashFlowCode: string;
   establishment?: string;
 };
 
-export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
+export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
   {
     accessorKey: 'terminal',
     header: ({ column }) => {
@@ -109,7 +109,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.establishment}</span>
+          <span>{cashFlow.establishment  || '-'}</span>
         </div>
       );
     },
@@ -184,7 +184,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTable>[] = [
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Data
+          DataTableData
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );

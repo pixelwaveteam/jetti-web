@@ -2,8 +2,8 @@
 
 import { revalidateTag } from 'next/cache';
 
-import { EstablishmentData } from '@/app/(in)/establishments/columns';
 import { api } from '@/lib/api';
+import { Establishment } from './fetch-establishments';
 
 interface CreateEstablishment {
   organizationId: string;
@@ -11,7 +11,7 @@ interface CreateEstablishment {
 }
 
 export async function createEstablishment(data: CreateEstablishment) {
-  const response = await api<EstablishmentData>('/establishments', {
+  const response = await api<Establishment>('/establishments', {
     method: 'POST',
     body: JSON.stringify(data),
   });

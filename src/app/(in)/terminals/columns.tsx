@@ -9,14 +9,14 @@ import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 import { Terminal } from './actions/fetch-terminals';
 
-export type TerminalData = Terminal & {
+export type TerminalDataTableData = Terminal & {
   establishmentState?: string;
   interfaceName?: string;
   cashIn?: number;
   cashOut?: number;
 };
 
-export const terminalColumns: ColumnDef<TerminalData>[] = [
+export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
   {
     accessorKey: 'code',
     header: ({ column }) => {
@@ -79,7 +79,7 @@ export const terminalColumns: ColumnDef<TerminalData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{terminal.establishmentState}</span>
+          <span className='truncate'>{terminal.establishmentState || '-'}</span>
         </div>
       );
     },
@@ -102,7 +102,7 @@ export const terminalColumns: ColumnDef<TerminalData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{terminal.interfaceName}</span>
+          <span className='truncate'>{terminal.interfaceName || '-'}</span>
         </div>
       );
     },

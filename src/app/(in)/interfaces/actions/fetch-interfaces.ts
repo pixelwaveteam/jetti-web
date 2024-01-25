@@ -1,10 +1,14 @@
 'use server';
 
-import { InterfaceData } from '@/app/(in)/interfaces/columns';
 import { api } from '@/lib/api';
 
+export interface Interface {
+  id: string;
+  name: string;
+}
+
 export async function fetchInterfaces() {
-  const response = await api<InterfaceData[]>('/interfaces', {
+  const response = await api<Interface[]>('/interfaces', {
     next: {
       tags: ['interfaces'],
     },

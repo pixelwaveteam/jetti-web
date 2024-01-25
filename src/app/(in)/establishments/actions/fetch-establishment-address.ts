@@ -1,26 +1,21 @@
 'use server';
 
 import { api } from '@/lib/api';
-import { z } from 'zod';
 
-const EstablishmentAddressSchema = z.object({
-  id: z.string(),
-  establishmentId: z.string(),
-  street: z.string(),
-  number: z.string(),
-  additional: z.string().nullable(),
-  district: z.string(),
-  city: z.string(),
-  state: z.string(),
-  zipCode: z.string(),
-});
-
-export type EstablishmentAddressData = z.infer<
-  typeof EstablishmentAddressSchema
->;
+export interface EstablishmentAddress {
+  id: string;
+  establishmentId: string;
+  street: string;
+  number: string;
+  additional: string | null;
+  district: string;
+  city: string;
+  state: string;
+  zipCode: string | null;
+}
 
 export async function fetchEstablishmentAddress(establishmentId: string) {
-  const response = await api<EstablishmentAddressData[]>(
+  const response = await api<EstablishmentAddress[]>(
     `/establishment-adresses/establishment/${establishmentId}`,
     {
       next: {

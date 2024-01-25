@@ -1,22 +1,17 @@
 'use server';
 
 import { api } from '@/lib/api';
-import { z } from 'zod';
 
-const EstablishmentDistributionSchema = z.object({
-  id: z.string(),
-  establishmentId: z.string(),
-  name: z.string(),
-  description: z.string().optional(),
-  percentage: z.number(),
-});
-
-export type EstablishmentDistributionData = z.infer<
-  typeof EstablishmentDistributionSchema
->;
+export interface EstablishmentDistribution {
+  id: string;
+  establishmentId: string;
+  name: string;
+  description: string | null;
+  percentage: number;
+}
 
 export async function fetchEstablishmentDistributions(establishmentId: string) {
-  const response = await api<EstablishmentDistributionData[]>(
+  const response = await api<EstablishmentDistribution[]>(
     `/establishment-distributions/establishment/${establishmentId}`,
     {
       next: {

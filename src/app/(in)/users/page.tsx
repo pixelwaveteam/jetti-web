@@ -1,11 +1,14 @@
 import { Metadata } from 'next';
 
 import { fetchUsers } from '@/app/(in)/users/actions/fetch-users';
-import { UserDataTable } from '@/app/(in)/users/data-table';
 import { PageContainer } from '@/components/page-container';
 import { UserProvider } from '@/providers/user-provider';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
+import { fetchTerminals } from '../terminals/actions/fetch-terminals';
 import { fetchUserOrganizations } from './actions/fetch-user-organizations';
+import { fetchUserTerminals } from './actions/fetch-user-terminals';
+import { UserDataTableData } from './columns';
+import { UserDataTable } from './data-table';
 
 export const metadata: Metadata = {
   title: 'Usuários',
@@ -15,23 +18,28 @@ export const metadata: Metadata = {
 export default async function Users() {
   const rawUsers = await fetchUsers();
   const organizations = await fetchOrganizations();
+  const terminals = await fetchTerminals();
 
   const users = []
 
-  for(const user of rawUsers) {
-    try {
-      const organizations = await fetchUserOrganizations(user.id);
-  
-      users.push({ ...user, organizations })
-    } catch {
-      users.push({ ...user, organizations: [] })
-    }
+  for(const rawUser of rawUsers) {
+    const user = rawUser as UserDataTableData;
+
+    const userOrganizations = await fetchUserOrganizations(rawUser.id)
+
+    user.organizations = userOrganizations || []
+
+    const userTerminals = await fetchUserTerminals(rawUser.id)
+    
+    user.terminals = userTerminals || []
+    
+    users.push(user)
   }
 
   return (
     <PageContainer title='Usuários'>
       <UserProvider
-        initialData={{ organizations }}
+        initialData={{ organizations, terminals }}
       >
         <UserDataTable data={users} />
       </UserProvider>

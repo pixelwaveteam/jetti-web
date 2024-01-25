@@ -1,12 +1,12 @@
 import { EstablishmentDistributionCreateSheet } from '@/app/(in)/establishments/[id]/tabs/distribution/create/create-sheet';
 import { EstablishmentDistributionDataTable } from '@/app/(in)/establishments/[id]/tabs/distribution/data-table';
-import { EstablishmentDistributionData } from '@/app/(in)/establishments/actions/fetch-establishment-distributions';
 import { EmptyState } from '@/components/empty-state';
 import { SheetProvider } from '@/providers/sheet-provider';
+import { EstablishmentDistribution } from '../../../actions/fetch-establishment-distributions';
 
 interface CardContentEstablishmentDistributionProps {
   establishmentId: string;
-  establishmentDistributions?: EstablishmentDistributionData[];
+  establishmentDistributions?: EstablishmentDistribution[];
 }
 
 export function CardContentEstablishmentDistribution({

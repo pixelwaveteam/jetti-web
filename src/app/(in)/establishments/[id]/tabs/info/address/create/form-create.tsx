@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -60,19 +60,21 @@ export function EstablishmentAddressFormCreate({
 }: EstablishmentAddressFormCreateProps) {
   const { setShow } = useContext(SheetContext);
   const { toast } = useToast();
+  const [cityValueByCEP, setCityValueByCEP] = useState('');
 
   const formMethods = useForm<EstablishmentAddressFormCreateType>({
     resolver: zodResolver(EstablishmentAddressFormCreateSchema),
   });
 
-  const { control, handleSubmit, formState, watch, setValue, setFocus } =
+  const { control, handleSubmit, formState, watch, setValue, setFocus, trigger } =
     formMethods;
 
   const zipCode = watch('zipCode');
 
   const state = watch('state');
+  const city = watch('city');
 
-  const cityItemsByState = cityItems[state as keyof typeof cityItems] || undefined
+  const cityItemsByState = useMemo(() => cityItems[state as keyof typeof cityItems] || undefined, [state])
 
   const onSubmit = async (data: EstablishmentAddressFormCreateType) => {
     try {
@@ -119,15 +121,21 @@ export function EstablishmentAddressFormCreate({
         setValue('street', response.logradouro);
         setValue('additional', response.complemento);
         setValue('district', response.bairro);
-        setValue('city', response.localidade);
         setValue('state', response.uf);
+        setCityValueByCEP(response.localidade);
 
         setFocus('number');
       };
 
       fetchAddress();
     }
-  }, [setFocus, setValue, toast, zipCode]);
+  }, [setFocus, setValue, toast, zipCode, trigger]);
+
+  useEffect(() => {
+    if(!!state && !!cityValueByCEP && !city) {
+      setValue('city', cityValueByCEP)
+    }
+  }, [state, cityValueByCEP, city, setValue])
 
   return (
     <Form {...formMethods}>
@@ -210,8 +218,7 @@ export function EstablishmentAddressFormCreate({
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  
+                  value={field.value}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder='Selecione...' />
@@ -236,13 +243,13 @@ export function EstablishmentAddressFormCreate({
         <FormField
           control={control}
           name='city'
-          render={({ field }) => (
+          render={({ field }) => {console.log({field, cityItemsByState}); console.log(!!cityItemsByState); return(
             <FormItem>
               <FormLabel>Cidade</FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={!!cityItemsByState ? field.value : ''}
                   disabled={!state}
                 >
                   <SelectTrigger>
@@ -262,7 +269,7 @@ export function EstablishmentAddressFormCreate({
               </FormControl>
               <FormMessage />
             </FormItem>
-          )}
+          )}}
         />
 
         <Button

@@ -2,34 +2,16 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import * as z from 'zod';
 
 import { EstablishmentDistributionEditSheet } from '@/app/(in)/establishments/[id]/tabs/distribution/edit/edit-sheet';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
+import { EstablishmentDistribution } from '../../../actions/fetch-establishment-distributions';
 
-const EstablishmentDistributionSchema = z.object({
-  id: z.string(),
-  establishmentId: z.string(),
-  name: z.string(),
-  description: z.string().optional(),
-  percentage: z.coerce.number(),
-});
+export type EstablishmentDistributionDataTableData = EstablishmentDistribution;
 
-export type EstablishmentDistributionData = z.infer<
-  typeof EstablishmentDistributionSchema
->;
-
-export type EstablishmentDistribution = {
-  id: string;
-  establishmentId: string;
-  name: string;
-  description?: string;
-  percentage: number;
-};
-
-export const establishmentDistributionColumns: ColumnDef<EstablishmentDistributionData>[] =
+export const establishmentDistributionColumns: ColumnDef<EstablishmentDistributionDataTableData>[] =
   [
     {
       accessorKey: 'name',

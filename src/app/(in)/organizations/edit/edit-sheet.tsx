@@ -3,7 +3,6 @@
 import { Edit } from 'lucide-react';
 import { useContext } from 'react';
 
-import { Organization } from '@/app/(in)/organizations/columns';
 import { OrganizationFormEdit } from '@/app/(in)/organizations/edit/form-edit';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,6 +13,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
+import { Organization } from '../actions/fetch-organizations';
 
 interface OrganizationEditSheetProps {
   organization: Organization;

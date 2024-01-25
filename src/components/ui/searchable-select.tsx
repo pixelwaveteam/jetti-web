@@ -26,7 +26,7 @@ function useSearchableSelect() {
   const context = useContext(searchableSelectContext);
 
   if (!context) {
-    throw new Error('useFormField should be used within <FormField>');
+    throw new Error('useSearchableSelect should be used within <SearchableSelect>');
   }
   
   return context
@@ -45,12 +45,12 @@ function SearchableSelect({children, ...props}: SearchableSelectProps) {
   const isItemsQueryEmpty = useMemo(() => itemsQuery.length === 0, [itemsQuery.length])
 
   const items = useMemo(() => 
-    originalItems.filter(item => item.toLocaleLowerCase().includes(itemsQuery)), 
+    originalItems.filter(item => item.toLocaleLowerCase().includes(itemsQuery.toLocaleLowerCase())), 
     [itemsQuery, originalItems]
   )
 
   function queryItems(query: string) {
-    setItemsQuery(query.toLocaleLowerCase())
+    setItemsQuery(query)
   }
 
   function addItemToOriginalItems(item: string) {

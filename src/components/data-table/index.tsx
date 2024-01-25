@@ -239,8 +239,15 @@ export function DataTable<TData, TValue>({
               name='globalSearch'
             />
           )}
-
-          {children}
+          {
+            globalFiltering ? 
+              children : (
+                <div className='absolute top-0 right-0'>
+                  {children}
+                </div>
+              )
+                 
+          }
         </div>
       </div>
       <div className='rounded-md border overflow-x-auto'>
