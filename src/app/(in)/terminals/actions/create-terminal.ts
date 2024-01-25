@@ -8,7 +8,6 @@ import { Terminal } from './fetch-terminals';
 interface CreateTerminal {
   establishmentId: string;
   interfaceId: string;
-  code: string;
   isActive: boolean;
 }
 

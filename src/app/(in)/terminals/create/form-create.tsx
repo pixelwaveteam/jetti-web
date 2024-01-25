@@ -26,16 +26,12 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { SheetContext } from '@/providers/sheet-provider';
 import { TerminalContext } from '@/providers/terminal-provider';
-import { getRandomString } from '@/utils/text';
 import { useContext } from 'react';
 import { createCashFlow } from '../../cash-flows/actions/create-cash-flow';
 
 const TerminalFormCreateSchema = z.object({
   establishmentId: z.string({ required_error: 'Local não pode ser vazio.' }),
   interfaceId: z.string({ required_error: 'Interface não pode ser vazia.' }),
-  code: z
-    .string({ required_error: 'Código não pode ser vazio.' })
-    .max(10, 'Código deve ter no máximo 10 caracteres.'),
   cashIn: z.coerce.number({ required_error: 'Entrada não pode ser vazia.' }),
   cashOut: z.coerce.number({ required_error: 'Saída não pode ser vazia.' }),
 });
@@ -49,9 +45,6 @@ export function TerminalFormCreate() {
 
   const formMethods = useForm<TerminalFormCreateType>({
     resolver: zodResolver(TerminalFormCreateSchema),
-    defaultValues: {
-      code: getRandomString().toLocaleLowerCase(),
-    },
   });
 
   const { control, handleSubmit } = formMethods;
@@ -66,6 +59,8 @@ export function TerminalFormCreate() {
         ...data,
         isActive: true,
       });
+
+      console.log({terminalId})
 
       await createCashFlow({
         terminalId,
@@ -83,6 +78,8 @@ export function TerminalFormCreate() {
         duration: 5000,
       });
     } catch (error) {
+      console.log({error})
+
       toast({
         variant: 'destructive',
         title: 'Erro',
@@ -95,19 +92,6 @@ export function TerminalFormCreate() {
   return (
     <Form {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
-        <FormField
-          control={control}
-          name='code'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Código</FormLabel>
-              <FormControl>
-                <Input placeholder='Código do terminal' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={control}
           name='establishmentId'
