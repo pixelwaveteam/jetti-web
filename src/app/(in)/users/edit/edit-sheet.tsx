@@ -18,6 +18,7 @@ import { useSession } from 'next-auth/react';
 import { UserOrganization } from '../actions/fetch-user-organizations';
 import { UserTerminal } from '../actions/fetch-user-terminals';
 import { User } from '../actions/fetch-users';
+import { UserPasswordFormEdit } from './tabs/change-password';
 import { UserOrganizationsFormEdit } from './tabs/organizations/form-edit';
 import { UserTerminalFormEdit } from './tabs/terminals/form-edit';
 
@@ -60,6 +61,9 @@ export function UserEditSheet({ user }: UserEditSheetProps) {
                   <TabsTrigger value='terminals'>
                     Terminais
                   </TabsTrigger>
+                  <TabsTrigger value='password'>
+                    Senha
+                  </TabsTrigger>
                 </>
               )
             }
@@ -76,6 +80,10 @@ export function UserEditSheet({ user }: UserEditSheetProps) {
 
                 <TabsContent value='terminals'>
                   <UserTerminalFormEdit user={user} /> 
+                </TabsContent>
+
+                <TabsContent value='password'>
+                  <UserPasswordFormEdit /> 
                 </TabsContent>
               </>
             )
