@@ -1,11 +1,11 @@
 'use client';
 
+import { Organization } from '@/app/(in)/organizations/actions/fetch-organizations';
 import { ReactNode, createContext } from 'react';
 
-import { OrganizationData } from '@/app/(in)/organizations/columns';
 
 interface EstablishmentContextValues {
-  organizations: OrganizationData[];
+  organizations: Organization[];
 }
 
 export const EstablishmentContext = createContext<EstablishmentContextValues>(
@@ -15,7 +15,7 @@ export const EstablishmentContext = createContext<EstablishmentContextValues>(
 interface EstablishmentProviderProps {
   children: ReactNode;
   initialData: {
-    organizations: OrganizationData[];
+    organizations: Organization[];
   };
 }
 

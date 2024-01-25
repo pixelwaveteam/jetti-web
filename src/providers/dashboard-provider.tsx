@@ -4,13 +4,13 @@ import { subDays } from 'date-fns';
 import { ReactNode, createContext, useCallback, useState } from 'react';
 
 import { CashFlows } from '@/app/(in)/cash-flows/actions/fetch-cash-flows';
-import { EstablishmentData } from '@/app/(in)/establishments/columns';
-import { TerminalData } from '@/app/(in)/terminals/columns';
+import { Establishment } from '@/app/(in)/establishments/actions/fetch-establishments';
+import { Terminal } from '@/app/(in)/terminals/actions/fetch-terminals';
 
 interface DashboardContextValues {
   cashFlows: CashFlows[];
-  terminals: TerminalData[];
-  establishments: EstablishmentData[];
+  terminals: Terminal[];
+  establishments: Establishment[];
   filter: {
     startDate: Date;
     endDate: Date;
@@ -26,8 +26,8 @@ interface DashboardProviderProps {
   children: ReactNode;
   initialData: {
     cashFlows: CashFlows[];
-    terminals: TerminalData[];
-    establishments: EstablishmentData[];
+    terminals: Terminal[];
+    establishments: Establishment[];
   };
 }
 

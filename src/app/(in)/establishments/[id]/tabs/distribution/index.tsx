@@ -1,6 +1,5 @@
 import { CardContentEstablishmentDistribution } from '@/app/(in)/establishments/[id]/tabs/distribution/card-content';
 import { fetchEstablishmentDistributions } from '@/app/(in)/establishments/actions/fetch-establishment-distributions';
-import { EstablishmentData } from '@/app/(in)/establishments/columns';
 import {
   Card,
   CardContent,
@@ -9,9 +8,10 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Establishment } from '../../../actions/fetch-establishments';
 
 interface TabDistributionProps {
-  establishment: EstablishmentData;
+  establishment: Establishment;
 }
 
 export async function TabDistribution({ establishment }: TabDistributionProps) {

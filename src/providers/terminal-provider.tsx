@@ -1,15 +1,13 @@
 'use client';
 
+import { Establishment } from '@/app/(in)/establishments/actions/fetch-establishments';
+import { Interface } from '@/app/(in)/interfaces/actions/fetch-interfaces';
+import { Organization } from '@/app/(in)/organizations/actions/fetch-organizations';
 import { ReactNode, createContext } from 'react';
-
-import { EstablishmentData } from '@/app/(in)/establishments/columns';
-import { InterfaceData } from '@/app/(in)/interfaces/columns';
-import { OrganizationData } from '@/app/(in)/organizations/columns';
-
 interface TerminalContextValues {
-  organizations: OrganizationData[];
-  establishments: EstablishmentData[];
-  interfaces: InterfaceData[];
+  organizations: Organization[];
+  establishments: Establishment[];
+  interfaces: Interface[];
 }
 
 export const TerminalContext = createContext<TerminalContextValues>(
@@ -19,9 +17,9 @@ export const TerminalContext = createContext<TerminalContextValues>(
 interface TerminalProviderProps {
   children: ReactNode;
   initialData: {
-    organizations: OrganizationData[];
-    establishments: EstablishmentData[];
-    interfaces: InterfaceData[];
+    organizations: Organization[];
+    establishments: Establishment[];
+    interfaces: Interface[];
   };
 }
 

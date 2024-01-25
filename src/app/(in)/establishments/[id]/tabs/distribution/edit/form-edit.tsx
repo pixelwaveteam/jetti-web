@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { deleteEstablishmentDistribution } from '@/app/(in)/establishments/actions/delete-establishment-distribution';
+import { EstablishmentDistribution } from '@/app/(in)/establishments/actions/fetch-establishment-distributions';
 import { updateEstablishmentDistribution } from '@/app/(in)/establishments/actions/update-establishment-distribution';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
@@ -24,7 +25,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
-import { EstablishmentDistributionData } from '../columns';
 
 const EstablishmentDistributionFormEditSchema = z.object({
   name: z.string({ required_error: 'Nome não pode ser vazio.' }),
@@ -46,7 +46,7 @@ type EstablishmentDistributionFormEditType = z.infer<
 >;
 
 interface EstablishmentDistributionFormEditProps {
-  establishmentDistribution: EstablishmentDistributionData;
+  establishmentDistribution: EstablishmentDistribution;
 }
 
 export function EstablishmentDistributionFormEdit({

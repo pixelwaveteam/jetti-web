@@ -1,10 +1,10 @@
 'use server';
 
-import { TerminalData } from '@/app/(in)/terminals/columns';
 import { api } from '@/lib/api';
+import { Terminal } from './fetch-terminals';
 
 export async function fetchTerminal(id: string) {
-  const response = await api<TerminalData>(`/terminals/${id}`);
+  const response = await api<Terminal>(`/terminals/${id}`);
 
   return response;
 }
