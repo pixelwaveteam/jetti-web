@@ -81,7 +81,7 @@ export function EstablishmentDistributionFormEdit({
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Distribuição alterado com sucesso.',
+        description: 'Distribuição alterada com sucesso.',
         duration: 5000,
       });
     } catch {
@@ -103,7 +103,7 @@ export function EstablishmentDistributionFormEdit({
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Distribuição excluida com sucesso.',
+        description: 'Distribuição excluída com sucesso.',
         duration: 5000,
       });
     } catch {

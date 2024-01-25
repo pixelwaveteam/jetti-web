@@ -84,7 +84,7 @@ export function EstablishmentFormEdit({
       toast({
         variant: 'destructive',
         title: 'Erro',
-        description: 'Favor tente novamenteDSAD mais tarde.',
+        description: 'Favor tente novamente mais tarde.',
         duration: 5000,
       });
     }
@@ -99,7 +99,7 @@ export function EstablishmentFormEdit({
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Local excluido com sucesso.',
+        description: 'Local excluído com sucesso.',
         duration: 5000,
       });
 

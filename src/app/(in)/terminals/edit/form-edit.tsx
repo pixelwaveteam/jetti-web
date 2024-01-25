@@ -101,7 +101,7 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Terminal excluido com sucesso.',
+        description: 'Terminal excluído com sucesso.',
         duration: 5000,
       });
     } catch(err: unknown) {

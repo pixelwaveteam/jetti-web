@@ -90,7 +90,7 @@ export function EstablishmentContactFormEdit({
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Contato do local excluida com sucesso.',
+        description: 'Contato do local excluído com sucesso.',
         duration: 5000,
       });
     } catch {

@@ -101,7 +101,7 @@ export function UserInfoFormEdit({ user }: UserFormEditProps) {
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Usuário excluida com sucesso.',
+        description: 'Usuário excluído com sucesso.',
         duration: 5000,
       });
     } catch(err) {

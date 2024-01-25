@@ -84,7 +84,7 @@ export function InterfaceFormEdit({
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Interface excluida com sucesso.',
+        description: 'Interface excluída com sucesso.',
         duration: 5000,
       });
     } catch(err) {

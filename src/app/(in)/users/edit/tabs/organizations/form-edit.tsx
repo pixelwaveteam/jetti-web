@@ -111,19 +111,6 @@ export function UserOrganizationsFormEdit({ user: { id: userId, ...user } }: Use
         duration: 5000,
       });
     } catch(err) {
-      if(err instanceof Error && err.message === "User has dependents.") {
-        toast({
-          variant: 'destructive',
-          title: 'Erro',
-          description: 'Esse usuário tem registros associados à ele. Para exclui-lo, exclua suas associações antes!',
-          duration: 7000,
-        });
-
-        setShow(false);
-
-        return
-      }
-
       toast({
         variant: 'destructive',
         title: 'Erro',

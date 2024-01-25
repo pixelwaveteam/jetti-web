@@ -84,7 +84,7 @@ export function OrganizationFormEdit({
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Organização excluida com sucesso.',
+        description: 'Organização excluída com sucesso.',
         duration: 5000,
       });
     } catch(err) {
