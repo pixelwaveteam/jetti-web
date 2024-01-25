@@ -18,7 +18,7 @@ export function PageContainer({
   children,
 }: PageContainerProps) {
   return (
-    <div className='flex-1 space-y-4 overflow-x-hidden'>
+    <div className='flex-1 space-y-4 overflow-x-hidden relative'>
       <div className='flex items-center justify-between space-y-2'>
         <div className='flex flex-col'>
           {goBackUrl && (
