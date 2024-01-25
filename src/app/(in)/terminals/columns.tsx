@@ -36,7 +36,7 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{terminal.code}</span>
+          <span className='truncate'>{String(terminal.code).padStart(6, '0')}</span>
         </div>
       );
     },

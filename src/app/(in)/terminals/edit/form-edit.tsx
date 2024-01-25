@@ -65,7 +65,7 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
     defaultValues: {
       establishmentId: terminal.establishmentId,
       interfaceId: terminal.interfaceId,
-      code: terminal.code,
+      code: String(terminal.code),
       isActive: terminal.isActive,
       cashIn: terminal.cashIn,
       cashOut: terminal.cashOut,
@@ -77,15 +77,17 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
   const onSubmit = async ({
     cashIn,
     cashOut,
+    code,
     ...data
   }: TerminalFormEditType) => {
     try {
       await updateTerminal({
         id: terminal.id,
-        data,
+        data: {
+          ...data,
+          code: Number(code)
+        },
       });
-
-
 
       if(!terminal.cashIn) {
         await createCashFlow({

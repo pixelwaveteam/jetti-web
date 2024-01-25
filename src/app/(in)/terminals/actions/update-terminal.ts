@@ -6,7 +6,7 @@ import { revalidateTag } from 'next/cache';
 interface UpdateTerminal {
   id: string;
   data: {
-    code: string;
+    code: number;
     establishmentId: string;
     interfaceId: string;
     isActive: boolean;
