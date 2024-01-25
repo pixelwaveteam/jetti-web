@@ -11,6 +11,7 @@ import { Terminal } from './actions/fetch-terminals';
 
 export type TerminalDataTableData = Terminal & {
   establishmentState?: string;
+  establishmentName?: string;
   interfaceName?: string;
   cashIn?: number;
   cashOut?: number;
@@ -35,7 +36,7 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{terminal.code}</span>
+          <span className='truncate'>{String(terminal.code).padStart(6, '0')}</span>
         </div>
       );
     },
@@ -47,7 +48,7 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
     },
     cell: ({ row }) => {
       const terminal = row.original;
-
+      
       return (
         <div className='flex gap-2 items-center'>
           <Badge
@@ -60,6 +61,29 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
       );
     },
     enableGlobalFilter: false,
+  },
+  {
+    accessorKey: 'establishmentName',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Local
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const terminal = row.original;
+
+      return (
+        <div className='flex gap-2 items-center'>
+          <span className='truncate'>{terminal.establishmentName || '-'}</span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'establishmentState',

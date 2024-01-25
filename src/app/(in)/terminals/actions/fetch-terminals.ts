@@ -6,7 +6,7 @@ export interface Terminal {
   id: string;
   establishmentId: string;
   interfaceId: string;
-  code: string;
+  code: number;
   isActive: boolean;
 }
 

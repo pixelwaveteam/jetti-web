@@ -31,6 +31,8 @@ import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
 import { TerminalContext } from '@/providers/terminal-provider';
+import { createCashFlow } from '../../cash-flows/actions/create-cash-flow';
+import { updateInitialCashFlow } from '../../cash-flows/actions/update-initial-cash-flow';
 import { Terminal } from '../actions/fetch-terminals';
 
 const TerminalFormEditSchema = z.object({
@@ -47,7 +49,10 @@ const TerminalFormEditSchema = z.object({
 type TerminalFormEditType = z.infer<typeof TerminalFormEditSchema>;
 
 interface TerminalFormEditProps {
-  terminal: Terminal;
+  terminal: Terminal & {
+    cashIn?: number;
+    cashOut?: number;
+  };
 }
 
 export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
@@ -60,23 +65,46 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
     defaultValues: {
       establishmentId: terminal.establishmentId,
       interfaceId: terminal.interfaceId,
-      code: terminal.code,
+      code: String(terminal.code),
       isActive: terminal.isActive,
+      cashIn: terminal.cashIn,
+      cashOut: terminal.cashOut,
     },
   });
 
   const { handleSubmit, control } = formMethods;
 
   const onSubmit = async ({
-    cashIn: _,
-    cashOut: __,
+    cashIn,
+    cashOut,
+    code,
     ...data
   }: TerminalFormEditType) => {
     try {
       await updateTerminal({
         id: terminal.id,
-        data,
+        data: {
+          ...data,
+          code: Number(code)
+        },
       });
+
+      if(!terminal.cashIn) {
+        await createCashFlow({
+          terminalId: terminal.id,
+          cashIn,
+          cashOut,
+          date: new Date(0).toISOString(),
+        })
+      } else {
+        await updateInitialCashFlow({
+          id: terminal.id,
+          data : {
+            cashIn,
+            cashOut,
+          }
+        })
+      }
 
       setShow(false);
 
@@ -86,7 +114,7 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
         description: 'Terminal alterado com sucesso.',
         duration: 5000,
       });
-    } catch {
+    } catch(err) {
       toast({
         variant: 'destructive',
         title: 'Erro',

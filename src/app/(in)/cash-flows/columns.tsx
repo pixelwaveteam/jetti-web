@@ -184,7 +184,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          DataTableData
+          Data
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
