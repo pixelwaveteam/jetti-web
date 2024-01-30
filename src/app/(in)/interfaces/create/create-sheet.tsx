@@ -27,7 +27,7 @@ export function InterfaceCreateSheet() {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Nova Interface</SheetTitle>
+          <SheetTitle>Criar Interface</SheetTitle>
         </SheetHeader>
         <InterfaceFormCreate />
       </SheetContent>

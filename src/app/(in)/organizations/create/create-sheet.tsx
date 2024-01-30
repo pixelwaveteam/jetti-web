@@ -27,7 +27,7 @@ export function OrganizationCreateSheet() {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Nova Organização</SheetTitle>
+          <SheetTitle>Criar Organização</SheetTitle>
         </SheetHeader>
         <OrganizationFormCreate />
       </SheetContent>

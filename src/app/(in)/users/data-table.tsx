@@ -9,14 +9,7 @@ interface UserDataTableProps {
 
 export function UserDataTable({ data }: UserDataTableProps) {
   return (
-    <DataTable
-      columns={userColumns}
-      data={data}
-      filterBy={[{
-        key: 'name',
-        label: 'nome',
-      }]}
-    >
+    <DataTable columns={userColumns} data={data} globalFiltering>
       <SheetProvider>
         <UserCreateSheet />
       </SheetProvider>

@@ -25,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { DateFilter } from './filters/date';
 import { NumberFilter } from './filters/number';
@@ -97,7 +98,7 @@ type FilterBy = {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  filterBy: FilterBy[];
+  filterBy?: FilterBy[];
   globalFiltering?: boolean;
   children?: ReactNode;
 }
@@ -195,11 +196,12 @@ export function DataTable<TData, TValue>({
   globalFiltering,
 }: DataTableProps<TData, TValue>) {
   const defaultFilters = filterBy
-    .filter((filter) => filter.defaultValue)
+    ?.filter((filter) => filter.defaultValue)
     .map(({ key, defaultValue }) => ({ id: key, value: defaultValue }));
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] =
-    useState<ColumnFiltersState>(defaultFilters);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
+    defaultFilters ?? []
+  );
   const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
@@ -222,32 +224,29 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className='flex flex-col gap-2 py-4'>
-        <Card className='w-full'>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Filtros</CardTitle>
-          </CardHeader>
-          <CardContent className='w-full gap-2 flex flex-wrap'>
-            {renderFilters(table, filterBy)}
-          </CardContent>
-        </Card>
-        <div className='flex w-full justify-end gap-2'>
+        {filterBy?.length && (
+          <Card className='w-full'>
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+              <CardTitle className='text-sm font-medium'>
+                Filtros Avançados
+              </CardTitle>
+            </CardHeader>
+
+            <CardContent className='w-full gap-2 flex flex-wrap'>
+              {renderFilters(table, filterBy)}
+            </CardContent>
+          </Card>
+        )}
+        <div className='flex w-[60%] md:w-[40%] self-end mr-1 gap-2'>
           {globalFiltering && (
             <Input
-              placeholder='Filtrar por todos os campos...'
+              placeholder='Filtrar...'
               value={globalFilter ?? ''}
               onChange={({ target: { value } }) => setGlobalFilter(value)}
               name='globalSearch'
             />
           )}
-          {
-            globalFiltering ? 
-              children : (
-                <div className='absolute top-0 right-0'>
-                  {children}
-                </div>
-              )
-                 
-          }
+          <div className='absolute top-0 right-0'>{children}</div>
         </div>
       </div>
       <div className='rounded-md border overflow-x-auto'>
@@ -301,14 +300,19 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
       <div className='flex items-center justify-end space-x-2 py-4'>
-        <div className='flex-1 text-sm text-muted-foreground'>
+        <div className='flex-1 text-sm text-muted-foreground hidden md:flex'>
           Exibindo {table.getRowModel().rows?.length} registro
           {table.getRowModel().rows?.length > 1 && 's'} de{' '}
           {table.getCoreRowModel().rows.length}
         </div>
 
+        <div className='flex-1 text-sm text-muted-foreground flex md:hidden'>
+          Página {table.getState().pagination.pageIndex + 1} de{' '}
+          {table.getPageCount()}
+        </div>
+
         <div className='flex items-center gap-x-6'>
-          <div className='flex-1 text-sm text-muted-foreground'>
+          <div className='flex-1 text-sm text-muted-foreground hidden md:flex'>
             Página {table.getState().pagination.pageIndex + 1} de{' '}
             {table.getPageCount()}
           </div>

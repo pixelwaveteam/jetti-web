@@ -1,6 +1,6 @@
 import {
   OrganizationDataTableData,
-  organizationColumns
+  organizationColumns,
 } from '@/app/(in)/organizations/columns';
 import { OrganizationCreateSheet } from '@/app/(in)/organizations/create/create-sheet';
 import { DataTable } from '@/components/data-table';
@@ -14,14 +14,7 @@ export async function OrganizationDataTable({
   data,
 }: OrganizationDataTableProps) {
   return (
-    <DataTable
-      columns={organizationColumns}
-      data={data}
-      filterBy={[{
-        key: 'name',
-        label: 'nome',
-      }]}
-    >
+    <DataTable columns={organizationColumns} data={data} globalFiltering>
       <SheetProvider>
         <OrganizationCreateSheet />
       </SheetProvider>
