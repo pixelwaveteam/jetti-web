@@ -10,6 +10,8 @@ interface UpdateTerminal {
     establishmentId: string;
     interfaceId: string;
     isActive: boolean;
+    input: number;
+    output: number;
   };
 }
 

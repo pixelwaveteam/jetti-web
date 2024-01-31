@@ -27,13 +27,12 @@ import { useToast } from '@/hooks/use-toast';
 import { SheetContext } from '@/providers/sheet-provider';
 import { TerminalContext } from '@/providers/terminal-provider';
 import { useContext } from 'react';
-import { createCashFlow } from '../../cash-flows/actions/create-cash-flow';
 
 const TerminalFormCreateSchema = z.object({
   establishmentId: z.string({ required_error: 'Local não pode ser vazio.' }),
   interfaceId: z.string({ required_error: 'Interface não pode ser vazia.' }),
-  cashIn: z.coerce.number({ required_error: 'Entrada não pode ser vazia.' }),
-  cashOut: z.coerce.number({ required_error: 'Saída não pode ser vazia.' }),
+  input: z.coerce.number({ required_error: 'Entrada não pode ser vazia.' }),
+  output: z.coerce.number({ required_error: 'Saída não pode ser vazia.' }),
 });
 
 type TerminalFormCreateType = z.infer<typeof TerminalFormCreateSchema>;
@@ -50,24 +49,17 @@ export function TerminalFormCreate() {
   const { control, handleSubmit } = formMethods;
 
   const onSubmit = async ({
-    cashIn,
-    cashOut,
+    input,
+    output,
     ...data
   }: TerminalFormCreateType) => {
     try {
-      const { id: terminalId } = await createTerminal({
+      await createTerminal({
         ...data,
         isActive: true,
+        input: Number(input),
+        output: Number(output),
       });
-
-      console.log({terminalId})
-
-      await createCashFlow({
-        terminalId,
-        cashIn,
-        cashOut,
-        date: new Date(0).toISOString(),
-      })
 
       setShow(false);
 
@@ -78,8 +70,6 @@ export function TerminalFormCreate() {
         duration: 5000,
       });
     } catch (error) {
-      console.log({error})
-
       toast({
         variant: 'destructive',
         title: 'Erro',
@@ -142,7 +132,7 @@ export function TerminalFormCreate() {
         />
         <FormField
           control={control}
-          name='cashIn'
+          name='input'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Entradas</FormLabel>
@@ -158,7 +148,7 @@ export function TerminalFormCreate() {
         />
         <FormField
           control={control}
-          name='cashOut'
+          name='output'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Saídas</FormLabel>

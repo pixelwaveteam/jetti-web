@@ -31,8 +31,6 @@ import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
 import { TerminalContext } from '@/providers/terminal-provider';
-import { createCashFlow } from '../../cash-flows/actions/create-cash-flow';
-import { updateInitialCashFlow } from '../../cash-flows/actions/update-initial-cash-flow';
 import { Terminal } from '../actions/fetch-terminals';
 
 const TerminalFormEditSchema = z.object({
@@ -42,17 +40,14 @@ const TerminalFormEditSchema = z.object({
     .string({ required_error: 'Código não pode ser vazio.' })
     .max(10, 'Código deve ter no máximo 10 caracteres.'),
   isActive: z.boolean(),
-  cashIn: z.coerce.number({ required_error: 'Entrada não pode ser vazia.' }),
-  cashOut: z.coerce.number({ required_error: 'Saída não pode ser vazia.' }),
+  input: z.coerce.number({ required_error: 'Entrada não pode ser vazia.' }),
+  output: z.coerce.number({ required_error: 'Saída não pode ser vazia.' }),
 });
 
 type TerminalFormEditType = z.infer<typeof TerminalFormEditSchema>;
 
 interface TerminalFormEditProps {
-  terminal: Terminal & {
-    cashIn?: number;
-    cashOut?: number;
-  };
+  terminal: Terminal;
 }
 
 export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
@@ -67,16 +62,16 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
       interfaceId: terminal.interfaceId,
       code: String(terminal.code),
       isActive: terminal.isActive,
-      cashIn: terminal.cashIn,
-      cashOut: terminal.cashOut,
+      input: terminal.input,
+      output: terminal.output,
     },
   });
 
   const { handleSubmit, control } = formMethods;
 
   const onSubmit = async ({
-    cashIn,
-    cashOut,
+    input,
+    output,
     code,
     ...data
   }: TerminalFormEditType) => {
@@ -85,26 +80,11 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
         id: terminal.id,
         data: {
           ...data,
-          code: Number(code)
+          input: Number(input),
+          output: Number(output),
+          code: Number(code),
         },
       });
-
-      if(!terminal.cashIn) {
-        await createCashFlow({
-          terminalId: terminal.id,
-          cashIn,
-          cashOut,
-          date: new Date(0).toISOString(),
-        })
-      } else {
-        await updateInitialCashFlow({
-          id: terminal.id,
-          data : {
-            cashIn,
-            cashOut,
-          }
-        })
-      }
 
       setShow(false);
 
@@ -114,7 +94,7 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
         description: 'Terminal alterado com sucesso.',
         duration: 5000,
       });
-    } catch(err) {
+    } catch (err) {
       toast({
         variant: 'destructive',
         title: 'Erro',
@@ -261,32 +241,28 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
           />
           <FormField
             control={control}
-            name='cashIn'
+            name='input'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Entradas</FormLabel>
                 <FormControl>
                   <Input placeholder='Entrada Inicial' {...field} />
                 </FormControl>
-                <FormDescription>
-                  Total de entrada no terminal inicialmente.
-                </FormDescription>
+                <FormDescription>Total de entrada no terminal.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
           <FormField
             control={control}
-            name='cashOut'
+            name='output'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Saídas</FormLabel>
                 <FormControl>
                   <Input placeholder='Total de Saídas' {...field} />
                 </FormControl>
-                <FormDescription>
-                  Total de saída no terminal inicialmente.
-                </FormDescription>
+                <FormDescription>Total de saída no terminal.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

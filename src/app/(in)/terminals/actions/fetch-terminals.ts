@@ -8,6 +8,8 @@ export interface Terminal {
   interfaceId: string;
   code: number;
   isActive: boolean;
+  input: number;
+  output: number;
 }
 
 export async function fetchTerminals() {
