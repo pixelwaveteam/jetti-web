@@ -3,12 +3,15 @@
 import { revalidateTag } from 'next/cache';
 
 import { api } from '@/lib/api';
+
 import { Terminal } from './fetch-terminals';
 
 interface CreateTerminal {
   establishmentId: string;
   interfaceId: string;
   isActive: boolean;
+  input: number;
+  output: number;
 }
 
 export async function createTerminal(data: CreateTerminal) {
@@ -19,5 +22,5 @@ export async function createTerminal(data: CreateTerminal) {
 
   revalidateTag('terminals');
 
-  return terminal
+  return terminal;
 }

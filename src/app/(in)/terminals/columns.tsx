@@ -13,8 +13,8 @@ export type TerminalDataTableData = Terminal & {
   establishmentState?: string;
   establishmentName?: string;
   interfaceName?: string;
-  cashIn?: number;
-  cashOut?: number;
+  input?: number;
+  output?: number;
 };
 
 export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
@@ -36,7 +36,9 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{String(terminal.code).padStart(6, '0')}</span>
+          <span className='truncate'>
+            {String(terminal.code).padStart(6, '0')}
+          </span>
         </div>
       );
     },
@@ -44,11 +46,11 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
   {
     accessorKey: 'isActive',
     header: () => {
-      return "Status";
+      return 'Status';
     },
     cell: ({ row }) => {
       const terminal = row.original;
-      
+
       return (
         <div className='flex gap-2 items-center'>
           <Badge
@@ -149,7 +151,7 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.cashIn || 0}</span>
+          <span>{cashFlow.input || 0}</span>
         </div>
       );
     },
@@ -172,7 +174,7 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>-{cashFlow.cashOut || 0}</span>
+          <span>-{cashFlow.output || 0}</span>
         </div>
       );
     },
