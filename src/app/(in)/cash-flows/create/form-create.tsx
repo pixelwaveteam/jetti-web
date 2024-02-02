@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -85,7 +85,7 @@ export function CashFlowFormCreate() {
     },
   });
 
-  const { control, handleSubmit, watch, setValue } = formMethods;
+  const { control, handleSubmit, watch, setValue, reset } = formMethods;
 
   const terminalId = watch('terminalId');
 
@@ -113,6 +113,12 @@ export function CashFlowFormCreate() {
       });
     }
   };
+
+  const onClose = useCallback(() => {
+    setShow(false);
+    reset();
+    selectEstablishment(null)
+  }, [reset, selectEstablishment, setShow])
   
   const lastInput = useMemo(() => {
     return terminals.find((terminal) => terminal.id === terminalId)?.input || 0;
@@ -154,9 +160,9 @@ export function CashFlowFormCreate() {
 
   useEffect(() => {
     if (availableTerminals.length === 0) {
-      setShow(false);
+      onClose();
     }
-  }, [availableTerminals, setShow]);
+  }, [availableTerminals, onClose]);
 
   useEffect(() => {
     if (availableTerminals.length > 0) {
