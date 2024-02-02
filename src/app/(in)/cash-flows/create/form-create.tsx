@@ -95,6 +95,9 @@ export function CashFlowFormCreate() {
       
       completedTerminals.current.push(data.terminalId);
 
+      setValue('output', '' as unknown as number)
+      setValue('input', '' as unknown as number)
+
       toast({
         variant: 'default',
         title: 'Sucesso',
@@ -194,10 +197,14 @@ export function CashFlowFormCreate() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Terminal</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder='Selecione...' />
+                    <SelectValue placeholder='Selecione...'>
+                      {availableTerminals.find(terminal => terminal.id === field.value)?.code}
+                      {' '}-{' '}
+                      {availableTerminals.find(terminal => terminal.id === field.value)?.interfaceName}
+                    </SelectValue>
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
