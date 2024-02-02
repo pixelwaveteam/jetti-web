@@ -7,6 +7,7 @@ interface CashFlowStatsProps {
   statValues: {
     cashIn: number;
     cashOut: number;
+    gross: number;
     net: number;
   };
 }
@@ -15,7 +16,11 @@ type CashFlowStat = {
   id: string;
   title: string;
   icon: LucideIcon;
-  iconColor: 'text-yellow-400' | 'text-red-400' | 'text-green-400';
+  iconColor:
+    | 'text-yellow-400'
+    | 'text-red-400'
+    | 'text-green-400'
+    | 'text-green-600';
 };
 
 const cashFlowStats = [
@@ -32,16 +37,22 @@ const cashFlowStats = [
     iconColor: 'text-red-400',
   },
   {
-    id: 'net',
-    title: 'Ganhos',
+    id: 'gross',
+    title: 'Ganhos bruto',
     icon: DollarSign,
     iconColor: 'text-green-400',
+  },
+  {
+    id: 'net',
+    title: 'Ganhos líquido',
+    icon: DollarSign,
+    iconColor: 'text-green-600',
   },
 ] satisfies CashFlowStat[];
 
 export function CashFlowStats({ statValues }: CashFlowStatsProps) {
   return (
-    <div className='grid gap-4 grid-cols-1 md:grid-cols-3'>
+    <div className='grid gap-4 grid-cols-2 md:grid-cols-4'>
       {cashFlowStats.map((stat) => {
         const statKey = stat.id as keyof typeof statValues;
 

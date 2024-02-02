@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useContext, useEffect, useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -8,7 +9,6 @@ import { createCashFlow } from '@/app/(in)/cash-flows/actions/create-cash-flow';
 import { fetchLastCashFlow } from '@/app/(in)/cash-flows/actions/fetch-last-cash-flow';
 import { CardPeriodCashFlow } from '@/app/(in)/cash-flows/card-period';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
   FormControl,
@@ -19,11 +19,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Progress } from '@/components/ui/progress';
 import {
   Select,
   SelectContent,
@@ -34,72 +30,62 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { CashFlowContext } from '@/providers/cash-flow-provider';
 import { SheetContext } from '@/providers/sheet-provider';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useContext, useEffect } from 'react';
 
 const CashFlowFormCreateSchema = z.object({
   terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
-  establishmentId: z.string({ required_error: 'Local é obrigatório.' }),
-  cashIn: z.coerce.number().transform((val) => {
-    const cashInCents = val * 100;
-
-    return cashInCents;
-  }),
-  cashOut: z.coerce.number().transform((val) => {
-    const cashOutCents = val * 100;
-
-    return cashOutCents;
-  }),
-  date: z.date({ required_error: 'Data é obrigatória.' }),
+  input: z.coerce.number({ required_error: 'Entrada é obrigatório.' }),
+  output: z.coerce.number({ required_error: 'Saída é obrigatório.' }),
 });
 
 type CashFlowFormCreateType = z.infer<typeof CashFlowFormCreateSchema>;
 
 export function CashFlowFormCreate() {
-  const router = useRouter();
-  const { terminals, setPeriod, establishments } = useContext(CashFlowContext);
+  const { terminals, setPeriod, selectedEstablishment, selectEstablishment } =
+    useContext(CashFlowContext);
   const { setShow } = useContext(SheetContext);
   const { toast } = useToast();
-  const { data: session } = useSession();
 
-  const role = session ? session?.user.role : undefined;
+  const completedTerminals = useRef<string[]>([]);
+
+  const availableTerminals = useMemo(() => {
+    return terminals.filter(
+      (terminal) => !completedTerminals.current.includes(terminal.id)
+    );
+  }, [terminals]);
+
+  const terminalReaderProgress = useMemo(() => {
+    const totalTerminals = terminals.length;
+    const completed = completedTerminals.current.length;
+
+    return (completed / totalTerminals) * 100;
+  }, [terminals, completedTerminals]);
 
   const formMethods = useForm<CashFlowFormCreateType>({
     resolver: zodResolver(CashFlowFormCreateSchema),
     defaultValues: {
-      date: new Date(),
+      terminalId:
+        availableTerminals.length > 0 ? availableTerminals[0].id : undefined,
+      input: '' as unknown as number,
+      output: '' as unknown as number,
     },
   });
 
-  const { control, handleSubmit, watch } = formMethods;
+  const { control, handleSubmit, watch, setValue } = formMethods;
 
   const terminalId = watch('terminalId');
-  const establishmentId = watch('establishmentId');
 
-  const onSubmit = async ({
-    date,
-    establishmentId,
-    ...data
-  }: CashFlowFormCreateType) => {
+  const onSubmit = async (data: CashFlowFormCreateType) => {
     try {
-      const cashFlowCreated = await createCashFlow({
-        ...data,
-        date: date.toISOString(),
-      });
+      await createCashFlow(data);
 
-      setShow(false);
+      completedTerminals.current.push(data.terminalId);
 
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Local criado com sucesso.',
+        description: 'Leitura criada com sucesso.',
         duration: 5000,
       });
-
-      router.push(`/cash-flows/${cashFlowCreated.id}`);
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -110,12 +96,22 @@ export function CashFlowFormCreate() {
     }
   };
 
-  useEffect(() => {
-    async function handlePeriodCashFlow(terminalId: string) {
-      try {
-        const result = await fetchLastCashFlow(terminalId);
+  const lastInput = useMemo(() => {
+    return terminals.find((terminal) => terminal.id === terminalId)?.input || 0;
+  }, [terminals, terminalId]);
 
-        setPeriod(result.date);
+  const lastOutput = useMemo(() => {
+    return (
+      terminals.find((terminal) => terminal.id === terminalId)?.output || 0
+    );
+  }, [terminals, terminalId]);
+
+  useEffect(() => {
+    async function handlePeriodCashFlow(selectedTerminalId: string) {
+      try {
+        const lastCashFlow = await fetchLastCashFlow(selectedTerminalId);
+
+        setPeriod(lastCashFlow.date);
       } catch {
         setPeriod(null);
       }
@@ -126,15 +122,51 @@ export function CashFlowFormCreate() {
     }
   }, [setPeriod, terminalId]);
 
+  useEffect(() => {
+    if (availableTerminals.length === 0) {
+      setShow(false);
+    }
+  }, [availableTerminals, setShow]);
+
+  useEffect(() => {
+    if (availableTerminals.length > 0) {
+      setValue('terminalId', availableTerminals[0].id);
+    }
+  }, [availableTerminals, setValue]);
+
   return (
     <Form {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
+        <div className='flex flex-col gap-2'>
+          <span className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
+            Local
+            <Button
+              variant={'secondary'}
+              size={'xs'}
+              className='ml-2'
+              onClick={() => selectEstablishment(null)}
+            >
+              Alterar
+            </Button>
+          </span>
+          <strong className='font-bold leading-none text-muted-foreground'>
+            {selectedEstablishment?.name}
+          </strong>
+        </div>
+
+        <div className='flex items-center'>
+          <Progress value={terminalReaderProgress} />
+          <span className='ml-2 text-sm text-gray-300'>
+            {`${completedTerminals.current.length}/${terminals.length}`}
+          </span>
+        </div>
+
         <FormField
           control={control}
-          name='establishmentId'
+          name='terminalId'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Local</FormLabel>
+              <FormLabel>Terminal</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -142,9 +174,9 @@ export function CashFlowFormCreate() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {establishments.map((establishment) => (
-                    <SelectItem key={establishment.id} value={establishment.id}>
-                      {establishment.name}
+                  {availableTerminals.map((terminal) => (
+                    <SelectItem key={terminal.id} value={terminal.id}>
+                      {terminal.code} - {terminal.interfaceName}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -156,40 +188,7 @@ export function CashFlowFormCreate() {
 
         <FormField
           control={control}
-          name='terminalId'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Terminal</FormLabel>
-              <Select
-                disabled={!establishmentId}
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder='Selecione...' />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {terminals
-                    .filter(
-                      (terminal) => terminal.establishmentId === establishmentId
-                    )
-                    .map((terminal) => (
-                      <SelectItem key={terminal.id} value={terminal.id}>
-                        {terminal.code} - {terminal.interfaceName}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
-          name='cashIn'
+          name='input'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Entradas</FormLabel>
@@ -197,56 +196,35 @@ export function CashFlowFormCreate() {
                 <Input placeholder='Total de Entradas' {...field} />
               </FormControl>
               <FormDescription>
-                Entradas no terminal no período.
+                {lastInput > 0
+                  ? `Entrada atual: ${lastInput}`
+                  : `Nenhuma entrada anterior registrada`}
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={control}
-          name='cashOut'
+          name='output'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Saídas</FormLabel>
               <FormControl>
                 <Input placeholder='Total de Saídas' {...field} />
               </FormControl>
-              <FormDescription>Saídas no terminal no período.</FormDescription>
+              <FormDescription>
+                {lastOutput > 0
+                  ? `Saída atual: ${lastOutput}`
+                  : `Nenhuma saída anterior registrada`}
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={control}
-          name='date'
-          render={({ field }) => (
-            <Popover key={field.name}>
-              <PopoverTrigger asChild>
-                <FormItem>
-                  <FormLabel>Data</FormLabel>
-                  <Input
-                    placeholder='--/--/----'
-                    value={field.value ? format(field.value, 'dd/MM/yyyy') : ''}
-                    className='max-w-xs'
-                  />
-                  <FormMessage />
-                </FormItem>
-              </PopoverTrigger>
-              <PopoverContent>
-                <Calendar
-                  locale={ptBR}
-                  mode='single'
-                  selected={field.value}
-                  onSelect={field.onChange}
-                  disabled={role === 'OPERATOR'}
-                />
-              </PopoverContent>
-            </Popover>
-          )}
-        />
 
-        <CardPeriodCashFlow show={!!terminalId} />
+        {!!terminalId && <CardPeriodCashFlow />}
         <Button type='submit' className='w-full'>
           Criar
         </Button>

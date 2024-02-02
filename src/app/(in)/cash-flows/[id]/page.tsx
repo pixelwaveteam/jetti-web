@@ -4,7 +4,10 @@ import { getServerSession } from 'next-auth';
 
 import { fetchCashFlow } from '@/app/(in)/cash-flows/actions/fetch-cash-flow';
 import { fetchNetDistributions } from '@/app/(in)/cash-flows/actions/fetch-net-distributions';
-import { Terminal, fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
+import {
+  Terminal,
+  fetchTerminals,
+} from '@/app/(in)/terminals/actions/fetch-terminals';
 import { fetchUser } from '@/app/(in)/users/actions/fetch-user';
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { PageContainer } from '@/components/page-container';
@@ -54,33 +57,36 @@ export default async function CashFlow({ params: { id } }: CashFlowProps) {
 
   const terminals = [];
 
-  for(const rawTerminal of rawTerminals) {
-    const terminal = rawTerminal as (Terminal & {
+  for (const rawTerminal of rawTerminals) {
+    const terminal = rawTerminal as Terminal & {
       interfaceName?: string;
-    })
+    };
 
     const fetchedInterface = await fetchInterface(rawTerminal.interfaceId);
 
-    if(fetchedInterface) {
-      terminal.interfaceName = fetchedInterface.name
+    if (fetchedInterface) {
+      terminal.interfaceName = fetchedInterface.name;
     }
 
-    terminals.push(terminal)
+    terminals.push(terminal);
   }
 
   const establishment = establishments.find(
-    establishmentItem => establishmentItem.id === terminal?.establishmentId
-  )
+    (establishmentItem) => establishmentItem.id === terminal?.establishmentId
+  );
 
   const renderEditCashFlowButton = (
     <SheetProvider>
-      <CashFlowEditSheet cashFlow={{...cashFlow, establishmentId: establishment?.id || '' }} />
+      <CashFlowEditSheet
+        cashFlow={{ ...cashFlow, establishmentId: establishment?.id || '' }}
+      />
     </SheetProvider>
   );
 
   const statValues = {
     cashIn: cashFlow.cashIn,
     cashOut: cashFlow.cashOut,
+    gross: cashFlow.gross,
     net: cashFlow.net,
   };
 

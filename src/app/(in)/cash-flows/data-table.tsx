@@ -1,6 +1,6 @@
 import {
   CashFlowDataTableData,
-  cashFlowColumns
+  cashFlowColumns,
 } from '@/app/(in)/cash-flows/columns';
 import { CashFlowCreateSheet } from '@/app/(in)/cash-flows/create/create-sheet';
 import { DataTable } from '@/components/data-table';
@@ -16,13 +16,14 @@ interface CashFlowDataTableProps {
 export async function CashFlowDataTable({ data }: CashFlowDataTableProps) {
   const users = await fetchUsers();
 
-  const operators = users.map(({name}) => name)
+  const operators = users.map(({ name }) => name);
 
-  const establishments = (await fetchEstablishments()).map(({ name }) => name)
+  const establishments = (await fetchEstablishments())
+    .map(({ name }) => name)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
-  const currentStartOfWeek = startOfWeek(new Date())
-
-  const currentEndOfWeek = endOfWeek(new Date())
+  const currentStartOfWeek = startOfWeek(new Date());
+  const currentEndOfWeek = endOfWeek(new Date());
 
   return (
     <DataTable
@@ -31,7 +32,7 @@ export async function CashFlowDataTable({ data }: CashFlowDataTableProps) {
       filterBy={[
         {
           key: 'cashFlowCode',
-          label: 'código'
+          label: 'código',
         },
         {
           key: 'terminal',
@@ -51,8 +52,8 @@ export async function CashFlowDataTable({ data }: CashFlowDataTableProps) {
         {
           key: 'operator',
           label: 'operadores',
-          items: operators
-        }
+          items: operators,
+        },
       ]}
       globalFiltering
     >
