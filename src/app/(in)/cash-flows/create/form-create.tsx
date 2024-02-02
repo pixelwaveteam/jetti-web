@@ -111,7 +111,7 @@ export function CashFlowFormCreate() {
       try {
         const lastCashFlow = await fetchLastCashFlow(selectedTerminalId);
 
-        setPeriod(lastCashFlow.date);
+        setPeriod(lastCashFlow?.date || null);
       } catch {
         setPeriod(null);
       }

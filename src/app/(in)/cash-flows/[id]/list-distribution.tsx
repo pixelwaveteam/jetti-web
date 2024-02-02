@@ -13,29 +13,37 @@ export function ListDistribution({ netDistributions }: ListDistributionProps) {
     0
   );
 
+  const formattedToPercentage = (value: number) => {
+    return value / 100;
+  };
+
   return (
     <div className='space-y-4'>
       {netDistributions.map((netDistribution) => {
-        const percentage = netDistribution.percentage / 100;
-        const amount = convertCentsToCurrency(netDistribution.amount);
+        const percentageDistribution = formattedToPercentage(
+          netDistribution.percentage
+        );
+        const amountDistribution = convertCentsToCurrency(
+          netDistribution.amount
+        );
 
         return (
           <div className='flex items-center' key={netDistribution.id}>
-            <div className='space-y-1'>
-              <p className='text-sm font-medium leading-none'>
-                {netDistribution.name}{' '}
-                <Badge color='primary'>{`${percentage}%`}</Badge>
-              </p>
+            <div className='space-x-1'>
+              <span className='font-medium leading-none'>
+                {netDistribution.name}
+              </span>
+              <Badge color='primary'>{`${percentageDistribution}%`}</Badge>
             </div>
-            <div className='ml-auto font-medium'>{amount}</div>
+            <div className='ml-auto font-medium'>{amountDistribution}</div>
           </div>
         );
       })}
+
       <Separator />
+
       <div className='flex items-center'>
-        <div className='space-y-1'>
-          <p className='text-sm font-medium leading-none'>Total</p>
-        </div>
+        <span className='font-medium leading-none'>Total</span>
         <div className='ml-auto font-medium'>
           {convertCentsToCurrency(totalAmount)}
         </div>

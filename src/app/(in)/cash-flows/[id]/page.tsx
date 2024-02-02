@@ -22,11 +22,11 @@ import { CashFlowProvider } from '@/providers/cash-flow-provider';
 import { SheetProvider } from '@/providers/sheet-provider';
 import { getDateFormatted } from '@/utils/date';
 
+import { ListDistribution } from '@/app/(in)/cash-flows/[id]/list-distribution';
 import { fetchEstablishments } from '../../establishments/actions/fetch-establishments';
 import { fetchInterface } from '../../interfaces/actions/fetch-interface';
 import { ChartDistribution } from './chart-distribution';
 import { CashFlowEditSheet } from './edit/edit-sheet';
-import { ListDistribution } from './list-distribution';
 import { CashFlowStats } from './stats';
 
 export const metadata: Metadata = {
