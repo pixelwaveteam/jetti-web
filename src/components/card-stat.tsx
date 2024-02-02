@@ -10,9 +10,10 @@ interface CardStatProps {
   icon: LucideIcon;
   iconColor?:
     | 'text-indigo-400'
-    | 'text-green-400'
     | 'text-red-400'
-    | 'text-yellow-400';
+    | 'text-yellow-400'
+    | 'text-green-400'
+    | 'text-green-600';
 }
 
 export function CardStat({

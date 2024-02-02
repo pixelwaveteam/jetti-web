@@ -3,13 +3,13 @@
 import { revalidateTag } from 'next/cache';
 
 import { api } from '@/lib/api';
+
 import { CashFlow } from './fetch-cash-flow';
 
 interface CreateCashFlow {
   terminalId: string;
-  cashIn: number;
-  cashOut: number;
-  date: string;
+  input: number;
+  output: number;
 }
 
 export async function createCashFlow(data: CreateCashFlow) {

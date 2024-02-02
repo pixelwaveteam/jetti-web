@@ -10,6 +10,7 @@ import { deleteEstablishmentDistribution } from '@/app/(in)/establishments/actio
 import { EstablishmentDistribution } from '@/app/(in)/establishments/actions/fetch-establishment-distributions';
 import { updateEstablishmentDistribution } from '@/app/(in)/establishments/actions/update-establishment-distribution';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -116,6 +117,10 @@ export function EstablishmentDistributionFormEdit({
     }
   };
 
+  const isJetti = establishmentDistribution.name
+    .toLowerCase()
+    .includes('jetti');
+
   return (
     <div className='space-y-6'>
       <Form {...formMethods}>
@@ -123,6 +128,7 @@ export function EstablishmentDistributionFormEdit({
           <FormField
             control={control}
             name='name'
+            disabled={isJetti}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Nome</FormLabel>
@@ -136,6 +142,7 @@ export function EstablishmentDistributionFormEdit({
           <FormField
             control={control}
             name='description'
+            disabled={isJetti}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Descrição</FormLabel>
@@ -153,6 +160,7 @@ export function EstablishmentDistributionFormEdit({
           <FormField
             control={control}
             name='percentage'
+            disabled={isJetti}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Percentual (%)</FormLabel>
@@ -167,28 +175,44 @@ export function EstablishmentDistributionFormEdit({
             )}
           />
 
-          <div className='flex gap-2'>
-            <Button
-              type='submit'
-              disabled={formState.isSubmitting}
-              className='w-full'
-            >
-              {formState.isSubmitting ? (
-                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-              ) : (
-                'Alterar'
-              )}
-            </Button>
-            <DialogProvider>
-              <ConfirmDeletionDialog
-                onConfirm={handleDeleteEsblishmentDistribution}
+          {!isJetti && (
+            <div className='flex gap-2'>
+              <Button
+                type='submit'
+                disabled={formState.isSubmitting}
+                className='w-full'
               >
-                <Button type='button' variant='destructive' className='w-full'>
-                  Excluir
-                </Button>
-              </ConfirmDeletionDialog>
-            </DialogProvider>
-          </div>
+                {formState.isSubmitting ? (
+                  <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                ) : (
+                  'Alterar'
+                )}
+              </Button>
+
+              <DialogProvider>
+                <ConfirmDeletionDialog
+                  onConfirm={handleDeleteEsblishmentDistribution}
+                >
+                  <Button
+                    type='button'
+                    variant='destructive'
+                    className='w-full'
+                  >
+                    Excluir
+                  </Button>
+                </ConfirmDeletionDialog>
+              </DialogProvider>
+            </div>
+          )}
+          {isJetti && (
+            <Alert variant={'destructive'}>
+              <AlertTitle>Informação!</AlertTitle>
+              <AlertDescription>
+                O percentual de distribuição da Jetti é calculado
+                automaticamente e não pode ser modificado
+              </AlertDescription>
+            </Alert>
+          )}
         </form>
       </Form>
     </div>

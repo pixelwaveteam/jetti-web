@@ -4,10 +4,10 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
 import { EstablishmentDistributionEditSheet } from '@/app/(in)/establishments/[id]/tabs/distribution/edit/edit-sheet';
+import { EstablishmentDistribution } from '@/app/(in)/establishments/actions/fetch-establishment-distributions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
-import { EstablishmentDistribution } from '../../../actions/fetch-establishment-distributions';
 
 export type EstablishmentDistributionDataTableData = EstablishmentDistribution;
 

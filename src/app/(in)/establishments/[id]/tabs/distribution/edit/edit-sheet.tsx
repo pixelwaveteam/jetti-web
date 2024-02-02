@@ -33,7 +33,7 @@ export function EstablishmentDistributionEditSheet({
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Alterar Contato</SheetTitle>
+          <SheetTitle>Alterar Distribuição</SheetTitle>
         </SheetHeader>
         <EstablishmentDistributionFormEdit
           establishmentDistribution={establishmentDistribution}
