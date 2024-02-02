@@ -66,4 +66,10 @@ export const navItems = [
     path: '/financial',
     roles: [],
   },
+  {
+    title: 'Fechamento',
+    icon: DollarSign,
+    path: '/closure',
+    roles: ['ADMIN'],
+  },
 ] as NavItem[];
