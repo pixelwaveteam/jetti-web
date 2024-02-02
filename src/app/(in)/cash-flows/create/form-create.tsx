@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useContext, useEffect, useMemo, useRef } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -31,13 +31,23 @@ import { useToast } from '@/hooks/use-toast';
 import { CashFlowContext } from '@/providers/cash-flow-provider';
 import { SheetContext } from '@/providers/sheet-provider';
 
-const CashFlowFormCreateSchema = z.object({
+const CashFlowFormCreateSchema = (lastInput: number | undefined = 0, lastOutput: number | undefined = 0) => z.object({
   terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
-  input: z.coerce.number({ required_error: 'Entrada é obrigatório.' }),
-  output: z.coerce.number({ required_error: 'Saída é obrigatório.' }),
+  input: z.coerce
+    .number({ required_error: 'Entrada é obrigatório.' })
+    .refine(value => value > lastInput, {
+      message: 'O valor de entrada deve ser maior que a anterior',
+    }),
+  output: z.coerce
+    .number({ required_error: 'Saída é obrigatório.' })
+    .refine(value => value > lastOutput, {
+      message: 'O valor de saída deve ser maior que a anterior',
+    }),
 });
 
-type CashFlowFormCreateType = z.infer<typeof CashFlowFormCreateSchema>;
+const CashFlowFormCreateSchemaDefault = CashFlowFormCreateSchema()
+
+type CashFlowFormCreateType = z.infer<typeof CashFlowFormCreateSchemaDefault>;
 
 export function CashFlowFormCreate() {
   const { terminals, setPeriod, selectedEstablishment, selectEstablishment } =
@@ -60,8 +70,13 @@ export function CashFlowFormCreate() {
     return (completed / totalTerminals) * 100;
   }, [terminals, completedTerminals]);
 
+  const [formInputOutputMinimum, setFormInputOutputMinimum] = useState({lastInput: 0, lastOutput: 0})
+
   const formMethods = useForm<CashFlowFormCreateType>({
-    resolver: zodResolver(CashFlowFormCreateSchema),
+    resolver: zodResolver(CashFlowFormCreateSchema(
+      formInputOutputMinimum.lastInput, 
+      formInputOutputMinimum.lastOutput
+    )),
     defaultValues: {
       terminalId:
         availableTerminals.length > 0 ? availableTerminals[0].id : undefined,
@@ -77,7 +92,7 @@ export function CashFlowFormCreate() {
   const onSubmit = async (data: CashFlowFormCreateType) => {
     try {
       await createCashFlow(data);
-
+      
       completedTerminals.current.push(data.terminalId);
 
       toast({
@@ -95,7 +110,7 @@ export function CashFlowFormCreate() {
       });
     }
   };
-
+  
   const lastInput = useMemo(() => {
     return terminals.find((terminal) => terminal.id === terminalId)?.input || 0;
   }, [terminals, terminalId]);
@@ -105,6 +120,18 @@ export function CashFlowFormCreate() {
       terminals.find((terminal) => terminal.id === terminalId)?.output || 0
     );
   }, [terminals, terminalId]);
+  
+  useEffect(() => {
+    if(lastInput) {
+      setFormInputOutputMinimum(state => ({...state, lastInput}));
+    }
+  }, [lastInput])
+  
+  useEffect(() => {
+    if(lastOutput) {
+      setFormInputOutputMinimum(state => ({...state, lastOutput}));
+    }
+  }, [lastOutput])
 
   useEffect(() => {
     async function handlePeriodCashFlow(selectedTerminalId: string) {
