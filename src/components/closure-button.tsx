@@ -1,19 +1,24 @@
 'use client'
 
 import { NewClosureContext } from "@/providers/new-closure-provider";
+import { useSession } from "next-auth/react";
 import { useContext, useState } from "react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 
 export function ClosureButton() {
+  const { data: session } = useSession();
+
+  const isUserAdmin = session?.user.role === "ADMIN"
+
   const { closureCashFlows } = useContext(NewClosureContext);
 
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
 
   const closureCashFlowsTotal = closureCashFlows.length;
 
-  if(closureCashFlowsTotal === 0) {
+  if(closureCashFlowsTotal === 0 || !isUserAdmin) {
     return; 
   }
   
