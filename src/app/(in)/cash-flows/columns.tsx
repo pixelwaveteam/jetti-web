@@ -14,6 +14,7 @@ import { CashFlows as FetchCashFlows } from './actions/fetch-cash-flows';
 export type CashFlowDataTableData = FetchCashFlows & {
   cashFlowCode: string;
   establishment?: string;
+  organization?: string;
 };
 
 export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [

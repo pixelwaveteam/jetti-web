@@ -5,9 +5,12 @@ import { CashFlowDataTable } from '@/app/(in)/cash-flows/data-table';
 import { Terminal, fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
 import { PageContainer } from '@/components/page-container';
 import { CashFlowProvider } from '@/providers/cash-flow-provider';
+import { NewClosureProvider } from '@/providers/new-closure-provider';
 import { fetchEstablishment } from '../establishments/actions/fetch-establishment';
 import { fetchEstablishments } from '../establishments/actions/fetch-establishments';
 import { fetchInterface } from '../interfaces/actions/fetch-interface';
+import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
+import { fetchUsers } from '../users/actions/fetch-users';
 import { CashFlowDataTableData } from './columns';
 
 export const metadata: Metadata = {
@@ -16,11 +19,19 @@ export const metadata: Metadata = {
 };
 
 export default async function CashFlows() {
-  const [rawCashFlows, rawTerminals, establishments] = await Promise.all([
+  const [rawCashFlows, rawTerminals, establishments, organizations, users] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
-    fetchEstablishments()
+    fetchEstablishments(),
+    fetchOrganizations(),
+    fetchUsers()
   ]); 
+
+  const operators = users.map(({ name }) => name);
+
+  const establishmentsName = establishments
+    .map(({ name }) => name)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
   const cashFlows = []
 
@@ -33,6 +44,14 @@ export default async function CashFlows() {
       const { name: establishmentName } = await fetchEstablishment(cashFlowEstablishmentId)
 
       cashFlow.establishment = establishmentName
+
+      const cashFlowOrganizationId = establishments.find(({ id }) => id === cashFlowEstablishmentId)?.organizationId
+
+      const cashFlowOrganizationName = cashFlowOrganizationId && organizations.find(({ id }) => id === cashFlowOrganizationId)?.name
+
+      if(cashFlowOrganizationName) {
+        cashFlow.organization = cashFlowOrganizationName;
+      }
     }
 
     cashFlows.push(cashFlow)
@@ -57,7 +76,9 @@ export default async function CashFlows() {
   return (
     <PageContainer title='Leituras'>
       <CashFlowProvider initialData={{ terminals, establishments }}>
-        <CashFlowDataTable data={cashFlows} />
+        <NewClosureProvider>
+          <CashFlowDataTable data={cashFlows} establishments={establishmentsName} operators={operators} />
+        </NewClosureProvider>
       </CashFlowProvider>
     </PageContainer>
   );
