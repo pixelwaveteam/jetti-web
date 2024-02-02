@@ -8,6 +8,7 @@ export interface CashFlows {
   operator: string;
   cashIn: number;
   cashOut: number;
+  gross: number;
   net: number;
   date: string;
 }

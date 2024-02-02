@@ -64,8 +64,8 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
   },
   {
     accessorKey: 'operator',
-    filterFn: (row, id, value) => {      
-      return value.length > 0 ? value.includes(row.original.operator) : true
+    filterFn: (row, id, value) => {
+      return value.length > 0 ? value.includes(row.original.operator) : true;
     },
     header: ({ column }) => {
       return (
@@ -90,8 +90,10 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
   },
   {
     accessorKey: 'establishment',
-    filterFn: (row, id, value) => {      
-      return value.length > 0 ? value.includes(row.original.establishment) : true
+    filterFn: (row, id, value) => {
+      return value.length > 0
+        ? value.includes(row.original.establishment)
+        : true;
     },
     header: ({ column }) => {
       return (
@@ -109,7 +111,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.establishment  || '-'}</span>
+          <span>{cashFlow.establishment || '-'}</span>
         </div>
       );
     },
@@ -132,13 +134,13 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{convertCentsToCurrency(cashFlow.cashIn - cashFlow.cashOut)}</span>
+          <span>{convertCentsToCurrency(cashFlow.gross)}</span>
         </div>
       );
     },
   },
   {
-    accessorKey: 'liquid',
+    accessorKey: 'net',
     header: ({ column }) => {
       return (
         <Button
@@ -155,7 +157,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{convertCentsToCurrency(cashFlow.cashIn - cashFlow.cashOut)}</span>
+          <span>{convertCentsToCurrency(cashFlow.net)}</span>
         </div>
       );
     },
@@ -163,20 +165,22 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
   {
     accessorKey: 'date',
     filterFn: (row, id, value) => {
-      
-      const splitDate = (row.getValue(id) as string).slice(0, 10).split('-').map(part => Number(part))
-      
-      const rowDate = new Date(splitDate[0], splitDate[1]-1, splitDate[2]);
+      const splitDate = (row.getValue(id) as string)
+        .slice(0, 10)
+        .split('-')
+        .map((part) => Number(part));
 
-      if(!value.from) { 
-        return isSameDay(rowDate, value.to)
+      const rowDate = new Date(splitDate[0], splitDate[1] - 1, splitDate[2]);
+
+      if (!value.from) {
+        return isSameDay(rowDate, value.to);
       }
 
-      if(!value.to) {
-        return isSameDay(rowDate, value.from)
+      if (!value.to) {
+        return isSameDay(rowDate, value.from);
       }
 
-      return isWithinInterval(rowDate, { start: value.from, end: value.to })
+      return isWithinInterval(rowDate, { start: value.from, end: value.to });
     },
     header: ({ column }) => {
       return (
