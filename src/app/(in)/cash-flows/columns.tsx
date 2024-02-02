@@ -3,6 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, ChevronRight } from 'lucide-react';
 
+import { AddCashFlowButton } from '@/components/add-cash-flow-button';
 import { Button } from '@/components/ui/button';
 import { convertCentsToCurrency } from '@/utils/currency';
 import { getDateFormatted } from '@/utils/date';
@@ -209,7 +210,9 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
       const cashFlow = row.original;
 
       return (
-        <div className='flex justify-end'>
+        <div className='flex gap-x-3 justify-end'>
+          <AddCashFlowButton cashFlow={cashFlow} />
+
           <Button variant={'ghost'} size={'icon'} asChild>
             <Link href={`/cash-flows/${cashFlow.id}`}>
               <ChevronRight className='h-4 w-4' />
