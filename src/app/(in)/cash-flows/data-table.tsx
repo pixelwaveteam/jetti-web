@@ -1,3 +1,5 @@
+'use client'
+
 import {
   CashFlowDataTableData,
   cashFlowColumns,
@@ -5,69 +7,78 @@ import {
 import { CashFlowCreateSheet } from '@/app/(in)/cash-flows/create/create-sheet';
 import { ClosureButton } from '@/components/closure-button';
 import { DataTable } from '@/components/data-table';
-import { NewClosureProvider } from '@/providers/new-closure-provider';
+import { NewClosureContext } from '@/providers/new-closure-provider';
 import { SheetProvider } from '@/providers/sheet-provider';
 import { endOfWeek, startOfWeek } from 'date-fns';
-import { fetchEstablishments } from '../establishments/actions/fetch-establishments';
-import { fetchUsers } from '../users/actions/fetch-users';
+import { useSession } from 'next-auth/react';
+import { useContext, useMemo } from 'react';
 
 interface CashFlowDataTableProps {
   data: CashFlowDataTableData[];
+  operators: string[];
+  establishments: string[]
 }
 
-export async function CashFlowDataTable({ data }: CashFlowDataTableProps) {
-  const users = await fetchUsers();
+export function CashFlowDataTable({ data, establishments, operators }: CashFlowDataTableProps) {
+  const { data: session } = useSession();
 
-  const operators = users.map(({ name }) => name);
+  const isUserAdmin = session?.user.role === "ADMIN"
 
-  const establishments = (await fetchEstablishments())
-    .map(({ name }) => name)
-    .filter((value, index, self) => self.indexOf(value) === index);
+  const { closureCashFlows } = useContext(NewClosureContext);
+
+  const filteredData = useMemo(() => 
+    closureCashFlows[0] ?
+      data.filter(entry => entry.organization === closureCashFlows[0].organization)
+      : data,
+    [data, closureCashFlows]
+  )
 
   const currentStartOfWeek = startOfWeek(new Date());
   const currentEndOfWeek = endOfWeek(new Date());
 
   return (
-    <NewClosureProvider>
-      <DataTable
-        columns={cashFlowColumns}
-        data={data}
-        filterBy={[
-          {
-            key: 'cashFlowCode',
-            label: 'código',
-          },
-          {
-            key: 'terminal',
-            label: 'código de terminal',
-          },
-          {
-            key: 'establishment',
-            label: 'locais',
-            items: establishments,
-          },
-          {
-            key: 'date',
-            label: 'intervalo',
-            isDate: true,
-            defaultValue: { from: currentStartOfWeek, to: currentEndOfWeek },
-          },
-          {
-            key: 'operator',
-            label: 'operadores',
-            items: operators,
-          },
-        ]}
-        globalFiltering
-      >
-        <div className='flex items-center gap-x-6'>
-          <ClosureButton />
+    <DataTable
+      columns={cashFlowColumns}
+      data={filteredData}
+      filterBy={[
+        {
+          key: 'cashFlowCode',
+          label: 'código',
+        },
+        {
+          key: 'terminal',
+          label: 'código de terminal',
+        },
+        {
+          key: 'establishment',
+          label: 'locais',
+          items: establishments,
+        },
+        {
+          key: 'date',
+          label: 'intervalo',
+          isDate: true,
+          defaultValue: { from: currentStartOfWeek, to: currentEndOfWeek },
+        },
+        {
+          key: 'operator',
+          label: 'operadores',
+          items: operators,
+        },
+      ]}
+      globalFiltering
+    >
+      <div className='flex items-center gap-x-6'>
+        {
+          isUserAdmin && (
+            <ClosureButton />
+          )
+        }
 
-          <SheetProvider>
-            <CashFlowCreateSheet />
-          </SheetProvider>
-        </div>
-      </DataTable>
-    </NewClosureProvider>
+        <SheetProvider>
+          <CashFlowCreateSheet />
+        </SheetProvider>
+      </div>
+    </DataTable>
   );
 }
