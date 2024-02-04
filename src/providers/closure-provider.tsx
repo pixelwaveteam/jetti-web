@@ -1,13 +1,8 @@
 'use client';
 
-import {
-  ReactNode,
-  createContext
-} from 'react';
+import { ReactNode, createContext } from 'react';
 
-
-interface ClosureContextValues {
-}
+interface ClosureContextValues {}
 
 export const ClosureContext = createContext<ClosureContextValues>(
   {} as ClosureContextValues
@@ -15,21 +10,14 @@ export const ClosureContext = createContext<ClosureContextValues>(
 
 interface ClosureProviderProps {
   children: ReactNode;
-  initialData: {
-    
-  };
+  initialData: {};
 }
 
 export function ClosureProvider({
   children,
   initialData,
 }: ClosureProviderProps) {
-
   return (
-    <ClosureContext.Provider
-      value={{}}
-    >
-      {children}
-    </ClosureContext.Provider>
+    <ClosureContext.Provider value={{}}>{children}</ClosureContext.Provider>
   );
 }

@@ -1,9 +1,9 @@
 {
-  "estados": [
+  "states": [
     {
-      "sigla": "AC",
-      "nome": "Acre",
-      "cidades": [
+      "short": "AC",
+      "name": "Acre",
+      "cities": [
         "Acrelândia",
         "Assis Brasil",
         "Brasiléia",
@@ -29,9 +29,9 @@
       ]
     },
     {
-      "sigla": "AL",
-      "nome": "Alagoas",
-      "cidades": [
+      "short": "AL",
+      "name": "Alagoas",
+      "cities": [
         "Água Branca",
         "Anadia",
         "Arapiraca",
@@ -137,9 +137,9 @@
       ]
     },
     {
-      "sigla": "AM",
-      "nome": "Amazonas",
-      "cidades": [
+      "short": "AM",
+      "name": "Amazonas",
+      "cities": [
         "Alvarães",
         "Amaturá",
         "Anamã",
@@ -205,9 +205,9 @@
       ]
     },
     {
-      "sigla": "AP",
-      "nome": "Amapá",
-      "cidades": [
+      "short": "AP",
+      "name": "Amapá",
+      "cities": [
         "Amapá",
         "Calçoene",
         "Cutias",
@@ -227,9 +227,9 @@
       ]
     },
     {
-      "sigla": "BA",
-      "nome": "Bahia",
-      "cidades": [
+      "short": "BA",
+      "name": "Bahia",
+      "cities": [
         "Abaíra",
         "Abaré",
         "Acajutiba",
@@ -650,9 +650,9 @@
       ]
     },
     {
-      "sigla": "CE",
-      "nome": "Ceará",
-      "cidades": [
+      "short": "CE",
+      "name": "Ceará",
+      "cities": [
         "Abaiara",
         "Acarape",
         "Acaraú",
@@ -840,9 +840,9 @@
       ]
     },
     {
-      "sigla": "DF",
-      "nome": "Distrito Federal",
-      "cidades": [
+      "short": "DF",
+      "name": "Distrito Federal",
+      "cities": [
         "Águas Claras",
         "Arniqueira",
         "Brasília",
@@ -882,9 +882,9 @@
       ]
     },
     {
-      "sigla": "ES",
-      "nome": "Espírito Santo",
-      "cidades": [
+      "short": "ES",
+      "name": "Espírito Santo",
+      "cities": [
         "Afonso Cláudio",
         "Água Doce do Norte",
         "Águia Branca",
@@ -966,9 +966,9 @@
       ]
     },
     {
-      "sigla": "GO",
-      "nome": "Goiás",
-      "cidades": [
+      "short": "GO",
+      "name": "Goiás",
+      "cities": [
         "Abadia de Goiás",
         "Abadiânia",
         "Acreúna",
@@ -1218,9 +1218,9 @@
       ]
     },
     {
-      "sigla": "MA",
-      "nome": "Maranhão",
-      "cidades": [
+      "short": "MA",
+      "name": "Maranhão",
+      "cities": [
         "Açailândia",
         "Afonso Cunha",
         "Água Doce do Maranhão",
@@ -1441,9 +1441,9 @@
       ]
     },
     {
-      "sigla": "MG",
-      "nome": "Minas Gerais",
-      "cidades": [
+      "short": "MG",
+      "name": "Minas Gerais",
+      "cities": [
         "Abadia dos Dourados",
         "Abaeté",
         "Abre Campo",
@@ -2300,9 +2300,9 @@
       ]
     },
     {
-      "sigla": "MS",
-      "nome": "Mato Grosso do Sul",
-      "cidades": [
+      "short": "MS",
+      "name": "Mato Grosso do Sul",
+      "cities": [
         "Água Clara",
         "Alcinópolis",
         "Amambaí",
@@ -2383,9 +2383,9 @@
       ]
     },
     {
-      "sigla": "MT",
-      "nome": "Mato Grosso",
-      "cidades": [
+      "short": "MT",
+      "name": "Mato Grosso",
+      "cities": [
         "Acorizal",
         "Água Boa",
         "Alta Floresta",
@@ -2528,9 +2528,9 @@
       ]
     },
     {
-      "sigla": "PA",
-      "nome": "Pará",
-      "cidades": [
+      "short": "PA",
+      "name": "Pará",
+      "cities": [
         "Abaetetuba",
         "Abel Figueiredo",
         "Acará",
@@ -2677,9 +2677,9 @@
       ]
     },
     {
-      "sigla": "PB",
-      "nome": "Paraíba",
-      "cidades": [
+      "short": "PB",
+      "name": "Paraíba",
+      "cities": [
         "Água Branca",
         "Aguiar",
         "Alagoa Grande",
@@ -2906,9 +2906,9 @@
       ]
     },
     {
-      "sigla": "PE",
-      "nome": "Pernambuco",
-      "cidades": [
+      "short": "PE",
+      "name": "Pernambuco",
+      "cities": [
         "Abreu e Lima",
         "Afogados da Ingazeira",
         "Afrânio",
@@ -3097,9 +3097,9 @@
       ]
     },
     {
-      "sigla": "PI",
-      "nome": "Piauí",
-      "cidades": [
+      "short": "PI",
+      "name": "Piauí",
+      "cities": [
         "Acauã",
         "Agricolândia",
         "Água Branca",
@@ -3325,9 +3325,9 @@
       ]
     },
     {
-      "sigla": "PR",
-      "nome": "Paraná",
-      "cidades": [
+      "short": "PR",
+      "name": "Paraná",
+      "cities": [
         "Abatiá",
         "Adrianópolis",
         "Agudos do Sul",
@@ -3730,9 +3730,9 @@
       ]
     },
     {
-      "sigla": "RJ",
-      "nome": "Rio de Janeiro",
-      "cidades": [
+      "short": "RJ",
+      "name": "Rio de Janeiro",
+      "cities": [
         "Angra dos Reis",
         "Aperibé",
         "Araruama",
@@ -3828,9 +3828,9 @@
       ]
     },
     {
-      "sigla": "RN",
-      "nome": "Rio Grande do Norte",
-      "cidades": [
+      "short": "RN",
+      "name": "Rio Grande do Norte",
+      "cities": [
         "Acari",
         "Açu",
         "Afonso Bezerra",
@@ -4001,9 +4001,9 @@
       ]
     },
     {
-      "sigla": "RO",
-      "nome": "Rondônia",
-      "cidades": [
+      "short": "RO",
+      "name": "Rondônia",
+      "cities": [
         "Alta Floresta d'Oeste",
         "Alto Alegre do Parecis",
         "Alto Paraíso",
@@ -4059,9 +4059,9 @@
       ]
     },
     {
-      "sigla": "RR",
-      "nome": "Roraima",
-      "cidades": [
+      "short": "RR",
+      "name": "Roraima",
+      "cities": [
         "Alto Alegre",
         "Amajari",
         "Boa Vista",
@@ -4080,9 +4080,9 @@
       ]
     },
     {
-      "sigla": "RS",
-      "nome": "Rio Grande do Sul",
-      "cidades": [
+      "short": "RS",
+      "name": "Rio Grande do Sul",
+      "cities": [
         "Aceguá",
         "Água Santa",
         "Agudo",
@@ -4582,9 +4582,9 @@
       ]
     },
     {
-      "sigla": "SC",
-      "nome": "Santa Catarina",
-      "cidades": [
+      "short": "SC",
+      "name": "Santa Catarina",
+      "cities": [
         "Abdon Batista",
         "Abelardo Luz",
         "Agrolândia",
@@ -4881,9 +4881,9 @@
       ]
     },
     {
-      "sigla": "SE",
-      "nome": "Sergipe",
-      "cidades": [
+      "short": "SE",
+      "name": "Sergipe",
+      "cities": [
         "Amparo de São Francisco",
         "Aquidabã",
         "Aracaju",
@@ -4962,9 +4962,9 @@
       ]
     },
     {
-      "sigla": "SP",
-      "nome": "São Paulo",
-      "cidades": [
+      "short": "SP",
+      "name": "São Paulo",
+      "cities": [
         "Adamantina",
         "Adolfo",
         "Aguaí",
@@ -5613,9 +5613,9 @@
       ]
     },
     {
-      "sigla": "TO",
-      "nome": "Tocantins",
-      "cidades": [
+      "short": "TO",
+      "name": "Tocantins",
+      "cities": [
         "Abreulândia",
         "Aguiarnópolis",
         "Aliança do Tocantins",

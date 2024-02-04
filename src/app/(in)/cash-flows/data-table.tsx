@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
+import { ClosureButton } from '@/app/(in)/cash-flows/closure-button';
 import {
   CashFlowDataTableData,
   cashFlowColumns,
 } from '@/app/(in)/cash-flows/columns';
 import { CashFlowCreateSheet } from '@/app/(in)/cash-flows/create/create-sheet';
-import { ClosureButton } from '@/components/closure-button';
 import { DataTable } from '@/components/data-table';
 import { NewClosureContext } from '@/providers/new-closure-provider';
 import { SheetProvider } from '@/providers/sheet-provider';
@@ -16,22 +16,29 @@ import { useContext, useMemo } from 'react';
 interface CashFlowDataTableProps {
   data: CashFlowDataTableData[];
   operators: string[];
-  establishments: string[]
+  establishments: string[];
 }
 
-export function CashFlowDataTable({ data, establishments, operators }: CashFlowDataTableProps) {
+export function CashFlowDataTable({
+  data,
+  establishments,
+  operators,
+}: CashFlowDataTableProps) {
   const { data: session } = useSession();
 
-  const isUserAdmin = session?.user.role === "ADMIN"
+  const isUserAdmin = session?.user.role === 'ADMIN';
 
   const { closureCashFlows } = useContext(NewClosureContext);
 
-  const filteredData = useMemo(() => 
-    closureCashFlows[0] ?
-      data.filter(entry => entry.organization === closureCashFlows[0].organization)
-      : data,
+  const filteredData = useMemo(
+    () =>
+      closureCashFlows[0]
+        ? data.filter(
+            (entry) => entry.organization === closureCashFlows[0].organization
+          )
+        : data,
     [data, closureCashFlows]
-  )
+  );
 
   const currentStartOfWeek = startOfWeek(new Date());
   const currentEndOfWeek = endOfWeek(new Date());
@@ -69,11 +76,7 @@ export function CashFlowDataTable({ data, establishments, operators }: CashFlowD
       globalFiltering
     >
       <div className='flex items-center gap-x-6'>
-        {
-          isUserAdmin && (
-            <ClosureButton />
-          )
-        }
+        {isUserAdmin && <ClosureButton />}
 
         <SheetProvider>
           <CashFlowCreateSheet />

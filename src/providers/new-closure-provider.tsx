@@ -1,13 +1,7 @@
 'use client';
 
 import { CashFlowDataTableData } from '@/app/(in)/cash-flows/columns';
-import {
-  ReactNode,
-  createContext,
-  useCallback,
-  useState
-} from 'react';
-
+import { ReactNode, createContext, useCallback, useState } from 'react';
 
 interface NewClosureContextValues {
   closureCashFlows: CashFlowDataTableData[];
@@ -23,18 +17,18 @@ interface NewClosureProviderProps {
   children: ReactNode;
 }
 
-export function NewClosureProvider({
-  children,
-}: NewClosureProviderProps) {
-  const [closureCashFlows, setClosureCashFlows] = useState<CashFlowDataTableData[]>([]);
+export function NewClosureProvider({ children }: NewClosureProviderProps) {
+  const [closureCashFlows, setClosureCashFlows] = useState<
+    CashFlowDataTableData[]
+  >([]);
 
   const addNewCashFlow = useCallback((cashFlow: CashFlowDataTableData) => {
-    setClosureCashFlows(state => [cashFlow, ...state])
-  }, [])
+    setClosureCashFlows((state) => [cashFlow, ...state]);
+  }, []);
 
   const removeCashFlow = useCallback((id: string) => {
-    setClosureCashFlows(state => state.filter(entry => entry.id !== id))
-  }, [])
+    setClosureCashFlows((state) => state.filter((entry) => entry.id !== id));
+  }, []);
 
   return (
     <NewClosureContext.Provider

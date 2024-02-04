@@ -3,15 +3,15 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, ChevronRight } from 'lucide-react';
 
-import { AddCashFlowButton } from '@/components/add-cash-flow-button';
+import { AddCashFlowButton } from '@/app/(in)/cash-flows/add-cash-flow-button';
 import { Button } from '@/components/ui/button';
 import { convertCentsToCurrency } from '@/utils/currency';
 import { getDateFormatted } from '@/utils/date';
 import { isSameDay, isWithinInterval } from 'date-fns';
 import Link from 'next/link';
-import { CashFlows as FetchCashFlows } from './actions/fetch-cash-flows';
+import { CashFlow } from './actions/fetch-cash-flows';
 
-export type CashFlowDataTableData = FetchCashFlows & {
+export type CashFlowDataTableData = CashFlow & {
   cashFlowCode: string;
   establishment?: string;
   organization?: string;
@@ -210,9 +210,13 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
     cell: ({ row }) => {
       const cashFlow = row.original;
 
+      const { cashFlowCode, establishment, organization, ...rest } = cashFlow;
+
+      const cashFlowDate = rest satisfies CashFlow;
+
       return (
         <div className='flex gap-x-3 justify-end'>
-          <AddCashFlowButton cashFlow={cashFlow} />
+          <AddCashFlowButton cashFlow={cashFlowDate} />
 
           <Button variant={'ghost'} size={'icon'} asChild>
             <Link href={`/cash-flows/${cashFlow.id}`}>

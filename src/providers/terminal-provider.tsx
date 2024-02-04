@@ -1,9 +1,11 @@
 'use client';
 
+import { ReactNode, createContext } from 'react';
+
 import { Establishment } from '@/app/(in)/establishments/actions/fetch-establishments';
 import { Interface } from '@/app/(in)/interfaces/actions/fetch-interfaces';
 import { Organization } from '@/app/(in)/organizations/actions/fetch-organizations';
-import { ReactNode, createContext } from 'react';
+
 interface TerminalContextValues {
   organizations: Organization[];
   establishments: Establishment[];

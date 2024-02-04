@@ -1,4 +1,3 @@
-
 import { DataTable } from '@/components/data-table';
 import { ClosureDataTableData, closureColumns } from './columns';
 
@@ -6,12 +5,10 @@ interface ClosureDataTableProps {
   data: ClosureDataTableData[];
 }
 
-export async function ClosureDataTable({
-  data,
-}: ClosureDataTableProps) {
+export async function ClosureDataTable({ data }: ClosureDataTableProps) {
   return (
-    <DataTable 
-      columns={closureColumns} 
+    <DataTable
+      columns={closureColumns}
       filterBy={[
         {
           key: 'establishment',
@@ -36,8 +33,8 @@ export async function ClosureDataTable({
           label: 'período',
           isDate: true,
         },
-      ]} 
-      data={data} 
+      ]}
+      data={data}
       globalFiltering
     >
       {/* <SheetProvider>
