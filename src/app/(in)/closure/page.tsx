@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth/next';
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { PageContainer } from '@/components/page-container';
+import { fetchOrganization } from '../organizations/actions/fetch-organization';
+import { fetchUser } from '../users/actions/fetch-user';
+import { fetchClosures } from './actions/fetch-closures';
 import { ClosureDataTableData } from './columns';
 import { ClosureDataTable } from './data-table';
 
@@ -18,9 +21,27 @@ export default async function Closures() {
     return null;
   }
 
-  const closures: ClosureDataTableData[] = [{
+  const rawClosures = await fetchClosures();
 
-  }] 
+  const closures = []
+
+  for(const rawClosure of rawClosures) {
+    const closure: ClosureDataTableData = {...rawClosure}
+
+    const closer = await fetchUser(rawClosure.closerId)
+
+    if(closer) {
+      closure.closer = closer.name;
+    }
+
+    const organization = await fetchOrganization(rawClosure.organizationId)
+
+    if(organization) {
+      closure.organization = organization.name;
+    }
+
+    closures.push(closure)
+  }
 
   return (
     <PageContainer title='Fechamentos'>

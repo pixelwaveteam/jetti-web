@@ -4,16 +4,14 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import { convertCentsToCurrency } from '@/utils/currency';
 import { getDateFormatted } from '@/utils/date';
 import { isSameDay, isWithinInterval } from 'date-fns';
+import { Closure } from './actions/fetch-closures';
 
-export type ClosureDataTableData = {
-  establishment?: string;
-  state?: string;
-  operator?: string;
-  date?: string;
-  gross?: number;
-  liquid?: number;
+export type ClosureDataTableData = Closure & {
+  organization?: string;
+  closer?: string;
 };
 
 export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
@@ -25,7 +23,7 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Local
+          Organização
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
@@ -35,30 +33,7 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{closure.establishment || '-'}</span>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: 'state',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant='ghost'
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Estado
-          <ArrowUpDown className='ml-2 h-4 w-4' />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const closure = row.original;
-
-      return (
-        <div className='flex gap-2 items-center'>
-          <span className='truncate'>{closure.state || '-'}</span>
+          <span className='truncate'>{closure.organization || '-'}</span>
         </div>
       );
     },
@@ -81,7 +56,7 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{closure.operator || '-'}</span>
+          <span className='truncate'>{closure.closer || '-'}</span>
         </div>
       );
     },
@@ -120,7 +95,7 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{closure.date ? getDateFormatted(closure.date) : '-'}</span>
+          <span className='truncate'>{closure.createdAt ? getDateFormatted(closure.createdAt) : '-'}</span>
         </div>
       );
     },
@@ -143,7 +118,7 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{closure.gross || '-'}</span>
+          <span className='truncate'>{convertCentsToCurrency(closure.gross)}</span>
         </div>
       );
     },
@@ -166,7 +141,7 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{closure.liquid || '-'}</span>
+          <span className='truncate'>{convertCentsToCurrency(closure.net)}</span>
         </div>
       );
     },
