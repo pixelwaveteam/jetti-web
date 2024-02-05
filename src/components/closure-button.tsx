@@ -1,5 +1,7 @@
 'use client'
 
+import { createClosure } from "@/app/(in)/closure/actions/create-closure";
+import { useToast } from "@/hooks/use-toast";
 import { NewClosureContext } from "@/providers/new-closure-provider";
 import { useSession } from "next-auth/react";
 import { useContext, useState } from "react";
@@ -11,6 +13,8 @@ export function ClosureButton() {
   const { data: session } = useSession();
 
   const isUserAdmin = session?.user.role === "ADMIN"
+
+  const { toast } = useToast();
 
   const { closureCashFlows } = useContext(NewClosureContext);
 
@@ -26,8 +30,30 @@ export function ClosureButton() {
     setShowConfirmationModal(false)
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
+    try {
+      const cashFlows = JSON.stringify(closureCashFlows.map(cashFlow => cashFlow.id));
 
+      await createClosure({cashFlows});
+
+      handleModalClose();
+
+      toast({
+        variant: 'default',
+        title: 'Sucesso',
+        description: 'Fechamento criado com sucesso.',
+        duration: 5000,
+      })
+    } catch(err) {
+      console.error(err)
+
+      toast({
+        variant: 'destructive',
+        title: 'Erro',
+        description: 'Favor tente novamente mais tarde.',
+        duration: 5000,
+      })
+    }
   }
 
   return (
