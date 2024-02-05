@@ -15,11 +15,13 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { NewClosureContext } from '@/providers/new-closure-provider';
+import { useRouter } from 'next/navigation';
 import { createClosure } from '../closure/actions/create-closure';
 
 export function ClosureButton() {
   const { data: session } = useSession();
   const { closureCashFlows } = useContext(NewClosureContext);
+  const { push } = useRouter()
 
   const isUserAdmin = session?.user.role === 'ADMIN';
 
@@ -41,7 +43,7 @@ export function ClosureButton() {
     try {
       const cashFlows = JSON.stringify(closureCashFlows.map(cashFlow => cashFlow.id));
 
-      await createClosure({cashFlows});
+      const closureCreated = await createClosure({cashFlows});
 
       handleModalClose();
 
@@ -51,6 +53,10 @@ export function ClosureButton() {
         description: 'Fechamento criado com sucesso.',
         duration: 5000,
       })
+
+      if(closureCreated) {
+        push(`/closure/${closureCreated.id}`)
+      }
     } catch(err) {
       console.error(err)
 
