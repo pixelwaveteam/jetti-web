@@ -3,7 +3,6 @@ import { getServerSession } from 'next-auth/next';
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { PageContainer } from '@/components/page-container';
-import { fetchOrganization } from '../organizations/actions/fetch-organization';
 import { fetchUser } from '../users/actions/fetch-user';
 import { fetchClosures } from './actions/fetch-closures';
 import { ClosureDataTableData } from './columns';
@@ -28,16 +27,12 @@ export default async function Closures() {
   for(const rawClosure of rawClosures) {
     const closure: ClosureDataTableData = {...rawClosure}
 
-    const closer = await fetchUser(rawClosure.closerId)
+    console.log(rawClosure)
+
+    const closer = await fetchUser(rawClosure.closure.closerId.value)
 
     if(closer) {
       closure.closer = closer.name;
-    }
-
-    const organization = await fetchOrganization(rawClosure.organizationId)
-
-    if(organization) {
-      closure.organization = organization.name;
     }
 
     closures.push(closure)

@@ -1,16 +1,16 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, ChevronRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { convertCentsToCurrency } from '@/utils/currency';
 import { getDateFormatted } from '@/utils/date';
 import { isSameDay, isWithinInterval } from 'date-fns';
+import Link from 'next/link';
 import { Closure } from './actions/fetch-closures';
 
 export type ClosureDataTableData = Closure & {
-  organization?: string;
   closer?: string;
 };
 
@@ -33,7 +33,7 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{closure.organization || '-'}</span>
+          <span className='truncate'>{closure.organization.name || '-'}</span>
         </div>
       );
     },
@@ -95,7 +95,7 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{closure.createdAt ? getDateFormatted(closure.createdAt) : '-'}</span>
+          <span className='truncate'>{closure.closure.createdAt ? getDateFormatted(closure.closure.createdAt) : '-'}</span>
         </div>
       );
     },
@@ -118,7 +118,7 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{convertCentsToCurrency(closure.gross)}</span>
+          <span className='truncate'>{convertCentsToCurrency(closure.closure.gross)}</span>
         </div>
       );
     },
@@ -141,8 +141,22 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{convertCentsToCurrency(closure.net)}</span>
+          <span className='truncate'>{convertCentsToCurrency(closure.closure.net)}</span>
         </div>
+      );
+    },
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => {
+      const closure = row.original;
+
+      return (
+        <Button variant={'ghost'} size={'icon'} asChild>
+          <Link href={`/closure/${closure.closure.id}`}>
+            <ChevronRight className='h-4 w-4' />
+          </Link>
+        </Button>
       );
     },
   },
