@@ -13,13 +13,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
 import { NewClosureContext } from '@/providers/new-closure-provider';
+import { createClosure } from '../closure/actions/create-closure';
 
 export function ClosureButton() {
   const { data: session } = useSession();
   const { closureCashFlows } = useContext(NewClosureContext);
 
   const isUserAdmin = session?.user.role === 'ADMIN';
+
+  const { toast } = useToast()
 
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
@@ -33,7 +37,31 @@ export function ClosureButton() {
     setShowConfirmationModal(false);
   }
 
-  function handleSubmit() {}
+  async function handleSubmit() {
+    try {
+      const cashFlows = JSON.stringify(closureCashFlows.map(cashFlow => cashFlow.id));
+
+      await createClosure({cashFlows});
+
+      handleModalClose();
+
+      toast({
+        variant: 'default',
+        title: 'Sucesso',
+        description: 'Fechamento criado com sucesso.',
+        duration: 5000,
+      })
+    } catch(err) {
+      console.error(err)
+
+      toast({
+        variant: 'destructive',
+        title: 'Erro',
+        description: 'Favor tente novamente mais tarde.',
+        duration: 5000,
+      })
+    }
+  }
 
   return (
     <Dialog
