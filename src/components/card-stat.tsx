@@ -13,7 +13,8 @@ interface CardStatProps {
     | 'text-red-400'
     | 'text-yellow-400'
     | 'text-green-400'
-    | 'text-green-600';
+    | 'text-green-600'
+    | 'text-blue-400'
 }
 
 export function CardStat({
