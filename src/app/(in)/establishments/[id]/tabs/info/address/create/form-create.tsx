@@ -19,7 +19,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import braziliansCitiesByState from '@/data/brazilian-cities-by-state.json';
 import braziliansStates from '@/data/brazilian-states.json';
 import { useToast } from '@/hooks/use-toast';
@@ -47,13 +53,15 @@ interface EstablishmentAddressFormCreateProps {
   establishmentId: string;
 }
 
-const statesItems = braziliansStates.reduce((acc, state) => (
-  [ ...acc, [state.shortName, state.name] ]
-), [] as string[][])
+const statesItems = braziliansStates.reduce(
+  (acc, state) => [...acc, [state.shortName, state.name]],
+  [] as string[][]
+);
 
-const cityItems = braziliansCitiesByState.estados.reduce((acc, state) => (
-  { ...acc, [state.sigla]: state.cidades }
-), {} as { [x: string]: string[] })
+const cityItems = braziliansCitiesByState.states.reduce(
+  (acc, state) => ({ ...acc, [state.short]: state.cities }),
+  {} as { [x: string]: string[] }
+);
 
 export function EstablishmentAddressFormCreate({
   establishmentId,
@@ -66,15 +74,25 @@ export function EstablishmentAddressFormCreate({
     resolver: zodResolver(EstablishmentAddressFormCreateSchema),
   });
 
-  const { control, handleSubmit, formState, watch, setValue, setFocus, trigger } =
-    formMethods;
+  const {
+    control,
+    handleSubmit,
+    formState,
+    watch,
+    setValue,
+    setFocus,
+    trigger,
+  } = formMethods;
 
   const zipCode = watch('zipCode');
 
   const state = watch('state');
   const city = watch('city');
 
-  const cityItemsByState = useMemo(() => cityItems[state as keyof typeof cityItems] || undefined, [state])
+  const cityItemsByState = useMemo(
+    () => cityItems[state as keyof typeof cityItems] || undefined,
+    [state]
+  );
 
   const onSubmit = async (data: EstablishmentAddressFormCreateType) => {
     try {
@@ -132,10 +150,10 @@ export function EstablishmentAddressFormCreate({
   }, [setFocus, setValue, toast, zipCode, trigger]);
 
   useEffect(() => {
-    if(!!state && !!cityValueByCEP && !city) {
-      setValue('city', cityValueByCEP)
+    if (!!state && !!cityValueByCEP && !city) {
+      setValue('city', cityValueByCEP);
     }
-  }, [state, cityValueByCEP, city, setValue])
+  }, [state, cityValueByCEP, city, setValue]);
 
   return (
     <Form {...formMethods}>
@@ -216,22 +234,17 @@ export function EstablishmentAddressFormCreate({
             <FormItem>
               <FormLabel>Estado</FormLabel>
               <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <SelectTrigger>
                     <SelectValue placeholder='Selecione...' />
                   </SelectTrigger>
 
                   <SelectContent>
-                    {
-                      statesItems.map(item => (
-                        <SelectItem value={item[0]} key={item[0]}>
-                          {item[1]}
-                        </SelectItem>
-                      ))
-                    }
+                    {statesItems.map((item) => (
+                      <SelectItem value={item[0]} key={item[0]}>
+                        {item[1]}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -257,13 +270,12 @@ export function EstablishmentAddressFormCreate({
                   </SelectTrigger>
 
                   <SelectContent>
-                    {
-                      cityItemsByState && cityItemsByState.map(item => (
+                    {cityItemsByState &&
+                      cityItemsByState.map((item) => (
                         <SelectItem value={item} key={item}>
                           {item}
                         </SelectItem>
-                      ))
-                    }
+                      ))}
                   </SelectContent>
                 </Select>
               </FormControl>

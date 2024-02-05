@@ -19,7 +19,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import braziliansCitiesByState from '@/data/brazilian-cities-by-state.json';
 import braziliansStates from '@/data/brazilian-states.json';
 import { useToast } from '@/hooks/use-toast';
@@ -50,13 +56,15 @@ interface EstablishmentAddressFormEditProps {
   establishmentAddress: EstablishmentAddress;
 }
 
-const statesItems = braziliansStates.reduce((acc, state) => (
-  [ ...acc, [state.shortName, state.name] ]
-), [] as string[][])
+const statesItems = braziliansStates.reduce(
+  (acc, state) => [...acc, [state.shortName, state.name]],
+  [] as string[][]
+);
 
-const cityItems = braziliansCitiesByState.estados.reduce((acc, state) => (
-  { ...acc, [state.sigla]: state.cidades }
-), {} as { [x: string]: string[] })
+const cityItems = braziliansCitiesByState.states.reduce(
+  (acc, state) => ({ ...acc, [state.short]: state.cities }),
+  {} as { [x: string]: string[] }
+);
 
 export function EstablishmentAddressFormEdit({
   establishmentAddress,
@@ -81,7 +89,8 @@ export function EstablishmentAddressFormEdit({
 
   const state = watch('state');
 
-  const cityItemsByState = cityItems[state as keyof typeof cityItems] || undefined
+  const cityItemsByState =
+    cityItems[state as keyof typeof cityItems] || undefined;
 
   const onSubmit = async (data: EstablishmentAddressFormEditType) => {
     try {
@@ -113,7 +122,7 @@ export function EstablishmentAddressFormEdit({
 
   async function handleDelete() {
     try {
-      await deleteEstablishmentAddress(establishmentAddress.id)
+      await deleteEstablishmentAddress(establishmentAddress.id);
 
       setShow(false);
 
@@ -220,68 +229,64 @@ export function EstablishmentAddressFormEdit({
           />
 
           <FormField
-          control={control}
-          name='state'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Estado</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder='Selecione...' />
-                  </SelectTrigger>
+            control={control}
+            name='state'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Estado</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder='Selecione...' />
+                    </SelectTrigger>
 
-                  <SelectContent>
-                    {
-                      statesItems.map(item => (
+                    <SelectContent>
+                      {statesItems.map((item) => (
                         <SelectItem value={item[0]} key={item[0]}>
                           {item[1]}
                         </SelectItem>
-                      ))
-                    }
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={control}
-          name='city'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cidade</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  disabled={!state}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder='Selecione...' />
-                  </SelectTrigger>
+          <FormField
+            control={control}
+            name='city'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Cidade</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={!state}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder='Selecione...' />
+                    </SelectTrigger>
 
-                  <SelectContent>
-                    {
-                      cityItemsByState && cityItemsByState.map(item => (
-                        <SelectItem value={item} key={item}>
-                          {item}
-                        </SelectItem>
-                      ))
-                    }
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                    <SelectContent>
+                      {cityItemsByState &&
+                        cityItemsByState.map((item) => (
+                          <SelectItem value={item} key={item}>
+                            {item}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <div className='flex gap-2'>
             <Button

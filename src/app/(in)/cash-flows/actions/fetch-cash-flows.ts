@@ -2,7 +2,7 @@
 
 import { api } from '@/lib/api';
 
-export interface CashFlows {
+export interface CashFlow {
   id: string;
   terminal: string;
   operator: string;
@@ -14,7 +14,7 @@ export interface CashFlows {
 }
 
 export async function fetchCashFlows() {
-  const response = await api<CashFlows[]>('/cash-flows', {
+  const response = await api<CashFlow[]>('/cash-flows', {
     next: {
       tags: ['cash-flows'],
     },

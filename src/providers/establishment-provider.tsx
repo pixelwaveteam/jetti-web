@@ -1,8 +1,8 @@
 'use client';
 
-import { Organization } from '@/app/(in)/organizations/actions/fetch-organizations';
 import { ReactNode, createContext } from 'react';
 
+import { Organization } from '@/app/(in)/organizations/actions/fetch-organizations';
 
 interface EstablishmentContextValues {
   organizations: Organization[];

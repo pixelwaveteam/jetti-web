@@ -22,10 +22,7 @@ interface UserProviderProps {
   };
 }
 
-export function UserProvider({
-  children,
-  initialData,
-}: UserProviderProps) {
+export function UserProvider({ children, initialData }: UserProviderProps) {
   const organizations = initialData.organizations;
 
   const terminals = initialData.terminals;
