@@ -1,4 +1,4 @@
-import { Calendar, Laptop, User } from 'lucide-react';
+import { Calendar, DollarSign, User } from 'lucide-react';
 import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 
@@ -15,6 +15,9 @@ import { getDateFormatted } from '@/utils/date';
 
 import { ClosureProvider } from '@/providers/closure-provider';
 import { NetDistributionData } from '../../cash-flows/actions/fetch-net-distributions';
+import { fetchUser } from '../../users/actions/fetch-user';
+import { fetchClosure } from '../actions/fetch-closure';
+import { fetchClosureCashFlows } from '../actions/fetch-closure-cash-flows';
 import { ChartDistribution } from './chart-distribution';
 import { ListDistribution } from './list-distribution';
 import { ClosureStats } from './stats';
@@ -33,28 +36,35 @@ interface ClosureProps {
 export default async function Closure({ params: { id } }: ClosureProps) {
   const session = await getServerSession(authOptions);
 
+  const {  net, gross, closerId, createdAt  } = await fetchClosure(id);
+
+  const closer = await fetchUser(closerId);
+
+  const cashFlows = await fetchClosureCashFlows(id);
+
+  const cashFlowsTotal = cashFlows.length
+
   const netDistributions: NetDistributionData[] = [];
 
   const statValues = {
-    cashIn: 0,
-    cashOut: 0,
-    gross: 0,
-    net: 0,
+    cashFlowsTotal,
+    gross,
+    net,
   };
 
   const renderDescription = (
     <div className='flex flex-col gap-1 md:flex-row md:gap-4'>
       <div className='flex gap-1 items-center'>
-        <Laptop size={16} />
-        <span>0000</span>
+        <DollarSign size={16} />
+        <span>{id}</span>
       </div>
       <div className='flex gap-1 items-center'>
         <User size={16} />
-        <span>John</span>
+        <span>{closer.name}</span>
       </div>
       <div className='flex gap-1 items-center'>
         <Calendar size={16} />
-        <span>{getDateFormatted(new Date())}</span>
+        <span>{getDateFormatted(createdAt)}</span>
       </div>
     </div>
   );
