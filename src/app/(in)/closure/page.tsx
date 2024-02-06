@@ -25,7 +25,7 @@ export default async function Closures() {
   const closures = []
 
   for(const rawClosure of rawClosures) {
-    const closure: ClosureDataTableData = {...rawClosure}
+    const closure: ClosureDataTableData = {...rawClosure, organizationName: rawClosure.organization.name, date: rawClosure.closure.createdAt}
 
     console.log(rawClosure)
 
