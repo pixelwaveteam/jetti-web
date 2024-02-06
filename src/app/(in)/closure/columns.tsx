@@ -12,11 +12,13 @@ import { Closure } from './actions/fetch-closures';
 
 export type ClosureDataTableData = Closure & {
   closer?: string;
+  organizationName: string;
+  date: Date;
 };
 
 export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
   {
-    accessorKey: 'establishment',
+    accessorKey: 'organizationName',
     header: ({ column }) => {
       return (
         <Button
@@ -33,13 +35,13 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{closure.organization.name || '-'}</span>
+          <span className='truncate'>{closure.organizationName || '-'}</span>
         </div>
       );
     },
   },
   {
-    accessorKey: 'operator',
+    accessorKey: 'closer',
     header: ({ column }) => {
       return (
         <Button
@@ -95,7 +97,7 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{closure.closure.createdAt ? getDateFormatted(closure.closure.createdAt) : '-'}</span>
+          <span className='truncate'>{getDateFormatted(closure.date)}</span>
         </div>
       );
     },

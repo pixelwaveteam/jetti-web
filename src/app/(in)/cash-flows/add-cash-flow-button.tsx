@@ -1,12 +1,12 @@
 import { Minus, Plus } from 'lucide-react';
 import { useContext, useMemo } from 'react';
 
-import { CashFlow } from '@/app/(in)/cash-flows/actions/fetch-cash-flows';
 import { Button } from '@/components/ui/button';
 import { NewClosureContext } from '@/providers/new-closure-provider';
+import { CashFlowDataTableData } from './columns';
 
 interface AddCashFlowButtonProps {
-  cashFlow: CashFlow;
+  cashFlow: CashFlowDataTableData;
 }
 
 export function AddCashFlowButton({ cashFlow }: AddCashFlowButtonProps) {

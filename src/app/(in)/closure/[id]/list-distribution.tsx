@@ -1,10 +1,14 @@
-import { NetDistributionData } from '@/app/(in)/cash-flows/actions/fetch-net-distributions';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { convertCentsToCurrency } from '@/utils/currency';
+import { ClosureDistribution } from '../actions/fetch-closure-distribution';
 
 interface ListDistributionProps {
-  netDistributions: NetDistributionData[];
+  netDistributions: ClosureDistribution[];
+}
+
+function calculatePercentage(amount: number, total: number) {
+  return (amount*100)/total
 }
 
 export function ListDistribution({ netDistributions }: ListDistributionProps) {
@@ -16,7 +20,7 @@ export function ListDistribution({ netDistributions }: ListDistributionProps) {
   return (
     <div className='space-y-4'>
       {netDistributions.map((netDistribution) => {
-        const percentage = netDistribution.percentage / 100;
+        const percentage = calculatePercentage(netDistribution.amount, totalAmount);
         const amount = convertCentsToCurrency(netDistribution.amount);
 
         return (

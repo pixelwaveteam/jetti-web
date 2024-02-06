@@ -14,10 +14,10 @@ import {
 import { getDateFormatted } from '@/utils/date';
 
 import { ClosureProvider } from '@/providers/closure-provider';
-import { NetDistributionData } from '../../cash-flows/actions/fetch-net-distributions';
 import { fetchUser } from '../../users/actions/fetch-user';
 import { fetchClosure } from '../actions/fetch-closure';
 import { fetchClosureCashFlows } from '../actions/fetch-closure-cash-flows';
+import { fetchClosureDistributions } from '../actions/fetch-closure-distribution';
 import { ChartDistribution } from './chart-distribution';
 import { ListDistribution } from './list-distribution';
 import { ClosureStats } from './stats';
@@ -38,13 +38,14 @@ export default async function Closure({ params: { id } }: ClosureProps) {
 
   const {  net, gross, closerId, createdAt  } = await fetchClosure(id);
 
+  const closureDistribution = await fetchClosureDistributions(id);
+
   const closer = await fetchUser(closerId);
 
   const cashFlows = await fetchClosureCashFlows(id);
 
   const cashFlowsTotal = cashFlows.length
 
-  const netDistributions: NetDistributionData[] = [];
 
   const statValues = {
     cashFlowsTotal,
@@ -86,18 +87,18 @@ export default async function Closure({ params: { id } }: ClosureProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className='pl-2'>
-              <ChartDistribution netDistributions={netDistributions} />
+              <ChartDistribution netDistributions={closureDistribution} />
             </CardContent>
           </Card>
           <Card className='col-span-2'>
             <CardHeader>
               <CardTitle>Distribuição de Ganhos</CardTitle>
               <CardDescription>
-                Ganhos divididos em {netDistributions.length} parte(s).
+                Ganhos divididos em {closureDistribution.length} parte(s).
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ListDistribution netDistributions={netDistributions} />
+              <ListDistribution netDistributions={closureDistribution} />
             </CardContent>
           </Card>
         </div>

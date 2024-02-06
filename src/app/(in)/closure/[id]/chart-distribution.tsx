@@ -1,24 +1,33 @@
 'use client';
 
-import { NetDistributionData } from '@/app/(in)/cash-flows/actions/fetch-net-distributions';
 import { useMemo } from 'react';
 import { Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { ClosureDistribution } from '../actions/fetch-closure-distribution';
 
 interface ChartDistributionProps {
-  netDistributions: NetDistributionData[];
+  netDistributions: ClosureDistribution[];
+}
+
+function calculatePercentage(amount: number, total: number) {
+  return (amount*100)/total
 }
 
 export function ChartDistribution({
   netDistributions,
 }: ChartDistributionProps) {
+  const totalAmount = useMemo(() => netDistributions.reduce(
+    (acc, netDistribution) => acc + netDistribution.amount,
+    0
+  ), [netDistributions])
+
   const distributions = useMemo(() => {
     return netDistributions.map((distribution) => {
       return {
         name: distribution.name,
-        percetage: distribution.percentage / 100,
+        percetage: calculatePercentage(distribution.amount, totalAmount),
       };
     });
-  }, [netDistributions]);
+  }, [netDistributions, totalAmount]);
 
   return (
     <ResponsiveContainer width='100%' height={350}>

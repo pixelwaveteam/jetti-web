@@ -210,13 +210,9 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
     cell: ({ row }) => {
       const cashFlow = row.original;
 
-      const { cashFlowCode, establishment, organization, ...rest } = cashFlow;
-
-      const cashFlowDate = rest satisfies CashFlow;
-
       return (
         <div className='flex gap-x-3 justify-end'>
-          <AddCashFlowButton cashFlow={cashFlowDate} />
+          <AddCashFlowButton cashFlow={cashFlow} />
 
           <Button variant={'ghost'} size={'icon'} asChild>
             <Link href={`/cash-flows/${cashFlow.id}`}>
