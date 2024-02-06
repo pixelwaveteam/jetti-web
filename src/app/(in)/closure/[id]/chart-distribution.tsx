@@ -8,17 +8,26 @@ interface ChartDistributionProps {
   netDistributions: ClosureDistribution[];
 }
 
+function calculatePercentage(amount: number, total: number) {
+  return (amount*100)/total
+}
+
 export function ChartDistribution({
   netDistributions,
 }: ChartDistributionProps) {
+  const totalAmount = useMemo(() => netDistributions.reduce(
+    (acc, netDistribution) => acc + netDistribution.amount,
+    0
+  ), [netDistributions])
+
   const distributions = useMemo(() => {
     return netDistributions.map((distribution) => {
       return {
         name: distribution.name,
-        percetage: distribution.amount / 100,
+        percetage: calculatePercentage(distribution.amount, totalAmount),
       };
     });
-  }, [netDistributions]);
+  }, [netDistributions, totalAmount]);
 
   return (
     <ResponsiveContainer width='100%' height={350}>
