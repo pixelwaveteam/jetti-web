@@ -1,11 +1,11 @@
 'use client';
 
-import { NetDistributionData } from '@/app/(in)/cash-flows/actions/fetch-net-distributions';
 import { useMemo } from 'react';
 import { Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { ClosureDistribution } from '../actions/fetch-closure-distribution';
 
 interface ChartDistributionProps {
-  netDistributions: NetDistributionData[];
+  netDistributions: ClosureDistribution[];
 }
 
 export function ChartDistribution({
@@ -15,7 +15,7 @@ export function ChartDistribution({
     return netDistributions.map((distribution) => {
       return {
         name: distribution.name,
-        percetage: distribution.percentage / 100,
+        percetage: distribution.amount / 100,
       };
     });
   }, [netDistributions]);
