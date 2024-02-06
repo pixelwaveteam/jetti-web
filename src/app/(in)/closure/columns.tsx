@@ -16,7 +16,7 @@ export type ClosureDataTableData = Closure & {
 
 export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
   {
-    accessorKey: 'establishment',
+    accessorKey: 'organization',
     header: ({ column }) => {
       return (
         <Button
