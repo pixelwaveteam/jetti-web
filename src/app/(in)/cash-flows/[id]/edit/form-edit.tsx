@@ -92,13 +92,19 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
   const onSubmit = async ({
     date,
     establishmentId,
+    input,
+    output,
     ...data
   }: CashFlowFormEditType) => {
     try {
+
+
       await updateCashFlow({
         id: cashFlow.id,
         data: {
           ...data,
+          cashIn: input,
+          cashOut: output,
           date: date.toISOString(),
         },
       });
