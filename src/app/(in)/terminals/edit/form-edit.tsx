@@ -40,8 +40,8 @@ const TerminalFormEditSchema = z.object({
     .string({ required_error: 'Código não pode ser vazio.' })
     .max(10, 'Código deve ter no máximo 10 caracteres.'),
   isActive: z.boolean(),
-  input: z.coerce.number({ required_error: 'Entrada não pode ser vazia.' }),
-  output: z.coerce.number({ required_error: 'Saída não pode ser vazia.' }),
+  input: z.coerce.number({ required_error: 'Entrada não pode ser vazia.' }).transform(value => value*100),
+  output: z.coerce.number({ required_error: 'Saída não pode ser vazia.' }).transform(value => value*100),
 });
 
 type TerminalFormEditType = z.infer<typeof TerminalFormEditSchema>;
@@ -62,8 +62,8 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
       interfaceId: terminal.interfaceId,
       code: String(terminal.code),
       isActive: terminal.isActive,
-      input: terminal.input,
-      output: terminal.output,
+      input: terminal.input/100,
+      output: terminal.output/100,
     },
   });
 

@@ -7,8 +7,8 @@ interface UpdateCashFlow {
   id: string;
   data: {
     terminalId: string;
-    input: number;
-    output: number;
+    cashIn: number;
+    cashOut: number;
     date: string;
   };
 }

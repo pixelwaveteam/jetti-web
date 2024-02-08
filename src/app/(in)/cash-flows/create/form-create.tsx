@@ -43,6 +43,7 @@ const CashFlowFormCreateSchema = (lastInput: number | undefined = 0, lastOutput:
     }),
   output: z.coerce
     .number({ required_error: 'Saída é obrigatório.', invalid_type_error: 'Saída deve ser um número. Substitua "," por "."' })
+    .transform(value => value*100)
     .refine(value => value > lastOutput, {
       message: 'O valor de saída deve ser maior que a anterior',
     }),

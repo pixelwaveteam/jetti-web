@@ -31,8 +31,8 @@ import { useContext } from 'react';
 const TerminalFormCreateSchema = z.object({
   establishmentId: z.string({ required_error: 'Local não pode ser vazio.' }),
   interfaceId: z.string({ required_error: 'Interface não pode ser vazia.' }),
-  input: z.coerce.number({ required_error: 'Entrada não pode ser vazia.' }),
-  output: z.coerce.number({ required_error: 'Saída não pode ser vazia.' }),
+  input: z.coerce.number({ required_error: 'Entrada não pode ser vazia.' }).transform(value => value*100),
+  output: z.coerce.number({ required_error: 'Saída não pode ser vazia.' }).transform(value => value*100),
 });
 
 type TerminalFormCreateType = z.infer<typeof TerminalFormCreateSchema>;

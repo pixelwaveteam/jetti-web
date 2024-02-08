@@ -79,8 +79,8 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
     defaultValues: {
       terminalId: cashFlow.terminalId,
       establishmentId: cashFlow.establishmentId,
-      input: cashFlow.input,
-      output: cashFlow.output,
+      input: cashFlow.input/100,
+      output: cashFlow.output/100,
       date: new Date(cashFlow.date),
     },
   });
@@ -92,13 +92,19 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
   const onSubmit = async ({
     date,
     establishmentId,
+    input,
+    output,
     ...data
   }: CashFlowFormEditType) => {
     try {
+
+
       await updateCashFlow({
         id: cashFlow.id,
         data: {
           ...data,
+          cashIn: input,
+          cashOut: output,
           date: date.toISOString(),
         },
       });
