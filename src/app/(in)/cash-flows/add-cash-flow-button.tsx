@@ -29,7 +29,6 @@ export function AddCashFlowButton({ cashFlow }: AddCashFlowButtonProps) {
 
     addNewCashFlow({
       ...cashFlow,
-      cashFlowCode: 'code',
     });
   }
 
