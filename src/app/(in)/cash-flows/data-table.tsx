@@ -49,7 +49,7 @@ export function CashFlowDataTable({
       data={filteredData}
       filterBy={[
         {
-          key: 'cashFlowCode',
+          key: 'code',
           label: 'código',
         },
         {

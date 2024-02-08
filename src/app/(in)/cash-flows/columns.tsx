@@ -12,7 +12,6 @@ import Link from 'next/link';
 import { CashFlow } from './actions/fetch-cash-flows';
 
 export type CashFlowDataTableData = CashFlow & {
-  cashFlowCode: string;
   establishment?: string;
   organization?: string;
   interface?: string;
@@ -43,7 +42,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
     },
   },
   {
-    accessorKey: 'cashFlowCode',
+    accessorKey: 'code',
     header: ({ column }) => {
       return (
         <Button
@@ -60,7 +59,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.cashFlowCode}</span>
+          <span>{cashFlow.code}</span>
         </div>
       );
     },

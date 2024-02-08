@@ -36,7 +36,7 @@ export default async function CashFlows() {
   const cashFlows = []
 
   for(const rawCashFlow of rawCashFlows) {
-    let cashFlow: CashFlowDataTableData = {...rawCashFlow, cashFlowCode: rawCashFlow.id.slice(0, 8) };
+    let cashFlow: CashFlowDataTableData = { ...rawCashFlow };
 
     const cashFlowsTerminal = rawTerminals.find(({ code }) => String(code) === rawCashFlow.terminal)
 

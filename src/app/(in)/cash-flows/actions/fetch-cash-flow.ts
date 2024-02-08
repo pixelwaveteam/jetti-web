@@ -6,6 +6,7 @@ export interface CashFlow {
   id: string;
   terminalId: string;
   operatorId: string;
+  code: number;
   input: number;
   output: number;
   cashIn: number;
