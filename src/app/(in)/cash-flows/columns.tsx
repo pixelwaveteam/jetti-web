@@ -15,6 +15,7 @@ export type CashFlowDataTableData = CashFlow & {
   cashFlowCode: string;
   establishment?: string;
   organization?: string;
+  interface?: string;
 };
 
 export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
@@ -36,7 +37,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.terminal}</span>
+          <span>{cashFlow.terminal} - {cashFlow.interface || ''}</span>
         </div>
       );
     },

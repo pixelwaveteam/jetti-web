@@ -38,7 +38,9 @@ export default async function CashFlows() {
   for(const rawCashFlow of rawCashFlows) {
     let cashFlow: CashFlowDataTableData = {...rawCashFlow, cashFlowCode: rawCashFlow.id.slice(0, 8) };
 
-    const cashFlowEstablishmentId = rawTerminals.find(({ code }) => String(code) === rawCashFlow.terminal)?.establishmentId
+    const cashFlowsTerminal = rawTerminals.find(({ code }) => String(code) === rawCashFlow.terminal)
+
+    const cashFlowEstablishmentId = cashFlowsTerminal?.establishmentId
 
     if(cashFlowEstablishmentId) {
       const { name: establishmentName } = await fetchEstablishment(cashFlowEstablishmentId)
@@ -52,6 +54,14 @@ export default async function CashFlows() {
       if(cashFlowOrganizationName) {
         cashFlow.organization = cashFlowOrganizationName;
       }
+    }
+
+    const terminalsInterfaceId = cashFlowsTerminal?.interfaceId
+
+    const terminalsInterface = terminalsInterfaceId && await fetchInterface(terminalsInterfaceId)
+
+    if(terminalsInterface) {
+      cashFlow.interface = terminalsInterface.name;
     }
 
     cashFlows.push(cashFlow)
