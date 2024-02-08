@@ -12,9 +12,9 @@ import Link from 'next/link';
 import { CashFlow } from './actions/fetch-cash-flows';
 
 export type CashFlowDataTableData = CashFlow & {
-  cashFlowCode: string;
   establishment?: string;
   organization?: string;
+  interface?: string;
 };
 
 export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
@@ -36,13 +36,13 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.terminal}</span>
+          <span>{cashFlow.terminal} - {cashFlow.interface || ''}</span>
         </div>
       );
     },
   },
   {
-    accessorKey: 'cashFlowCode',
+    accessorKey: 'code',
     header: ({ column }) => {
       return (
         <Button
@@ -59,7 +59,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.cashFlowCode}</span>
+          <span>{cashFlow.code}</span>
         </div>
       );
     },
@@ -114,6 +114,52 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
       return (
         <div className='flex flex-col gap-2 items-start'>
           <span>{cashFlow.establishment || '-'}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'cashIn',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Entrada
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{convertCentsToCurrency(cashFlow.cashIn)}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'cashOut',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Saída
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{convertCentsToCurrency(cashFlow.cashOut)}</span>
         </div>
       );
     },
