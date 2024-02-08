@@ -30,17 +30,19 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { CashFlowContext } from '@/providers/cash-flow-provider';
 import { SheetContext } from '@/providers/sheet-provider';
+import { convertCentsToCurrency } from '@/utils/currency';
 import { revalidateTerminals } from '../../terminals/actions/revalidate-terminal';
 
 const CashFlowFormCreateSchema = (lastInput: number | undefined = 0, lastOutput: number | undefined = 0) => z.object({
   terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
   input: z.coerce
-    .number({ required_error: 'Entrada é obrigatório.' })
+    .number({ required_error: 'Entrada é obrigatório.', invalid_type_error: 'Entrada deve ser um número. Substitua "," por "."' })
+    .transform(value => value*100)
     .refine(value => value > lastInput, {
       message: 'O valor de entrada deve ser maior que a anterior',
     }),
   output: z.coerce
-    .number({ required_error: 'Saída é obrigatório.' })
+    .number({ required_error: 'Saída é obrigatório.', invalid_type_error: 'Saída deve ser um número. Substitua "," por "."' })
     .refine(value => value > lastOutput, {
       message: 'O valor de saída deve ser maior que a anterior',
     }),
@@ -240,7 +242,7 @@ export function CashFlowFormCreate() {
               </FormControl>
               <FormDescription>
                 {lastInput > 0
-                  ? `Entrada atual: ${lastInput}`
+                  ? `Entrada atual: ${convertCentsToCurrency(lastInput)}`
                   : `Nenhuma entrada anterior registrada`}
               </FormDescription>
               <FormMessage />
@@ -259,7 +261,7 @@ export function CashFlowFormCreate() {
               </FormControl>
               <FormDescription>
                 {lastOutput > 0
-                  ? `Saída atual: ${lastOutput}`
+                  ? `Saída atual: ${convertCentsToCurrency(lastOutput)}`
                   : `Nenhuma saída anterior registrada`}
               </FormDescription>
               <FormMessage />

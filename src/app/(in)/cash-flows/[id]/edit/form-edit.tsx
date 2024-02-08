@@ -45,8 +45,18 @@ import { CashFlow } from '../../actions/fetch-cash-flow';
 const CashFlowFormEditSchema = z.object({
   terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
   establishmentId: z.string({ required_error: 'Local é obrigatório.' }),
-  input: z.coerce.number({ required_error: 'Entrada é obrigatório.' }),
-  output: z.coerce.number({ required_error: 'Saída é obrigatório.' }),
+  input: z.coerce
+    .number({ 
+      required_error: 'Entrada é obrigatório.', 
+      invalid_type_error: 'Entrada deve ser um número. Substitua "," por "."' 
+    })
+    .transform(value => value*100),
+  output: z.coerce
+    .number({ 
+      required_error: 'Saída é obrigatório.', 
+      invalid_type_error: 'Saída deve ser um número. Substitua "," por "."' 
+    })
+    .transform(value => value*100),
   date: z.date({ required_error: 'Data é obrigatória.' }),
 });
 
