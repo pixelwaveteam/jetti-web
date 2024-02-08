@@ -36,8 +36,6 @@ export default async function Terminals() {
 
   const terminals = [];
 
-  console.log('rawTerminals', rawTerminals);
-
   for (const rawTerminal of rawTerminals) {
     const terminal: TerminalDataTableData = { ...rawTerminal };
 
@@ -71,8 +69,6 @@ export default async function Terminals() {
   const allowedTerminals = terminals.filter(({ id }) =>
     userTerminals.some(({ terminalId }) => terminalId === id)
   );
-
-  console.log('allowedTerminals', allowedTerminals);
 
   return (
     <PageContainer title='Terminais'>

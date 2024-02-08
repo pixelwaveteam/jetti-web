@@ -27,8 +27,6 @@ export default async function Closures() {
   for(const rawClosure of rawClosures) {
     const closure: ClosureDataTableData = {...rawClosure, organizationName: rawClosure.organization.name, date: rawClosure.closure.createdAt}
 
-    console.log(rawClosure)
-
     const closer = await fetchUser(rawClosure.closure.closerId.value)
 
     if(closer) {

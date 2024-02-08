@@ -15,7 +15,5 @@ export interface Closure {
 export async function fetchClosure(id: string) {
   const response = await api<Closure>(`/closures/${id}`);
 
-  console.log({response})
-
   return response;
 }
