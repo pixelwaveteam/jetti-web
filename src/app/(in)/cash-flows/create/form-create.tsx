@@ -30,6 +30,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { CashFlowContext } from '@/providers/cash-flow-provider';
 import { SheetContext } from '@/providers/sheet-provider';
+import { revalidateTerminals } from '../../terminals/actions/revalidate-terminal';
 
 const CashFlowFormCreateSchema = (lastInput: number | undefined = 0, lastOutput: number | undefined = 0) => z.object({
   terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
@@ -92,6 +93,8 @@ export function CashFlowFormCreate() {
   const onSubmit = async (data: CashFlowFormCreateType) => {
     try {
       await createCashFlow(data);
+
+      await revalidateTerminals()
       
       completedTerminals.current.push(data.terminalId);
 
