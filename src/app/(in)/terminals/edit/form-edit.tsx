@@ -62,8 +62,8 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
       interfaceId: terminal.interfaceId,
       code: String(terminal.code),
       isActive: terminal.isActive,
-      input: terminal.input,
-      output: terminal.output,
+      input: terminal.input/100,
+      output: terminal.output/100,
     },
   });
 

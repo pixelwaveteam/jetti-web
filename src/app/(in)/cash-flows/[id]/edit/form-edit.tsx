@@ -79,8 +79,8 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
     defaultValues: {
       terminalId: cashFlow.terminalId,
       establishmentId: cashFlow.establishmentId,
-      input: cashFlow.input,
-      output: cashFlow.output,
+      input: cashFlow.input/100,
+      output: cashFlow.output/100,
       date: new Date(cashFlow.date),
     },
   });
