@@ -7,6 +7,7 @@ import { TerminalEditSheet } from '@/app/(in)/terminals/edit/edit-sheet';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
+import { convertCentsToCurrency } from '@/utils/currency';
 import { Terminal } from './actions/fetch-terminals';
 
 export type TerminalDataTableData = Terminal & {
@@ -151,7 +152,7 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.input || 0}</span>
+          <span>{convertCentsToCurrency(cashFlow.input)}</span>
         </div>
       );
     },
@@ -174,7 +175,7 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>-{cashFlow.output || 0}</span>
+          <span>-{convertCentsToCurrency(cashFlow.output)}</span>
         </div>
       );
     },
