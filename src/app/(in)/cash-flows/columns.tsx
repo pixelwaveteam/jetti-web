@@ -15,6 +15,7 @@ export type CashFlowDataTableData = CashFlow & {
   establishment?: string;
   organization?: string;
   interface?: string;
+  closed?: boolean;
 };
 
 export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [

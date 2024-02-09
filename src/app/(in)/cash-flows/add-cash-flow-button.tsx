@@ -37,6 +37,7 @@ export function AddCashFlowButton({ cashFlow }: AddCashFlowButtonProps) {
       variant={'ghost'}
       size={'icon'}
       onClick={handleToggleCashFlowButtonClick}
+      disabled={cashFlow.closed}
     >
       {addedToClosure ? (
         <Minus className='h-4 w-4 text-destructive' />
