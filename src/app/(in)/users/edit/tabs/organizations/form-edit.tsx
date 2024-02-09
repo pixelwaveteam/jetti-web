@@ -162,9 +162,9 @@ export function UserOrganizationsFormEdit({
   }
 
   return (
-    <div className='space-y-6'>
+    <div className='space-y-6 h-[85vh] overflow-auto mb-6'>
       <Form {...formMethods}>
-        <form className='mt-4 space-y-4'>
+        <form className='mt-4 space-y-6'>
           {orgs.map(({ id, organizationName }, index) => (
             <Popover
               key={id}
