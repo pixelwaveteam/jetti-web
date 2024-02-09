@@ -79,6 +79,7 @@ export function CashFlowDataTable({
         },
       ]}
       globalFiltering
+      total
     >
       <div className='flex items-center gap-x-6'>
         {isUserAdmin && <ClosureButton />}
