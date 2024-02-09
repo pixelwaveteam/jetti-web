@@ -1,12 +1,14 @@
 'use server';
 
-import { api } from '@/lib/api';
 import { revalidateTag } from 'next/cache';
+
+import { api } from '@/lib/api';
 
 interface UpdateUser {
   id: string;
   data: {
     name: string;
+    username: string;
     role: 'ADMIN' | 'OPERATOR';
   };
 }

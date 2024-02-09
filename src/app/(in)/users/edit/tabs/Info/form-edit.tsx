@@ -37,6 +37,13 @@ const UserFormEditSchema = z.object({
   name: z
     .string({ required_error: 'Nome não pode ser vazio.' })
     .max(50, 'Nome deve ter no máximo 50 caracteres.'),
+  username: z
+    .string({ required_error: 'Usuário é obrigatório.' })
+    .max(20, 'Nome deve ter no máximo 20 caracteres.')
+    .regex(
+      /^[a-z0-9._]+$/,
+      'Usuário deve conter apenas letras minúsculas, números, pontos e underline.'
+    ),
   role: z
     .enum(['ADMIN', 'OPERATOR'] as const)
     .refine((value) => value === 'ADMIN' || value === 'OPERATOR', {
@@ -61,6 +68,7 @@ export function UserInfoFormEdit({ user }: UserFormEditProps) {
     resolver: zodResolver(UserFormEditSchema),
     defaultValues: {
       name: user.name,
+      username: user.username,
       role: user.role,
     },
   });
@@ -104,18 +112,19 @@ export function UserInfoFormEdit({ user }: UserFormEditProps) {
         description: 'Usuário excluído com sucesso.',
         duration: 5000,
       });
-    } catch(err) {
-      if(err instanceof Error && err.message === "User has dependents.") {
+    } catch (err) {
+      if (err instanceof Error && err.message === 'User has dependents.') {
         toast({
           variant: 'destructive',
           title: 'Erro',
-          description: 'Esse usuário tem registros associados à ele. Para exclui-lo, exclua suas associações antes!',
+          description:
+            'Esse usuário tem registros associados à ele. Para exclui-lo, exclua suas associações antes!',
           duration: 7000,
         });
 
         setShow(false);
 
-        return
+        return;
       }
 
       toast({
@@ -139,6 +148,19 @@ export function UserInfoFormEdit({ user }: UserFormEditProps) {
                 <FormLabel>Nome</FormLabel>
                 <FormControl>
                   <Input placeholder='Nome do usuário' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name='username'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Usuário</FormLabel>
+                <FormControl>
+                  <Input placeholder='Usuário do usuário' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
