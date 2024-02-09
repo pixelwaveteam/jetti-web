@@ -21,6 +21,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -101,6 +102,7 @@ interface DataTableProps<TData, TValue> {
   filterBy?: FilterBy[];
   globalFiltering?: boolean;
   children?: ReactNode;
+  total?: boolean;
 }
 
 const renderFilters: (
@@ -194,6 +196,7 @@ export function DataTable<TData, TValue>({
   filterBy,
   children,
   globalFiltering,
+  total,
 }: DataTableProps<TData, TValue>) {
   const defaultFilters = filterBy
     ?.filter((filter) => filter.defaultValue)
@@ -254,6 +257,10 @@ export function DataTable<TData, TValue>({
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
+                {total &&(
+                  <TableHead>
+                  </TableHead>
+                )}
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
@@ -276,6 +283,10 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
+                  {total && (
+                    <TableCell />
+                  )}
+
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className='py-2'>
                       {flexRender(
@@ -297,6 +308,30 @@ export function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
+          {table.getFooterGroups().length && (
+            <TableFooter>
+              {
+                table.getFooterGroups().map((footerGroup) => (
+                  <TableRow key={footerGroup.id}>
+                    {total && (
+                      <TableCell>Total:</TableCell>
+                    )}
+                    {footerGroup.headers.map((header) => {
+                      return (
+                        <TableCell key={header.id}>
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                              header.column.columnDef.footer,
+                              header.getContext()
+                              )}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))}
+            </TableFooter>
+          )}
         </Table>
       </div>
       <div className='flex items-center justify-end space-x-2 py-4'>

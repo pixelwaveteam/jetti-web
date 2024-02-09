@@ -212,6 +212,13 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
         </div>
       );
     },
+    footer: (info) => {
+      const total = info.table.getRowModel().rows.reduce((acc, row) => 
+        Number(row.original[info.column.id as keyof CashFlowDataTableData]) + acc
+      , 0)
+
+      return <div>{convertCentsToCurrency(total)}</div>;
+    }
   },
   {
     accessorKey: 'date',
