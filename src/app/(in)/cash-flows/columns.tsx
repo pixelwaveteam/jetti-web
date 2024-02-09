@@ -139,7 +139,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{convertCentsToCurrency(cashFlow.cashIn)}</span>
+          <span>{cashFlow.cashIn}</span>
         </div>
       );
     },
@@ -162,7 +162,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{convertCentsToCurrency(cashFlow.cashOut)}</span>
+          <span>{cashFlow.cashOut}</span>
         </div>
       );
     },

@@ -1,7 +1,14 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -30,26 +37,35 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { CashFlowContext } from '@/providers/cash-flow-provider';
 import { SheetContext } from '@/providers/sheet-provider';
-import { convertCentsToCurrency } from '@/utils/currency';
 import { revalidateTerminals } from '../../terminals/actions/revalidate-terminal';
 
-const CashFlowFormCreateSchema = (lastInput: number | undefined = 0, lastOutput: number | undefined = 0) => z.object({
-  terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
-  input: z.coerce
-    .number({ required_error: 'Entrada é obrigatório.', invalid_type_error: 'Entrada deve ser um número. Substitua "," por "."' })
-    .transform(value => value*100)
-    .refine(value => value > lastInput, {
-      message: 'O valor de entrada deve ser maior que a anterior',
-    }),
-  output: z.coerce
-    .number({ required_error: 'Saída é obrigatório.', invalid_type_error: 'Saída deve ser um número. Substitua "," por "."' })
-    .transform(value => value*100)
-    .refine(value => value > lastOutput, {
-      message: 'O valor de saída deve ser maior que a anterior',
-    }),
-});
+const CashFlowFormCreateSchema = (
+  lastInput: number | undefined = 0,
+  lastOutput: number | undefined = 0
+) =>
+  z.object({
+    terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
+    input: z.coerce
+      .number({
+        required_error: 'Entrada é obrigatório.',
+        invalid_type_error: 'Entrada deve ser um número. Substitua "," por "."',
+      })
+      .transform((value) => value * 100)
+      .refine((value) => value >= lastInput, {
+        message: 'O valor de entrada deve ser maior ou igual anterior',
+      }),
+    output: z.coerce
+      .number({
+        required_error: 'Saída é obrigatório.',
+        invalid_type_error: 'Saída deve ser um número. Substitua "," por "."',
+      })
+      .transform((value) => value * 100)
+      .refine((value) => value >= lastOutput, {
+        message: 'O valor de saída deve ser maior ou igual anterior',
+      }),
+  });
 
-const CashFlowFormCreateSchemaDefault = CashFlowFormCreateSchema()
+const CashFlowFormCreateSchemaDefault = CashFlowFormCreateSchema();
 
 type CashFlowFormCreateType = z.infer<typeof CashFlowFormCreateSchemaDefault>;
 
@@ -74,13 +90,18 @@ export function CashFlowFormCreate() {
     return (completed / totalTerminals) * 100;
   }, [terminals, completedTerminals]);
 
-  const [formInputOutputMinimum, setFormInputOutputMinimum] = useState({lastInput: 0, lastOutput: 0})
+  const [formInputOutputMinimum, setFormInputOutputMinimum] = useState({
+    lastInput: 0,
+    lastOutput: 0,
+  });
 
   const formMethods = useForm<CashFlowFormCreateType>({
-    resolver: zodResolver(CashFlowFormCreateSchema(
-      formInputOutputMinimum.lastInput, 
-      formInputOutputMinimum.lastOutput
-    )),
+    resolver: zodResolver(
+      CashFlowFormCreateSchema(
+        formInputOutputMinimum.lastInput,
+        formInputOutputMinimum.lastOutput
+      )
+    ),
     defaultValues: {
       terminalId:
         availableTerminals.length > 0 ? availableTerminals[0].id : undefined,
@@ -97,12 +118,12 @@ export function CashFlowFormCreate() {
     try {
       await createCashFlow(data);
 
-      await revalidateTerminals()
-      
+      await revalidateTerminals();
+
       completedTerminals.current.push(data.terminalId);
 
-      setValue('output', '' as unknown as number)
-      setValue('input', '' as unknown as number)
+      setValue('output', '' as unknown as number);
+      setValue('input', '' as unknown as number);
 
       toast({
         variant: 'default',
@@ -123,9 +144,9 @@ export function CashFlowFormCreate() {
   const onClose = useCallback(() => {
     setShow(false);
     reset();
-    selectEstablishment(null)
-  }, [reset, selectEstablishment, setShow])
-  
+    selectEstablishment(null);
+  }, [reset, selectEstablishment, setShow]);
+
   const lastInput = useMemo(() => {
     return terminals.find((terminal) => terminal.id === terminalId)?.input || 0;
   }, [terminals, terminalId]);
@@ -135,18 +156,18 @@ export function CashFlowFormCreate() {
       terminals.find((terminal) => terminal.id === terminalId)?.output || 0
     );
   }, [terminals, terminalId]);
-  
+
   useEffect(() => {
-    if(lastInput) {
-      setFormInputOutputMinimum(state => ({...state, lastInput}));
+    if (lastInput) {
+      setFormInputOutputMinimum((state) => ({ ...state, lastInput }));
     }
-  }, [lastInput])
-  
+  }, [lastInput]);
+
   useEffect(() => {
-    if(lastOutput) {
-      setFormInputOutputMinimum(state => ({...state, lastOutput}));
+    if (lastOutput) {
+      setFormInputOutputMinimum((state) => ({ ...state, lastOutput }));
     }
-  }, [lastOutput])
+  }, [lastOutput]);
 
   useEffect(() => {
     async function handlePeriodCashFlow(selectedTerminalId: string) {
@@ -213,9 +234,17 @@ export function CashFlowFormCreate() {
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder='Selecione...'>
-                      {availableTerminals.find(terminal => terminal.id === field.value)?.code}
-                      {' '}-{' '}
-                      {availableTerminals.find(terminal => terminal.id === field.value)?.interfaceName}
+                      {
+                        availableTerminals.find(
+                          (terminal) => terminal.id === field.value
+                        )?.code
+                      }{' '}
+                      -{' '}
+                      {
+                        availableTerminals.find(
+                          (terminal) => terminal.id === field.value
+                        )?.interfaceName
+                      }
                     </SelectValue>
                   </SelectTrigger>
                 </FormControl>
@@ -243,7 +272,7 @@ export function CashFlowFormCreate() {
               </FormControl>
               <FormDescription>
                 {lastInput > 0
-                  ? `Entrada atual: ${convertCentsToCurrency(lastInput)}`
+                  ? `Entrada atual: ${lastInput}`
                   : `Nenhuma entrada anterior registrada`}
               </FormDescription>
               <FormMessage />
@@ -262,7 +291,7 @@ export function CashFlowFormCreate() {
               </FormControl>
               <FormDescription>
                 {lastOutput > 0
-                  ? `Saída atual: ${convertCentsToCurrency(lastOutput)}`
+                  ? `Saída atual: ${lastOutput}`
                   : `Nenhuma saída anterior registrada`}
               </FormDescription>
               <FormMessage />
