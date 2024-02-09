@@ -72,6 +72,7 @@ export function CashFlowProvider({
       .filter((establishment) =>
         terminalEstablishments.includes(establishment.id)
       )
+      .filter((establishment) => establishment.isActive)
       .filter((establishment) => !establishment.isWarehouse);
   }, [initialData.terminals, initialData.establishments]);
 

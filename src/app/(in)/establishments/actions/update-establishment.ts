@@ -8,6 +8,7 @@ interface UpdateEstablishment {
   id: string;
   data: {
     name: string;
+    isActive: boolean;
     organizationId: string;
   };
 }

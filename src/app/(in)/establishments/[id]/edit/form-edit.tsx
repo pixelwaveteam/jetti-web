@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { EstablishmentContext } from '@/providers/establishment-provider';
@@ -36,6 +37,7 @@ import { Establishment } from '../../actions/fetch-establishments';
 
 const EstablishmentFormEditSchema = z.object({
   organizationId: z.string({ required_error: 'Selecione uma organização.' }),
+  isActive: z.boolean(),
   name: z
     .string({ required_error: 'Nome não pode ser vazio.' })
     .max(50, 'Nome deve ter no máximo 50 caracteres.'),
@@ -60,6 +62,7 @@ export function EstablishmentFormEdit({
     defaultValues: {
       name: establishment.name,
       organizationId: establishment.organizationId,
+      isActive: establishment.isActive,
     },
   });
 
@@ -175,6 +178,26 @@ export function EstablishmentFormEdit({
                   </SelectContent>
                 </Select>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={control}
+            name='isActive'
+            render={({ field }) => (
+              <FormItem className='flex flex-row items-center justify-between rounded-md border p-4'>
+                <div className='space-y-0.5'>
+                  <FormLabel className='text-base'>Status do Local</FormLabel>
+                  <FormDescription>
+                    Local precisa estar ativo para realizar leituras.
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
               </FormItem>
             )}
           />

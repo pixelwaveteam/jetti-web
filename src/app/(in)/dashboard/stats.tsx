@@ -1,57 +1,60 @@
 'use client';
 
+import { isWithinInterval, startOfDay } from 'date-fns';
 import { Building, DollarSign, Laptop, Warehouse } from 'lucide-react';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 
 import { CardStat } from '@/components/card-stat';
 import { DashboardContext } from '@/providers/dashboard-provider';
 import { convertCentsToCurrency } from '@/utils/currency';
-import { isWithinInterval, startOfDay } from 'date-fns';
 
 export function OverviewStats() {
   const { filter, cashFlows, terminals, establishments } =
     useContext(DashboardContext);
 
-  const warehouses = establishments.filter(
-    (establishment) => establishment.isWarehouse
-  );
+  const warehouses = useMemo(() => {
+    return establishments.filter((establishment) => establishment.isWarehouse);
+  }, [establishments]);
 
-  const totalTerminalsWarehouse =
-    terminals.filter((terminal) =>
-      warehouses.some((warehouse) => warehouse.id === terminal.establishmentId)
-    ).length || 0;
+  const totalTerminalsWarehouse = useMemo(() => {
+    return (
+      terminals.filter((terminal) =>
+        warehouses.some(
+          (warehouse) => warehouse.id === terminal.establishmentId
+        )
+      ).length || 0
+    );
+  }, [terminals, warehouses]);
 
-  const totalTerminals = terminals.length - totalTerminalsWarehouse || 0;
-  const totalEstablishments = establishments.length || 0;
+  const totalTerminals = useMemo(() => {
+    return terminals.length - totalTerminalsWarehouse || 0;
+  }, [terminals, totalTerminalsWarehouse]);
 
-  const totalCashFlows =
-    cashFlows.filter((cashFlow) => {
-      const cashFlowDate = new Date(cashFlow.date);
+  const totalEstablishments = useMemo(() => {
+    return (
+      establishments.filter((establishment) => establishment.isActive).length ||
+      0
+    );
+  }, [establishments]);
 
-      const isBetween = isWithinInterval(startOfDay(cashFlowDate), {
-        start: startOfDay(filter.startDate),
-        end: startOfDay(filter.endDate),
-      });
+  const totalEarnings = useMemo(() => {
+    return cashFlows
+      .filter((cashFlow) => {
+        const cashFlowDate = new Date(cashFlow.date);
 
-      return isBetween;
-    }).length || 0;
+        const isBetween = isWithinInterval(startOfDay(cashFlowDate), {
+          start: startOfDay(filter.startDate),
+          end: startOfDay(filter.endDate),
+        });
 
-  const totalEarnings = cashFlows
-    .filter((cashFlow) => {
-      const cashFlowDate = new Date(cashFlow.date);
+        return isBetween;
+      })
+      .reduce((acc, cashFlow) => {
+        acc += cashFlow.net;
 
-      const isBetween = isWithinInterval(startOfDay(cashFlowDate), {
-        start: startOfDay(filter.startDate),
-        end: startOfDay(filter.endDate),
-      });
-
-      return isBetween;
-    })
-    .reduce((acc, cashFlow) => {
-      acc += cashFlow.net;
-
-      return acc;
-    }, 0);
+        return acc;
+      }, 0);
+  }, [cashFlows, filter.endDate, filter.startDate]);
 
   return (
     <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
