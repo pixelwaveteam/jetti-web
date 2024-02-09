@@ -19,6 +19,7 @@ import { fetchClosure } from '../actions/fetch-closure';
 import { fetchClosureCashFlows } from '../actions/fetch-closure-cash-flows';
 import { fetchClosureDistributions } from '../actions/fetch-closure-distribution';
 import { ChartDistribution } from './chart-distribution';
+import { DeleteClosureDialog } from './delete-closure-dialog';
 import { ListDistribution } from './list-distribution';
 import { ClosureStats } from './stats';
 
@@ -46,6 +47,9 @@ export default async function Closure({ params: { id } }: ClosureProps) {
 
   const cashFlowsTotal = cashFlows.length
 
+  const renderDeleteClosureButton = (
+    <DeleteClosureDialog />
+  )
 
   const statValues = {
     cashFlowsTotal,
@@ -76,6 +80,7 @@ export default async function Closure({ params: { id } }: ClosureProps) {
         title={`Fechamento`}
         description={renderDescription}
         goBackUrl={'/closure'}
+        action={renderDeleteClosureButton}
       >
         <ClosureStats statValues={statValues} />
         <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>

@@ -6,6 +6,7 @@ import { Terminal, fetchTerminals } from '@/app/(in)/terminals/actions/fetch-ter
 import { PageContainer } from '@/components/page-container';
 import { CashFlowProvider } from '@/providers/cash-flow-provider';
 import { NewClosureProvider } from '@/providers/new-closure-provider';
+import { fetchAllClosureCashFlows } from '../closure/actions/fetch-all-closure-cash-flows';
 import { fetchEstablishment } from '../establishments/actions/fetch-establishment';
 import { fetchEstablishments } from '../establishments/actions/fetch-establishments';
 import { fetchInterface } from '../interfaces/actions/fetch-interface';
@@ -19,12 +20,13 @@ export const metadata: Metadata = {
 };
 
 export default async function CashFlows() {
-  const [rawCashFlows, rawTerminals, establishments, organizations, users] = await Promise.all([
+  const [rawCashFlows, rawTerminals, establishments, organizations, users, closuresCashFlows] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
     fetchEstablishments(),
     fetchOrganizations(),
-    fetchUsers()
+    fetchUsers(),
+    fetchAllClosureCashFlows(),
   ]); 
 
   const operators = users.map(({ name }) => name);
@@ -62,6 +64,14 @@ export default async function CashFlows() {
 
     if(terminalsInterface) {
       cashFlow.interface = terminalsInterface.name;
+    }
+
+    const closureCashFlow = closuresCashFlows.find(closure => closure.cashFlowId === rawCashFlow.id)
+
+    console.log({closuresCashFlows, closureCashFlow, rawCashFlow})
+
+    if(closureCashFlow) {
+      cashFlow.closed = true;
     }
 
     cashFlows.push(cashFlow)
