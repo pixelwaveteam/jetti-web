@@ -6,6 +6,7 @@ export interface Establishment {
   id: string;
   organizationId: string;
   name: string;
+  isWarehouse: boolean;
   isActive: boolean;
 }
 

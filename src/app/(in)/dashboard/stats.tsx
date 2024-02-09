@@ -1,6 +1,6 @@
 'use client';
 
-import { Building, DollarSign, Gamepad, Laptop } from 'lucide-react';
+import { Building, DollarSign, Laptop, Warehouse } from 'lucide-react';
 import { useContext } from 'react';
 
 import { CardStat } from '@/components/card-stat';
@@ -12,7 +12,16 @@ export function OverviewStats() {
   const { filter, cashFlows, terminals, establishments } =
     useContext(DashboardContext);
 
-  const totalTerminals = terminals.length || 0;
+  const warehouses = establishments.filter(
+    (establishment) => establishment.isWarehouse
+  );
+
+  const totalTerminalsWarehouse =
+    terminals.filter((terminal) =>
+      warehouses.some((warehouse) => warehouse.id === terminal.establishmentId)
+    ).length || 0;
+
+  const totalTerminals = terminals.length - totalTerminalsWarehouse || 0;
   const totalEstablishments = establishments.length || 0;
 
   const totalCashFlows =
@@ -54,10 +63,10 @@ export function OverviewStats() {
       />
 
       <CardStat
-        title='Leituras'
-        highlight={totalCashFlows.toString()}
-        description='Total de leituras no período'
-        icon={Gamepad}
+        title='Galpões'
+        highlight={totalTerminalsWarehouse.toString()}
+        description='Total de terminais nos galpões'
+        icon={Warehouse}
       />
 
       <CardStat

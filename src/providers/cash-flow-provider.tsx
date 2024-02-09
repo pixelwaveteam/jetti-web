@@ -68,9 +68,11 @@ export function CashFlowProvider({
       .map((terminal) => terminal.establishmentId)
       .filter((value, index, self) => self.indexOf(value) === index);
 
-    return initialData.establishments.filter((establishment) =>
-      terminalEstablishments.includes(establishment.id)
-    );
+    return initialData.establishments
+      .filter((establishment) =>
+        terminalEstablishments.includes(establishment.id)
+      )
+      .filter((establishment) => !establishment.isWarehouse);
   }, [initialData.terminals, initialData.establishments]);
 
   const handlePeriodChange = useCallback((lastDate: string | null) => {
