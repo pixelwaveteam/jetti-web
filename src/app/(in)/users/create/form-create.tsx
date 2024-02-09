@@ -31,6 +31,13 @@ const UserFormCreateSchema = z.object({
   name: z
     .string({ required_error: 'Nome não pode ser vazio.' })
     .max(50, 'Nome deve ter no máximo 50 caracteres.'),
+  username: z
+    .string({ required_error: 'Usuário é obrigatório.' })
+    .max(20, 'Nome deve ter no máximo 20 caracteres.')
+    .regex(
+      /^[a-z0-9._]+$/,
+      'Usuário deve conter apenas letras minúsculas, números, pontos e underline.'
+    ),
   password: z
     .string({ required_error: 'Senha é obrigatória.' })
     .min(5, 'Senha deve ter pelo menos 6 caracteres.')
@@ -62,10 +69,11 @@ export function UserFormCreate() {
 
   const onSubmit = async (data: UserFormCreateType) => {
     try {
-      const { name, role: roleUser, password } = data;
+      const { name, username, role: roleUser, password } = data;
 
       await createUser({
         name,
+        username,
         password,
         role: roleUser,
       });
@@ -106,12 +114,29 @@ export function UserFormCreate() {
         />
         <FormField
           control={control}
+          name='username'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Usuário</FormLabel>
+              <FormControl>
+                <Input placeholder='username' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
           name='password'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Senha</FormLabel>
               <FormControl>
-                <Input placeholder='Senha do usuário' type='password' {...field} />
+                <Input
+                  placeholder='Senha do usuário'
+                  type='password'
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
