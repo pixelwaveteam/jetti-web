@@ -1,6 +1,5 @@
 'use client';
 
-import { useToast } from '@/hooks/use-toast';
 import { PopoverArrow } from '@radix-ui/react-popover';
 import { Trash, Triangle } from 'lucide-react';
 import { useContext, useMemo, useState } from 'react';
@@ -15,14 +14,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { useToast } from '@/hooks/use-toast';
 import { UserContext } from '@/providers/user-provider';
 
-import { createUserTerminal } from '../../../actions/create-user-terminal';
-import { deleteUserTerminal } from '../../../actions/delete-user-terminal';
+import { createUserEstablishment } from '../../../actions/create-user-establishment';
+import { deleteUserEstablishment } from '../../../actions/delete-user-establishment';
 import { UserRelations } from '../../edit-sheet';
 
-interface CreateUserTerminal {
-  terminalId: string;
+interface CreateUserEstablishment {
+  establishmentId: string;
   userId: string;
 }
 
@@ -30,64 +30,74 @@ interface UserFormEditProps {
   user: UserRelations;
 }
 
-interface NamedUserTerminal {
+interface NamedUserEstablishment {
   id: string;
   userId: string;
-  terminalId: string;
-  terminalName: number;
+  establishmentId: string;
+  establishmentName: string;
 }
 
-type NewUserTerminal =
-  | NamedUserTerminal
+type NewUserEstablishment =
+  | NamedUserEstablishment
   | {
       id: undefined;
       userId: undefined;
-      terminalId: undefined;
-      terminalName: undefined;
+      establishmentId: undefined;
+      establishmentName: undefined;
     };
 
-export function UserTerminalFormEdit({
+export function UserEstablishmentFormEdit({
   user: { id: userId, ...user },
 }: UserFormEditProps) {
-  const [terminalsQuery, setTerminalQuery] = useState<string | undefined>();
-  const [newTerminal, setNewTerminal] = useState<NewUserTerminal[]>([]);
   const { toast } = useToast();
-  const { terminals } = useContext(UserContext);
+  const { establishments } = useContext(UserContext);
 
-  const userTerminal = useMemo(
+  const [establishmentsQuery, setEstablishmentQuery] = useState<
+    string | undefined
+  >();
+  const [newEstablishment, setNewEstablishment] = useState<
+    NewUserEstablishment[]
+  >([]);
+
+  console.log('user', user);
+
+  const userEstablishment = useMemo(
     () =>
-      user.terminals.reduce((acc, rawTerminal) => {
-        const terminal = terminals.find(
-          ({ id }) => id === rawTerminal.terminalId
+      user.establishments.reduce((acc, rawEstablishment) => {
+        const establishment = establishments.find(
+          ({ id }) => id === rawEstablishment.establishmentId
         );
 
-        return terminal
-          ? [{ ...rawTerminal, terminalName: terminal.code }, ...acc]
+        return establishment
+          ? [
+              { ...rawEstablishment, establishmentName: establishment.name },
+              ...acc,
+            ]
           : acc;
-      }, [] as NamedUserTerminal[]),
-    [terminals, user.terminals]
+      }, [] as NamedUserEstablishment[]),
+    [establishments, user.establishments]
   );
 
-  const userTerminals = useMemo(
-    () => [...newTerminal, ...userTerminal],
-    [newTerminal, userTerminal]
+  const userEstablishments = useMemo(
+    () => [...newEstablishment, ...userEstablishment],
+    [newEstablishment, userEstablishment]
   );
 
   const formMethods = useForm();
 
-  const onCreateUserTerminal = async (
-    data: CreateUserTerminal,
+  const onCreateUserEstablishment = async (
+    data: CreateUserEstablishment,
     index: number
   ) => {
     try {
-      await createUserTerminal(data);
+      await createUserEstablishment(data);
 
-      handleNewUserTerminalDelete(index);
+      handleNewUserEstablishmentDelete(index);
 
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Terminal adicionado com sucesso.',
+        description: 'Establishment adicionado com sucesso.',
         duration: 5000,
       });
     } catch {
@@ -100,8 +110,8 @@ export function UserTerminalFormEdit({
     }
   };
 
-  function handleNewUserTerminalDelete(index: number) {
-    setNewTerminal((state) => {
+  function handleNewUserEstablishmentDelete(index: number) {
+    setNewEstablishment((state) => {
       const fieldValue = [...state];
 
       fieldValue.splice(index, 1);
@@ -110,14 +120,14 @@ export function UserTerminalFormEdit({
     });
   }
 
-  const handleDeleteUserTerminal = async (id: string) => {
+  const handleDeleteUserEstablishment = async (id: string) => {
     try {
-      await deleteUserTerminal(id);
+      await deleteUserEstablishment(id);
 
       toast({
         variant: 'default',
         title: 'Sucesso',
-        description: 'Terminal excluído com sucesso do usuário.',
+        description: 'Establishment excluído com sucesso do usuário.',
         duration: 5000,
       });
     } catch (err) {
@@ -130,25 +140,29 @@ export function UserTerminalFormEdit({
     }
   };
 
-  const filteredTerminal = useMemo(
+  const filteredEstablishment = useMemo(
     () =>
-      terminals.filter(
-        ({ id, code }) =>
-          !userTerminals.find(
-            (terminal) =>
-              code === terminal.terminalName && id === terminal.terminalId
-          ) && (terminalsQuery ? String(code).includes(terminalsQuery) : true)
+      establishments.filter(
+        ({ id, name }) =>
+          !userEstablishments.find(
+            (establishment) =>
+              name === establishment.establishmentName &&
+              id === establishment.establishmentId
+          ) &&
+          (establishmentsQuery
+            ? String(name).includes(establishmentsQuery)
+            : true)
       ),
-    [userTerminals, terminals, terminalsQuery]
+    [userEstablishments, establishments, establishmentsQuery]
   );
 
-  function handleNewUserTerminal() {
-    setNewTerminal((state) => [
+  function handleNewUserEstablishment() {
+    setNewEstablishment((state) => [
       {
         id: undefined,
         code: undefined,
-        terminalId: undefined,
-        terminalName: undefined,
+        establishmentId: undefined,
+        establishmentName: undefined,
         userId: undefined,
       },
       ...state,
@@ -159,22 +173,25 @@ export function UserTerminalFormEdit({
     <div className='space-y-6 h-[85vh] overflow-auto mb-6'>
       <Form {...formMethods}>
         <form className='mt-4 space-y-6'>
-          {userTerminals.map(({ id, terminalName }, index) => (
-            <Popover key={id} onOpenChange={() => setTerminalQuery(undefined)}>
+          {userEstablishments.map(({ id, establishmentName }, index) => (
+            <Popover
+              key={id}
+              onOpenChange={() => setEstablishmentQuery(undefined)}
+            >
               <PopoverTrigger asChild>
                 <FormItem>
                   <FormControl>
                     <div className='relative'>
                       <Input
-                        placeholder='Escolha o terminal'
+                        placeholder='Escolha o establishment'
                         readOnly
                         className='data-[selected="true"]:bg-primary text-primary-foreground cursor-pointer text-center'
-                        value={terminalName || ''}
-                        data-selected={!!terminalName}
+                        value={establishmentName || ''}
+                        data-selected={!!establishmentName}
                       />
-                      {terminalName ? (
+                      {establishmentName ? (
                         <button
-                          onClick={() => handleDeleteUserTerminal(id)}
+                          onClick={() => handleDeleteUserEstablishment(id)}
                           type='button'
                           className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-sm hover:bg-black/5 transition-all'
                         >
@@ -186,7 +203,9 @@ export function UserTerminalFormEdit({
                         </button>
                       ) : (
                         <button
-                          onClick={() => handleNewUserTerminalDelete(index)}
+                          onClick={() =>
+                            handleNewUserEstablishmentDelete(index)
+                          }
                           type='button'
                           className='absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-sm hover:bg-black/5 transition-all'
                         >
@@ -206,36 +225,40 @@ export function UserTerminalFormEdit({
                 onCloseAutoFocus={(e) => e.preventDefault()}
                 sideOffset={-10}
               >
-                {(!!terminalsQuery || filteredTerminal.length > 0) && (
+                {(!!establishmentsQuery ||
+                  filteredEstablishment.length > 0) && (
                   <Input
                     placeholder='Busque terminais'
-                    value={terminalsQuery}
+                    value={establishmentsQuery}
                     onChange={({ target: { value } }) =>
-                      setTerminalQuery(value)
+                      setEstablishmentQuery(value)
                     }
                     className='mb-4'
                   />
                 )}
-                {filteredTerminal.length > 0 ? (
+                {filteredEstablishment.length > 0 ? (
                   <div className='flex flex-col gap-y-2 mb-4 max-h-[25rem] overflow-y-auto'>
-                    {filteredTerminal.map(
-                      ({ id: terminalId, code: terminalCode }) => (
+                    {filteredEstablishment.map(
+                      ({ id: establishmentId, name: establishmentCode }) => (
                         <Button
                           className='w-full'
-                          key={terminalId}
+                          key={establishmentId}
                           onClick={() =>
-                            onCreateUserTerminal({ terminalId, userId }, index)
+                            onCreateUserEstablishment(
+                              { establishmentId, userId },
+                              index
+                            )
                           }
                         >
-                          {terminalCode}
+                          {establishmentCode}
                         </Button>
                       )
                     )}
                   </div>
                 ) : (
                   <p className='text-muted-foreground text-center text-sm'>
-                    {terminalsQuery
-                      ? 'Nenhum terminal encontrada.'
+                    {establishmentsQuery
+                      ? 'Nenhum establishment encontrada.'
                       : 'Todos terminais foram escolhidos.'}
                   </p>
                 )}
@@ -250,9 +273,9 @@ export function UserTerminalFormEdit({
           ))}
 
           <EmptyState
-            label='Novo terminal'
+            label='Novo establishment'
             className='py-4'
-            onClick={handleNewUserTerminal}
+            onClick={handleNewUserEstablishment}
           />
         </form>
       </Form>

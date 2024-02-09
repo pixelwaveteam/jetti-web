@@ -6,13 +6,14 @@ import { ArrowUpDown } from 'lucide-react';
 import { UserEditSheet } from '@/app/(in)/users/edit/edit-sheet';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
+
+import { UserEstablishment } from './actions/fetch-user-establishments';
 import { UserOrganization } from './actions/fetch-user-organizations';
-import { UserTerminal } from './actions/fetch-user-terminals';
 import { User } from './actions/fetch-users';
 
 export interface UserDataTableData extends User {
-  organizations: UserOrganization[]
-  terminals: UserTerminal[]
+  organizations: UserOrganization[];
+  establishments: UserEstablishment[];
 }
 
 export const userColumns: ColumnDef<UserDataTableData>[] = [

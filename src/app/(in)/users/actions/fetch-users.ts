@@ -2,11 +2,10 @@
 
 import { api } from '@/lib/api';
 
-type UserRole = 'ADMIN' | 'OPERATOR'
+type UserRole = 'ADMIN' | 'OPERATOR';
 
 export interface User {
-  id: string
-  organizationId?: string;
+  id: string;
   avatarId?: string;
   name: string;
   username: string;

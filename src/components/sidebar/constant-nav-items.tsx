@@ -22,7 +22,7 @@ export const navItems = [
     title: 'Dashboard',
     icon: LayoutDashboard,
     path: '/dashboard',
-    roles: ['OPERATOR'],
+    roles: ['ADMIN', 'OPERATOR'],
   },
   {
     title: 'Organizações',

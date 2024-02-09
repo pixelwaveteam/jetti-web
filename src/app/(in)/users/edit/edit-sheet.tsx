@@ -1,6 +1,7 @@
 'use client';
 
 import { Edit } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useContext } from 'react';
 
 import { UserInfoFormEdit } from '@/app/(in)/users/edit/tabs/Info/form-edit';
@@ -14,18 +15,18 @@ import {
 } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SheetContext } from '@/providers/sheet-provider';
-import { useSession } from 'next-auth/react';
+
+import { UserEstablishment } from '../actions/fetch-user-establishments';
 import { UserOrganization } from '../actions/fetch-user-organizations';
-import { UserTerminal } from '../actions/fetch-user-terminals';
 import { User } from '../actions/fetch-users';
 import { UserPasswordFormEdit } from './tabs/change-password';
+import { UserEstablishmentFormEdit } from './tabs/establishments/form-edit';
 import { UserOrganizationsFormEdit } from './tabs/organizations/form-edit';
-import { UserTerminalFormEdit } from './tabs/terminals/form-edit';
 
 export type UserRelations = User & {
-  organizations: UserOrganization[]
-  terminals: UserTerminal[]
-}
+  organizations: UserOrganization[];
+  establishments: UserEstablishment[];
+};
 
 interface UserEditSheetProps {
   user: UserRelations;
@@ -51,43 +52,33 @@ export function UserEditSheet({ user }: UserEditSheetProps) {
         <Tabs defaultValue='info' className='w-full mt-4'>
           <TabsList>
             <TabsTrigger value='info'>Informações</TabsTrigger>
-            {
-              role === 'ADMIN' && (
-                <>
-                  <TabsTrigger value='organizations'>
-                    Organizações
-                  </TabsTrigger>
+            {role === 'ADMIN' && (
+              <>
+                <TabsTrigger value='organizations'>Organizações</TabsTrigger>
 
-                  <TabsTrigger value='terminals'>
-                    Terminais
-                  </TabsTrigger>
-                  <TabsTrigger value='password'>
-                    Senha
-                  </TabsTrigger>
-                </>
-              )
-            }
+                <TabsTrigger value='establishments'>Locais</TabsTrigger>
+                <TabsTrigger value='password'>Senha</TabsTrigger>
+              </>
+            )}
           </TabsList>
           <TabsContent value='info'>
             <UserInfoFormEdit user={user} />
           </TabsContent>
-          {
-            role === 'ADMIN' && (
-              <>
-                <TabsContent value='organizations'>
-                  <UserOrganizationsFormEdit user={user} />
-                </TabsContent>
+          {role === 'ADMIN' && (
+            <>
+              <TabsContent value='organizations'>
+                <UserOrganizationsFormEdit user={user} />
+              </TabsContent>
 
-                <TabsContent value='terminals'>
-                  <UserTerminalFormEdit user={user} /> 
-                </TabsContent>
+              <TabsContent value='establishments'>
+                <UserEstablishmentFormEdit user={user} />
+              </TabsContent>
 
-                <TabsContent value='password'>
-                  <UserPasswordFormEdit /> 
-                </TabsContent>
-              </>
-            )
-          }
+              <TabsContent value='password'>
+                <UserPasswordFormEdit />
+              </TabsContent>
+            </>
+          )}
         </Tabs>
       </SheetContent>
     </Sheet>

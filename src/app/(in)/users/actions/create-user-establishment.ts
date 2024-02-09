@@ -4,13 +4,13 @@ import { revalidateTag } from 'next/cache';
 
 import { api } from '@/lib/api';
 
-interface CreateUserTerminal {
-  terminalId: string;
+interface CreateUserEstablishment {
+  establishmentId: string;
   userId: string;
 }
 
-export async function createUserTerminal(data: CreateUserTerminal) {
-  await api('/users/terminals', {
+export async function createUserEstablishment(data: CreateUserEstablishment) {
+  await api('/users/establishments', {
     method: 'POST',
     body: JSON.stringify(data),
   });

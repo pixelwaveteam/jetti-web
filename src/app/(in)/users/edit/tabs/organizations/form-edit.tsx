@@ -1,6 +1,5 @@
 'use client';
 
-import { useToast } from '@/hooks/use-toast';
 import { PopoverArrow } from '@radix-ui/react-popover';
 import { Trash, Triangle } from 'lucide-react';
 import { useContext, useMemo, useState } from 'react';
@@ -15,6 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { useToast } from '@/hooks/use-toast';
 import { UserContext } from '@/providers/user-provider';
 
 import { createUserOrganization } from '../../../actions/create-user-oganization';

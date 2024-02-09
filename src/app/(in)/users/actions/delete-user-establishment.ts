@@ -4,8 +4,8 @@ import { revalidateTag } from 'next/cache';
 
 import { api } from '@/lib/api';
 
-export async function deleteUserTerminal(id: string) {
-  await api(`/users/terminals/${id}`, {
+export async function deleteUserEstablishment(id: string) {
+  await api(`/users/establishments/${id}`, {
     method: 'DELETE',
   });
 

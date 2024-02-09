@@ -6,7 +6,7 @@ import { fetchInterfaces } from '@/app/(in)/interfaces/actions/fetch-interfaces'
 import { fetchOrganizations } from '@/app/(in)/organizations/actions/fetch-organizations';
 import { fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
 import { TerminalDataTable } from '@/app/(in)/terminals/data-table';
-import { fetchUserTerminals } from '@/app/(in)/users/actions/fetch-user-terminals';
+import { fetchUserEstablishments } from '@/app/(in)/users/actions/fetch-user-establishments';
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { PageContainer } from '@/components/page-container';
 import { TerminalProvider } from '@/providers/terminal-provider';
@@ -32,7 +32,7 @@ export default async function Terminals() {
   const organizations = await fetchOrganizations();
   const establishments = await fetchEstablishments();
   const interfaces = await fetchInterfaces();
-  const userTerminals = await fetchUserTerminals(user.id);
+  const userEstablishments = await fetchUserEstablishments(user.id);
 
   const terminals = [];
 
@@ -66,8 +66,10 @@ export default async function Terminals() {
     terminals.push(terminal);
   }
 
-  const allowedTerminals = terminals.filter(({ id }) =>
-    userTerminals.some(({ terminalId }) => terminalId === id)
+  const allowedTerminals = terminals.filter((termianl) =>
+    userEstablishments.some(
+      ({ establishmentId }) => establishmentId === termianl.establishmentId
+    )
   );
 
   return (

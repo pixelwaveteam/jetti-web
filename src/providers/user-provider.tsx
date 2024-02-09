@@ -2,12 +2,12 @@
 
 import { ReactNode, createContext } from 'react';
 
+import { Establishment } from '@/app/(in)/establishments/actions/fetch-establishments';
 import { Organization } from '@/app/(in)/organizations/actions/fetch-organizations';
-import { Terminal } from '@/app/(in)/terminals/actions/fetch-terminals';
 
 interface UserContextValues {
   organizations: Organization[];
-  terminals: Terminal[];
+  establishments: Establishment[];
 }
 
 export const UserContext = createContext<UserContextValues>(
@@ -18,17 +18,17 @@ interface UserProviderProps {
   children: ReactNode;
   initialData: {
     organizations: Organization[];
-    terminals: Terminal[];
+    establishments: Establishment[];
   };
 }
 
 export function UserProvider({ children, initialData }: UserProviderProps) {
   const organizations = initialData.organizations;
 
-  const terminals = initialData.terminals;
+  const establishments = initialData.establishments;
 
   return (
-    <UserContext.Provider value={{ organizations, terminals }}>
+    <UserContext.Provider value={{ organizations, establishments }}>
       {children}
     </UserContext.Provider>
   );
