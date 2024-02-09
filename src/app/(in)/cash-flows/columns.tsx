@@ -19,6 +19,29 @@ export type CashFlowDataTableData = CashFlow & {
 
 export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
   {
+    accessorKey: 'code',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          id
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const cashFlow = row.original;
+
+      return (
+        <div className='flex flex-col gap-2 items-start'>
+          <span>{cashFlow.code}</span>
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: 'terminal',
     header: ({ column }) => {
       return (
@@ -36,30 +59,9 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.terminal} - {cashFlow.interface || ''}</span>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: 'code',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant='ghost'
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          Leitura
-          <ArrowUpDown className='ml-2 h-4 w-4' />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const cashFlow = row.original;
-
-      return (
-        <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.code}</span>
+          <span>
+            {cashFlow.terminal} - {cashFlow.interface || ''}
+          </span>
         </div>
       );
     },

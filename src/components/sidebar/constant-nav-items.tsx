@@ -22,13 +22,13 @@ export const navItems = [
     title: 'Dashboard',
     icon: LayoutDashboard,
     path: '/dashboard',
-    roles: ['ADMIN', 'OPERATOR'],
+    roles: ['OPERATOR'],
   },
   {
     title: 'Organizações',
     icon: GitCompare,
     path: '/organizations',
-    roles: ['ADMIN', 'OPERATOR'],
+    roles: ['ADMIN'],
   },
   {
     title: 'Usuários',
@@ -40,19 +40,19 @@ export const navItems = [
     title: 'Locais',
     icon: Building,
     path: '/establishments',
-    roles: ['ADMIN', 'OPERATOR'],
+    roles: ['ADMIN'],
   },
   {
     title: 'Terminais',
     icon: Laptop,
     path: '/terminals',
-    roles: ['ADMIN', 'OPERATOR'],
+    roles: ['ADMIN'],
   },
   {
     title: 'Interfaces',
     icon: Gamepad,
     path: '/interfaces',
-    roles: ['ADMIN', 'OPERATOR'],
+    roles: ['ADMIN'],
   },
   {
     title: 'Leituras',

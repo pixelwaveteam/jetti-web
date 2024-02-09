@@ -1,5 +1,9 @@
 'use client';
 
+import { endOfWeek, startOfWeek } from 'date-fns';
+import { useSession } from 'next-auth/react';
+import { useContext, useMemo } from 'react';
+
 import { ClosureButton } from '@/app/(in)/cash-flows/closure-button';
 import {
   CashFlowDataTableData,
@@ -9,9 +13,6 @@ import { CashFlowCreateSheet } from '@/app/(in)/cash-flows/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { NewClosureContext } from '@/providers/new-closure-provider';
 import { SheetProvider } from '@/providers/sheet-provider';
-import { endOfWeek, startOfWeek } from 'date-fns';
-import { useSession } from 'next-auth/react';
-import { useContext, useMemo } from 'react';
 
 interface CashFlowDataTableProps {
   data: CashFlowDataTableData[];
@@ -43,9 +44,13 @@ export function CashFlowDataTable({
   const currentStartOfWeek = startOfWeek(new Date());
   const currentEndOfWeek = endOfWeek(new Date());
 
+  const cashFlowColumnsFilted = isUserAdmin
+    ? cashFlowColumns
+    : cashFlowColumns.slice(0, -1);
+
   return (
     <DataTable
-      columns={cashFlowColumns}
+      columns={cashFlowColumnsFilted}
       data={filteredData}
       filterBy={[
         {
