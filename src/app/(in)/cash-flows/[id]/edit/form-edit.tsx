@@ -66,6 +66,7 @@ type CashFlowFormEditType = z.infer<typeof CashFlowFormEditSchema>;
 interface CashFlowFormEditProps {
   cashFlow: CashFlow & {
     establishmentId: string;
+    isLatestCashFlow: boolean;
   };
 }
 
@@ -292,7 +293,7 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
             </Button>
             <DialogProvider>
               <ConfirmDeletionDialog onConfirm={handleDeleteCashFlow}>
-                <Button type='button' variant='destructive' className='w-full'>
+                <Button type='button' variant='destructive' className='w-full' disabled={!cashFlow.isLatestCashFlow}>
                   Excluir
                 </Button>
               </ConfirmDeletionDialog>

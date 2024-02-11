@@ -18,6 +18,7 @@ import { CashFlow } from '../../actions/fetch-cash-flow';
 interface CashFlowEditSheetProps {
   cashFlow: CashFlow & {
     establishmentId: string;
+    isLatestCashFlow: boolean;
   };
 }
 

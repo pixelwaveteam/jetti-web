@@ -25,6 +25,7 @@ import { getDateFormatted } from '@/utils/date';
 import { ListDistribution } from '@/app/(in)/cash-flows/[id]/list-distribution';
 import { fetchEstablishments } from '../../establishments/actions/fetch-establishments';
 import { fetchInterface } from '../../interfaces/actions/fetch-interface';
+import { fetchCashFlows } from '../actions/fetch-cash-flows';
 import { ChartDistribution } from './chart-distribution';
 import { CashFlowEditSheet } from './edit/edit-sheet';
 import { CashFlowStats } from './stats';
@@ -46,6 +47,7 @@ export default async function CashFlow({ params: { id } }: CashFlowProps) {
   const isAdmin = session?.user?.role === 'ADMIN';
 
   const cashFlow = await fetchCashFlow(id);
+  const cashFlows = await fetchCashFlows();
   const establishments = await fetchEstablishments();
   const rawTerminals = await fetchTerminals();
   const operator = await fetchUser(cashFlow.operatorId);
@@ -74,11 +76,18 @@ export default async function CashFlow({ params: { id } }: CashFlowProps) {
   const establishment = establishments.find(
     (establishmentItem) => establishmentItem.id === terminal?.establishmentId
   );
+  
+  const latestCashFlow = cashFlows
+    .filter(flow => flow.terminal === String(terminal?.code))
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .shift();
+
+  const isLatestCashFlow = latestCashFlow?.id === cashFlow.id;
 
   const renderEditCashFlowButton = (
     <SheetProvider>
       <CashFlowEditSheet
-        cashFlow={{ ...cashFlow, establishmentId: establishment?.id || '' }}
+        cashFlow={{ ...cashFlow, establishmentId: establishment?.id || '', isLatestCashFlow }}
       />
     </SheetProvider>
   );
