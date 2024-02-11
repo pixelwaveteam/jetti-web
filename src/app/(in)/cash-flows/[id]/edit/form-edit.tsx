@@ -40,6 +40,7 @@ import { CashFlowContext } from '@/providers/cash-flow-provider';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
 
+import { revalidateTerminals } from '@/app/(in)/terminals/actions/revalidate-terminal';
 import { CashFlow } from '../../actions/fetch-cash-flow';
 
 const CashFlowFormEditSchema = z.object({
@@ -131,6 +132,8 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
     try {
       await deleteCashFlow(cashFlow.id);
 
+      await revalidateTerminals();
+      
       setShow(false);
 
       toast({
