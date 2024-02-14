@@ -2,6 +2,7 @@ import {
   Building,
   DollarSign,
   FileArchive,
+  FileMinus2,
   Gamepad,
   GitCompare,
   Laptop,
@@ -71,5 +72,11 @@ export const navItems = [
     icon: DollarSign,
     path: '/closure',
     roles: ['ADMIN'],
+  },
+  {
+    title: 'Despesas',
+    icon: FileMinus2,
+    path: '/expenses',
+    roles: ['ADMIN', 'OPERATOR'],
   },
 ] as NavItem[];
