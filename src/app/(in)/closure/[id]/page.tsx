@@ -1,8 +1,6 @@
 import { Calendar, DollarSign, User } from 'lucide-react';
 import { Metadata } from 'next';
-import { getServerSession } from 'next-auth';
 
-import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { PageContainer } from '@/components/page-container';
 import {
   Card,
@@ -14,11 +12,17 @@ import {
 import { getDateFormatted } from '@/utils/date';
 
 import { ClosureProvider } from '@/providers/closure-provider';
+import { fetchCashFlow } from '../../cash-flows/actions/fetch-cash-flow';
+import { fetchEstablishment } from '../../establishments/actions/fetch-establishment';
+import { fetchExpense } from '../../expenses/actions/fetch-expense';
+import { fetchTerminal } from '../../terminals/actions/fetch-terminal';
 import { fetchUser } from '../../users/actions/fetch-user';
 import { fetchClosure } from '../actions/fetch-closure';
 import { fetchClosureCashFlows } from '../actions/fetch-closure-cash-flows';
 import { fetchClosureDistributions } from '../actions/fetch-closure-distribution';
-import { ChartDistribution } from './chart-distribution';
+import { fetchClosureExpenses } from '../actions/fetch-closure-expenses';
+import { ClosuresCashFlowsTable } from './closure-cash-flows-data-table';
+import { ClosuresExpensesTable } from './closure-expenses-data-table';
 import { DeleteClosureDialog } from './delete-closure-dialog';
 import { ListDistribution } from './list-distribution';
 import { ClosureStats } from './stats';
@@ -35,24 +39,46 @@ interface ClosureProps {
 }
 
 export default async function Closure({ params: { id } }: ClosureProps) {
-  const session = await getServerSession(authOptions);
-
-  const {  net, gross, closerId, createdAt  } = await fetchClosure(id);
+  const {  net, gross, closerId, createdAt } = await fetchClosure(id);
 
   const closureDistribution = await fetchClosureDistributions(id);
 
   const closer = await fetchUser(closerId);
 
-  const cashFlows = await fetchClosureCashFlows(id);
+  const closureCashFlows = await fetchClosureCashFlows(id);
 
-  const cashFlowsTotal = cashFlows.length
+  const closureCashFlowsTotal = closureCashFlows.length
+
+  const cashFlows = []
+
+  for(const closureCashFlow of closureCashFlows) {
+    const cashFlow = await fetchCashFlow(closureCashFlow.cashFlowId);
+
+    cashFlows.push(cashFlow)
+  }
+
+  const terminal = await fetchTerminal(cashFlows[0].terminalId)
+
+  const establishment = await fetchEstablishment(terminal.establishmentId);
+
+  const closureExpenses = await fetchClosureExpenses(id);
+
+  const expenses = []
+
+  for(const closureExpense of closureExpenses) {
+    const expense = await fetchExpense(closureExpense.expenseId);
+
+    expenses.push(expense)
+  }
+
+  console.log({expenses})
 
   const renderDeleteClosureButton = (
     <DeleteClosureDialog />
   )
 
   const statValues = {
-    cashFlowsTotal,
+    cashFlowsTotal: closureCashFlowsTotal,
     gross,
     net,
   };
@@ -83,19 +109,24 @@ export default async function Closure({ params: { id } }: ClosureProps) {
         action={renderDeleteClosureButton}
       >
         <ClosureStats statValues={statValues} />
-        <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-          <Card className='col-span-2'>
+        <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
+          <Card className='col-span-1'>
             <CardHeader>
-              <CardTitle>Gráfico de Distribuição</CardTitle>
-              <CardDescription>
-                Passe o mouse sobre o gráfico para ver os dados.
-              </CardDescription>
+              <CardTitle>Leituras</CardTitle>
             </CardHeader>
             <CardContent className='pl-2'>
-              <ChartDistribution netDistributions={closureDistribution} />
+              <ClosuresCashFlowsTable establishmentName={establishment.name} closuresCashFlows={cashFlows} />
             </CardContent>
           </Card>
-          <Card className='col-span-2'>
+          <Card className='col-span-1'>
+            <CardHeader>
+              <CardTitle>Despesas</CardTitle>
+            </CardHeader>
+            <CardContent className='pl-2'>
+              <ClosuresExpensesTable closuresExpenses={expenses} />
+            </CardContent>
+          </Card>
+          <Card className='col-span-1'>
             <CardHeader>
               <CardTitle>Distribuição de Ganhos</CardTitle>
               <CardDescription>

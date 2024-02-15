@@ -9,6 +9,7 @@ import { NewClosureProvider } from '@/providers/new-closure-provider';
 import { fetchAllClosureCashFlows } from '../closure/actions/fetch-all-closure-cash-flows';
 import { fetchEstablishment } from '../establishments/actions/fetch-establishment';
 import { fetchEstablishments } from '../establishments/actions/fetch-establishments';
+import { fetchExpenses } from '../expenses/actions/fetch-expenses';
 import { fetchInterface } from '../interfaces/actions/fetch-interface';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
 import { fetchUsers } from '../users/actions/fetch-users';
@@ -20,13 +21,14 @@ export const metadata: Metadata = {
 };
 
 export default async function CashFlows() {
-  const [rawCashFlows, rawTerminals, establishments, organizations, users, closuresCashFlows] = await Promise.all([
+  const [rawCashFlows, rawTerminals, establishments, organizations, users, closuresCashFlows, expenses] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
     fetchEstablishments(),
     fetchOrganizations(),
     fetchUsers(),
     fetchAllClosureCashFlows(),
+    fetchExpenses(),
   ]); 
 
   const operators = users.map(({ name }) => name);
@@ -96,7 +98,7 @@ export default async function CashFlows() {
   return (
     <PageContainer title='Leituras'>
       <CashFlowProvider initialData={{ terminals, establishments }}>
-        <NewClosureProvider>
+        <NewClosureProvider initialData={{ expenses }}>
           <CashFlowDataTable data={cashFlows} establishments={establishmentsName} operators={operators} />
         </NewClosureProvider>
       </CashFlowProvider>

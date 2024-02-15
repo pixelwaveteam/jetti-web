@@ -8,7 +8,7 @@ interface ListDistributionProps {
 }
 
 function calculatePercentage(amount: number, total: number) {
-  return (amount*100)/total
+  return (amount*100)/total || 0
 }
 
 export function ListDistribution({ netDistributions }: ListDistributionProps) {
@@ -22,6 +22,8 @@ export function ListDistribution({ netDistributions }: ListDistributionProps) {
       {netDistributions.map((netDistribution) => {
         const percentage = calculatePercentage(netDistribution.amount, totalAmount);
         const amount = convertCentsToCurrency(netDistribution.amount);
+
+        console.log({percentage})
 
         return (
           <div className='flex items-center' key={netDistribution.id}>
