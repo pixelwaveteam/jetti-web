@@ -1,9 +1,9 @@
 'use client';
 
-import { Edit } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useContext } from 'react';
 
-import { CashFlowFormEdit } from '@/app/(in)/cash-flows/[id]/edit/form-edit';
+import { ExpenseFormCreate } from '@/app/(in)/expenses/create/form-create';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -13,31 +13,23 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { SheetContext } from '@/providers/sheet-provider';
-import { CashFlow } from '../../actions/fetch-cash-flow';
 
-interface CashFlowEditSheetProps {
-  cashFlow: CashFlow & {
-    establishmentId: string;
-    isLatestCashFlow: boolean;
-  };
-}
-
-export function CashFlowEditSheet({ cashFlow }: CashFlowEditSheetProps) {
+export function ExpenseCreateSheet() {
   const { show, setShow } = useContext(SheetContext);
 
   return (
     <Sheet open={show} onOpenChange={setShow}>
       <SheetTrigger asChild>
         <Button variant='secondary' className='flex gap-1' size={'default'}>
-          <Edit size={16} />
-          <span className='hidden md:block'>Alterar</span>
+          <Plus size={16} />
+          <span className='hidden md:block'>Despesa</span>
         </Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Editar Leitura</SheetTitle>
+          <SheetTitle>Criar Despesa</SheetTitle>
         </SheetHeader>
-        <CashFlowFormEdit cashFlow={cashFlow} />
+        <ExpenseFormCreate />
       </SheetContent>
     </Sheet>
   );

@@ -40,6 +40,7 @@ import { CashFlowContext } from '@/providers/cash-flow-provider';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
 
+import { revalidateTerminals } from '@/app/(in)/terminals/actions/revalidate-terminal';
 import { CashFlow } from '../../actions/fetch-cash-flow';
 
 const CashFlowFormEditSchema = z.object({
@@ -65,6 +66,7 @@ type CashFlowFormEditType = z.infer<typeof CashFlowFormEditSchema>;
 interface CashFlowFormEditProps {
   cashFlow: CashFlow & {
     establishmentId: string;
+    isLatestCashFlow: boolean;
   };
 }
 
@@ -131,6 +133,8 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
     try {
       await deleteCashFlow(cashFlow.id);
 
+      await revalidateTerminals();
+      
       setShow(false);
 
       toast({
@@ -289,7 +293,7 @@ export function CashFlowFormEdit({ cashFlow }: CashFlowFormEditProps) {
             </Button>
             <DialogProvider>
               <ConfirmDeletionDialog onConfirm={handleDeleteCashFlow}>
-                <Button type='button' variant='destructive' className='w-full'>
+                <Button type='button' variant='destructive' className='w-full' disabled={!cashFlow.isLatestCashFlow}>
                   Excluir
                 </Button>
               </ConfirmDeletionDialog>
