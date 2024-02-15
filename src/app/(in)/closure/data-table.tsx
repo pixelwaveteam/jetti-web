@@ -2,7 +2,7 @@ import { DataTable } from '@/components/data-table';
 import { endOfWeek, startOfWeek } from 'date-fns';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
 import { fetchUsers } from '../users/actions/fetch-users';
-import { ClosureDataTableData, closureColumns } from './columns';
+import { ClosureDataTableData, closureColumns } from './create/columns';
 
 interface ClosureDataTableProps {
   data: ClosureDataTableData[];

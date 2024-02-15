@@ -8,7 +8,7 @@ import { convertCentsToCurrency } from '@/utils/currency';
 import { getDateFormatted } from '@/utils/date';
 import { isSameDay, isWithinInterval } from 'date-fns';
 import Link from 'next/link';
-import { Closure } from './actions/fetch-closures';
+import { Closure } from '../actions/fetch-closures';
 
 export type ClosureDataTableData = Closure & {
   closer?: string;

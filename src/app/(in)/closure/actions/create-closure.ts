@@ -6,7 +6,8 @@ import { api } from '@/lib/api';
 import { Closure } from './fetch-closure';
 
 interface CreateClosure {
-  cashFlows: string
+  cashFlows: string;
+  expenses: string;
 }
 
 export async function createClosure(data: CreateClosure) {

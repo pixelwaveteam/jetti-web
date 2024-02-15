@@ -4,7 +4,6 @@ import { endOfWeek, startOfWeek } from 'date-fns';
 import { useSession } from 'next-auth/react';
 import { useContext, useMemo } from 'react';
 
-import { ClosureButton } from '@/app/(in)/cash-flows/closure-button';
 import {
   CashFlowDataTableData,
   cashFlowColumns,
@@ -13,6 +12,7 @@ import { CashFlowCreateSheet } from '@/app/(in)/cash-flows/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import { NewClosureContext } from '@/providers/new-closure-provider';
 import { SheetProvider } from '@/providers/sheet-provider';
+import { ClosureCreateSheet } from '../closure/create/create-sheet';
 
 interface CashFlowDataTableProps {
   data: CashFlowDataTableData[];
@@ -82,7 +82,11 @@ export function CashFlowDataTable({
       total
     >
       <div className='flex items-center gap-x-6'>
-        {isUserAdmin && <ClosureButton />}
+        {isUserAdmin && 
+          <SheetProvider>
+            <ClosureCreateSheet />
+          </SheetProvider>
+        }
 
         <SheetProvider>
           <CashFlowCreateSheet />

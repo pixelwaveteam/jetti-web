@@ -5,7 +5,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { PageContainer } from '@/components/page-container';
 import { fetchUser } from '../users/actions/fetch-user';
 import { fetchClosures } from './actions/fetch-closures';
-import { ClosureDataTableData } from './columns';
+import { ClosureDataTableData } from './create/columns';
 import { ClosureDataTable } from './data-table';
 
 export const metadata: Metadata = {

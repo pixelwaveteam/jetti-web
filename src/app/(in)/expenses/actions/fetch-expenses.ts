@@ -6,6 +6,7 @@ export interface Expense {
   id: string;
   name: string;
   amount: number;
+  createdAt: string;
 }
 
 export async function fetchExpenses() {
