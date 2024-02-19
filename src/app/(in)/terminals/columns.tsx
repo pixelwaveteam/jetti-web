@@ -151,7 +151,7 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.input}</span>
+          <span>{cashFlow.input/100}</span>
         </div>
       );
     },
@@ -174,7 +174,7 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.output}</span>
+          <span>{cashFlow.output/100}</span>
         </div>
       );
     },
