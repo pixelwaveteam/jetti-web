@@ -79,4 +79,10 @@ export const navItems = [
     path: '/expenses',
     roles: ['ADMIN', 'OPERATOR'],
   },
+  {
+    title: 'Despesas das Organizações',
+    icon: FileMinus2,
+    path: '/organizations-expenses',
+    roles: ['ADMIN', 'OPERATOR'],
+  },
 ] as NavItem[];
