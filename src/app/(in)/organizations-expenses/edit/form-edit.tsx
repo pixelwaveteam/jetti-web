@@ -6,8 +6,6 @@ import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import { deleteExpense } from '@/app/(in)/expenses/actions/delete-expense';
-import { updateExpense } from '@/app/(in)/expenses/actions/update-expense';
 import { ConfirmDeletionDialog } from '@/components/confirm-deletion-dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,37 +21,46 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
 import { SheetContext } from '@/providers/sheet-provider';
-import { Expense } from '../actions/fetch-expenses';
+import { deleteOrganizationExpense } from '../actions/delete-organization-expense';
+import { updateOrganizationExpense } from '../actions/update-organization-expense';
+import { OrganizationExpenseDataTableData } from '../columns';
 
-const ExpenseFormEditSchema = z.object({
+const OrganizationExpenseFormEditSchema = z.object({
   name: z.string({ required_error: 'Nome não pode ser vazio.' }),
+  amount: z.coerce
+    .number({
+      required_error: 'Entrada é obrigatório.',
+      invalid_type_error: 'Entrada deve ser um número. Substitua "," por "."',
+    })
+    .transform((value) => value * 100),
 });
 
-type ExpenseFormEditType = z.infer<typeof ExpenseFormEditSchema>;
+type OrganizationExpenseFormEditType = z.infer<typeof OrganizationExpenseFormEditSchema>;
 
-interface ExpenseFormEditProps {
-  expense: Expense;
+interface OrganizationExpenseFormEditProps {
+  organizationExpense: OrganizationExpenseDataTableData;
 }
 
-export function ExpenseFormEdit({
-  expense,
-}: ExpenseFormEditProps) {
+export function OrganizationExpenseFormEdit({
+  organizationExpense,
+}: OrganizationExpenseFormEditProps) {
   const { toast } = useToast();
   const { setShow } = useContext(SheetContext);
 
-  const formMethods = useForm<ExpenseFormEditType>({
-    resolver: zodResolver(ExpenseFormEditSchema),
+  const formMethods = useForm<OrganizationExpenseFormEditType>({
+    resolver: zodResolver(OrganizationExpenseFormEditSchema),
     defaultValues: {
-      name: expense.name,
+      name: organizationExpense.name,
+      amount: organizationExpense.amount/100,
     },
   });
 
   const { handleSubmit, control, formState } = formMethods;
 
-  const onSubmit = async (data: ExpenseFormEditType) => {
+  const onSubmit = async (data: OrganizationExpenseFormEditType) => {
     try {
-      await updateExpense({
-        id: expense.id,
+      await updateOrganizationExpense({
+        id: organizationExpense.id,
         data,
       });
 
@@ -77,7 +84,7 @@ export function ExpenseFormEdit({
 
   const handleDeleteExpense = async () => {
     try {
-      await deleteExpense(expense.id);
+      await deleteOrganizationExpense(organizationExpense.id);
 
       setShow(false);
 
@@ -88,19 +95,6 @@ export function ExpenseFormEdit({
         duration: 5000,
       });
     } catch(err) {
-      if(err instanceof Error && err.message === "Expense has dependents.") {
-        toast({
-          variant: 'destructive',
-          title: 'Erro',
-          description: 'Essa despesa tem registros associados à ela. Para exclui-la, exclua suas associações antes!',
-          duration: 7000,
-        });
-
-        setShow(false);
-
-        return
-      }
-
       toast({
         variant: 'destructive',
         title: 'Erro',
@@ -126,6 +120,20 @@ export function ExpenseFormEdit({
                 <FormDescription>
                   Esse nome será exibido em telas e relatórios.
                 </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={control}
+            name='amount'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Valor</FormLabel>
+                <FormControl>
+                  <Input placeholder='Valor da despesa' {...field} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

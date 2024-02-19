@@ -7,7 +7,6 @@ interface UpdateExpense {
   id: string;
   data: {
     name: string;
-    amount: number;
   };
 }
 

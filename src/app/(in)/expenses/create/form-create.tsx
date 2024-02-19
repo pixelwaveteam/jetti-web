@@ -25,12 +25,6 @@ const ExpenseFormCreateSchema = z.object({
   name: z
     .string({ required_error: 'Nome não pode ser vazio.' })
     .max(50, 'Nome deve ter no máximo 50 caracteres.'),
-  amount: z.coerce
-    .number({
-      required_error: 'Entrada é obrigatório.',
-      invalid_type_error: 'Entrada deve ser um número. Substitua "," por "."',
-    })
-    .transform((value) => value * 100),
 });
 
 type ExpenseFormCreateType = z.infer<typeof ExpenseFormCreateSchema>;
@@ -87,19 +81,6 @@ export function ExpenseFormCreate() {
               <FormDescription>
                 Esse nome será exibido em telas e relatórios.
               </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name='amount'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Valor</FormLabel>
-              <FormControl>
-                <Input placeholder='Valor da despesa' {...field} />
-              </FormControl>
               <FormMessage />
             </FormItem>
           )}

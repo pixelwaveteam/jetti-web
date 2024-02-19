@@ -11,6 +11,7 @@ import { fetchEstablishment } from '../establishments/actions/fetch-establishmen
 import { fetchEstablishments } from '../establishments/actions/fetch-establishments';
 import { fetchExpenses } from '../expenses/actions/fetch-expenses';
 import { fetchInterface } from '../interfaces/actions/fetch-interface';
+import { fetchOrganizationsExpenses } from '../organizations-expenses/actions/fetch-organizations-expenses';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
 import { fetchUsers } from '../users/actions/fetch-users';
 import { CashFlowDataTableData } from './columns';
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CashFlows() {
-  const [rawCashFlows, rawTerminals, establishments, organizations, users, closuresCashFlows, expenses] = await Promise.all([
+  const [rawCashFlows, rawTerminals, establishments, organizations, users, closuresCashFlows, rawExpenses, organizationsExpenses] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
     fetchEstablishments(),
@@ -29,6 +30,7 @@ export default async function CashFlows() {
     fetchUsers(),
     fetchAllClosureCashFlows(),
     fetchExpenses(),
+    fetchOrganizationsExpenses(),
   ]); 
 
   const operators = users.map(({ name }) => name);
@@ -57,6 +59,7 @@ export default async function CashFlows() {
 
       if(cashFlowOrganizationName) {
         cashFlow.organization = cashFlowOrganizationName;
+        cashFlow.organizationId = cashFlowOrganizationId;
       }
     }
 
@@ -93,6 +96,18 @@ export default async function CashFlows() {
     }
 
     terminals.push(terminal)
+  }
+
+  const expenses = []
+
+  for(const organizationExpense of organizationsExpenses) {
+    const expense = organizationExpense;
+
+    const rawExpense = rawExpenses.find(({ id }) => organizationExpense.expenseId === id)
+
+    if(rawExpense) {
+      expenses.push({ ...rawExpense, ...expense });
+    }
   }
 
   return (

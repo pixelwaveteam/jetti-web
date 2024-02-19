@@ -4,9 +4,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { convertCentsToCurrency } from "@/utils/currency";
 import { getDateFormatted } from "@/utils/date";
 import { Expense } from "../../expenses/actions/fetch-expenses";
+import { OrganizationExpense } from "../../organizations-expenses/actions/fetch-organizations-expenses";
 
 interface ClosuresExpensesTableProps {
-  closuresExpenses: Expense[];
+  closuresExpenses: (Expense & OrganizationExpense)[];
 }
 
 export function ClosuresExpensesTable({ closuresExpenses }: ClosuresExpensesTableProps) {
