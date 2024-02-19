@@ -5,7 +5,6 @@ import { api } from '@/lib/api';
 export interface Expense {
   id: string;
   name: string;
-  amount: number;
   createdAt: string;
 }
 

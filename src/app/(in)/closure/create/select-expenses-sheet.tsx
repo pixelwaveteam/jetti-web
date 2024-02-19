@@ -16,6 +16,7 @@ import { SheetContext } from '@/providers/sheet-provider';
 import { convertCentsToCurrency } from '@/utils/currency';
 import { PenBox, Trash } from 'lucide-react';
 import { Expense } from '../../expenses/actions/fetch-expenses';
+import { OrganizationExpense } from '../../organizations-expenses/actions/fetch-organizations-expenses';
 
 interface SelectExpensesSheetProps {
   onChange: (expenses: {
@@ -41,7 +42,7 @@ export function SelectExpensesSheet({ onChange, selectedExpenses }: SelectExpens
     )
   , [expenses, selectedExpenses])
 
-  function onSelect(expense: Expense) {
+  function onSelect(expense: Expense & OrganizationExpense) {
     onChange([expense, ...selectedExpenses])
   }
 

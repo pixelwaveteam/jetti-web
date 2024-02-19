@@ -14,6 +14,7 @@ import { CashFlow } from './actions/fetch-cash-flows';
 export type CashFlowDataTableData = CashFlow & {
   establishment?: string;
   organization?: string;
+  organizationId?: string;
   interface?: string;
   closed?: boolean;
 };

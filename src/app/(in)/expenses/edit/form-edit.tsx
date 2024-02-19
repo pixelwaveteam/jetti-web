@@ -27,12 +27,6 @@ import { Expense } from '../actions/fetch-expenses';
 
 const ExpenseFormEditSchema = z.object({
   name: z.string({ required_error: 'Nome não pode ser vazio.' }),
-  amount: z.coerce
-    .number({
-      required_error: 'Entrada é obrigatório.',
-      invalid_type_error: 'Entrada deve ser um número. Substitua "," por "."',
-    })
-    .transform((value) => value * 100),
 });
 
 type ExpenseFormEditType = z.infer<typeof ExpenseFormEditSchema>;
@@ -51,7 +45,6 @@ export function ExpenseFormEdit({
     resolver: zodResolver(ExpenseFormEditSchema),
     defaultValues: {
       name: expense.name,
-      amount: expense.amount/100,
     },
   });
 
@@ -133,20 +126,6 @@ export function ExpenseFormEdit({
                 <FormDescription>
                   Esse nome será exibido em telas e relatórios.
                 </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={control}
-            name='amount'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Valor</FormLabel>
-                <FormControl>
-                  <Input placeholder='Valor da despesa' {...field} />
-                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

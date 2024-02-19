@@ -36,6 +36,7 @@ const ClosureFormCreateSchema = () =>
     })),
     expenses: z.array(z.object({
       id: z.string(),
+      expenseId: z.string(),
       name: z.string(),
       amount: z.number(),
     }))
@@ -46,7 +47,7 @@ const ClosureFormCreateSchemaDefault = ClosureFormCreateSchema();
 type ClosureFormCreateType = z.infer<typeof ClosureFormCreateSchemaDefault>;
 
 export function ClosureFormCreate() {
-  const { closureCashFlows, resetClosureCashFlows, expenses } =
+  const { closureCashFlows, resetClosureCashFlows } =
     useContext(NewClosureContext);
   
   const { setShow } = useContext(SheetContext);
@@ -70,7 +71,7 @@ export function ClosureFormCreate() {
   const onSubmit = async (data: ClosureFormCreateType) => {
     try {
       const cashFlows = JSON.stringify(data.cashFlows.map(cashFlow => cashFlow.id));
-      const expenses = JSON.stringify(data.expenses.map(expense => expense.id));
+      const expenses = JSON.stringify(data.expenses.map(expense => expense.expenseId));
 
       const closureCreated = await createClosure({cashFlows, expenses});
 

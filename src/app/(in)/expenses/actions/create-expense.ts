@@ -6,7 +6,6 @@ import { api } from '@/lib/api';
 
 interface CreateExpense {
   name: string;
-  amount: number;
 }
 
 export async function createExpense(data: CreateExpense) {

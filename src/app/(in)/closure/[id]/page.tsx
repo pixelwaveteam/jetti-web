@@ -15,6 +15,9 @@ import { ClosureProvider } from '@/providers/closure-provider';
 import { fetchCashFlow } from '../../cash-flows/actions/fetch-cash-flow';
 import { fetchEstablishment } from '../../establishments/actions/fetch-establishment';
 import { fetchExpense } from '../../expenses/actions/fetch-expense';
+import { Expense } from '../../expenses/actions/fetch-expenses';
+import { fetchOrganizationExpense } from '../../organizations-expenses/actions/fetch-organization-expense';
+import { OrganizationExpense } from '../../organizations-expenses/actions/fetch-organizations-expenses';
 import { fetchTerminal } from '../../terminals/actions/fetch-terminal';
 import { fetchUser } from '../../users/actions/fetch-user';
 import { fetchClosure } from '../actions/fetch-closure';
@@ -66,12 +69,23 @@ export default async function Closure({ params: { id } }: ClosureProps) {
   const expenses = []
 
   for(const closureExpense of closureExpenses) {
-    const expense = await fetchExpense(closureExpense.expenseId);
+    let newExpense: Expense & OrganizationExpense = {} as Expense & OrganizationExpense;
 
-    expenses.push(expense)
+    try {
+      const expense = await fetchExpense(closureExpense.expenseId);
+
+      newExpense = {...newExpense, ...expense}
+    } catch {}
+
+    try {
+      const organizationExpense = await fetchOrganizationExpense(establishment.organizationId, closureExpense.expenseId)
+
+      newExpense = {...newExpense, ...organizationExpense}
+    } catch {}
+
+
+    expenses.push(newExpense)
   }
-
-  console.log({expenses})
 
   const renderDeleteClosureButton = (
     <DeleteClosureDialog />
