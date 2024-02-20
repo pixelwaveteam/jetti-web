@@ -272,7 +272,7 @@ export function CashFlowFormCreate() {
               </FormControl>
               <FormDescription>
                 {lastInput > 0
-                  ? `Entrada atual: ${lastInput}`
+                  ? `Entrada atual: ${lastInput/100}`
                   : `Nenhuma entrada anterior registrada`}
               </FormDescription>
               <FormMessage />
@@ -291,7 +291,7 @@ export function CashFlowFormCreate() {
               </FormControl>
               <FormDescription>
                 {lastOutput > 0
-                  ? `Saída atual: ${lastOutput}`
+                  ? `Saída atual: ${lastOutput/100}`
                   : `Nenhuma saída anterior registrada`}
               </FormDescription>
               <FormMessage />
