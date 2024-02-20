@@ -16,10 +16,6 @@ export function ClosuresCashFlowsTable({ closuresCashFlows, establishmentName }:
       <TableHeader>
         <TableRow>
           <TableHead>
-            Id
-          </TableHead>
-
-          <TableHead>
             Local
           </TableHead>
 
@@ -42,9 +38,6 @@ export function ClosuresCashFlowsTable({ closuresCashFlows, establishmentName }:
             <TableRow
               key={cashFlow.id}
             >
-              <TableCell className='py-2'>
-                {cashFlow.id.slice(0, 6)}
-              </TableCell>
               <TableCell className='py-2'>
                 {establishmentName}
               </TableCell>

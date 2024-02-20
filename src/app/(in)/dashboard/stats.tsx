@@ -32,7 +32,7 @@ export function OverviewStats() {
 
   const totalEstablishments = useMemo(() => {
     return (
-      establishments.filter((establishment) => establishment.isActive).length ||
+      establishments.filter((establishment) => establishment.isActive && !establishment.isWarehouse).length ||
       0
     );
   }, [establishments]);
