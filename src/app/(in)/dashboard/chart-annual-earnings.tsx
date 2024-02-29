@@ -2,7 +2,7 @@
 
 import { CardDescription } from '@/components/ui/card';
 import { DashboardContext } from '@/providers/dashboard-provider';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import {
   Bar,
   BarChart,
@@ -13,7 +13,13 @@ import {
 } from 'recharts';
 
 export function ChartAnnualEarnings() {
-  const { cashFlows } = useContext(DashboardContext);
+  const { cashFlows, filter } = useContext(DashboardContext);
+
+  const filteredCashFlows = useMemo(() => 
+    cashFlows.filter(cashFlow => 
+      !!cashFlow.organizationId && filter.organization ? cashFlow.organizationId == filter.organization : true
+    ), [cashFlows, filter.organization]
+  )
 
   const yearCurrent = new Date().getFullYear();
 
@@ -37,7 +43,7 @@ export function ChartAnnualEarnings() {
     total: 0,
   }));
 
-  cashFlows.forEach((cashFlow) => {
+  filteredCashFlows.forEach((cashFlow) => {
     const cashFlowDate = new Date(cashFlow.date);
 
     if (cashFlowDate.getFullYear() === yearCurrent) {
@@ -49,7 +55,7 @@ export function ChartAnnualEarnings() {
   return (
     <ResponsiveContainer width='100%' height={350}>
       {
-        cashFlows.length > 0 ?
+        filteredCashFlows.length > 0 ?
           <BarChart data={earningsByMonth}>
             <XAxis
               dataKey='name'

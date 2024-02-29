@@ -16,6 +16,7 @@ import {
 import { DashboardProvider } from '@/providers/dashboard-provider';
 
 import Link from 'next/link';
+import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
 import { ChartAnnualEarnings } from './chart-annual-earnings';
 import { OverviewFilter } from './filter';
 import { RecentCashFlows } from './recent-cash-flows';
@@ -27,15 +28,37 @@ export const metadata: Metadata = {
 };
 
 export default async function Dashboard() {
-  const [cashFlows, terminals, establishments] = await Promise.all([
+  const [rawCashFlows, rawTerminals, establishments, organizations] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
     fetchEstablishments(),
+    fetchOrganizations()
   ]);
+
+  const cashFlows = [];
+
+  for(const cashFlow of rawCashFlows) {
+    const cashFlowTerminal = rawTerminals.find(({ code }) => String(code) === cashFlow.terminal)
+    const cashFlowEstablishment = cashFlowTerminal && establishments.find(({ id }) => id === cashFlowTerminal.establishmentId)
+
+    if(cashFlowEstablishment) {
+      cashFlows.push({...cashFlow, organizationId: cashFlowEstablishment.organizationId})
+    }
+  }
+
+  const terminals = [];
+
+  for(const terminal of rawTerminals) {
+    const terminalEstablishment = establishments.find(({ id }) => id === terminal.establishmentId)
+
+    if(terminalEstablishment) {
+      terminals.push({...terminal, organizationId: terminalEstablishment.organizationId})
+    }
+  }
 
   return (
     <DashboardProvider initialData={{ cashFlows, terminals, establishments }}>
-      <PageContainer title='Dashboard' action={<OverviewFilter />}>
+      <PageContainer title='Dashboard' action={<OverviewFilter organizations={organizations} />}>
         <OverviewStats />
         <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
           <Card className='col-span-2'>

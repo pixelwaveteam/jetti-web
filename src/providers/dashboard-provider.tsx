@@ -8,14 +8,16 @@ import { Establishment } from '@/app/(in)/establishments/actions/fetch-establish
 import { Terminal } from '@/app/(in)/terminals/actions/fetch-terminals';
 
 interface DashboardContextValues {
-  cashFlows: CashFlow[];
-  terminals: Terminal[];
+  cashFlows: (CashFlow & { organizationId?: string })[];
+  terminals: (Terminal & { organizationId?: string })[];
   establishments: Establishment[];
   filter: {
     startDate: Date;
     endDate: Date;
+    organization: string;
   };
-  changeFilter: (startDate: Date, endDate: Date) => void;
+  changeDateFilter: (startDate: Date, endDate: Date) => void;
+  changeOrganizationFilter: (organization: string) => void;
 }
 
 export const DashboardContext = createContext<DashboardContextValues>(
@@ -25,8 +27,8 @@ export const DashboardContext = createContext<DashboardContextValues>(
 interface DashboardProviderProps {
   children: ReactNode;
   initialData: {
-    cashFlows: CashFlow[];
-    terminals: Terminal[];
+    cashFlows: (CashFlow & { organizationId?: string })[];
+    terminals: (Terminal & { organizationId?: string })[];
     establishments: Establishment[];
   };
 }
@@ -38,19 +40,24 @@ export function DashboardProvider({
   const [filter, setFilter] = useState({
     startDate: subDays(new Date(), 30),
     endDate: new Date(),
+    organization: '',
   });
 
   const cashFlows = initialData.cashFlows;
   const terminals = initialData.terminals;
   const establishments = initialData.establishments;
 
-  const changeFilter = useCallback((startDate: Date, endDate: Date) => {
-    setFilter({ startDate, endDate });
+  const changeDateFilter = useCallback((startDate: Date, endDate: Date) => {
+    setFilter(state => ({ ...state, startDate, endDate }));
+  }, []);
+
+  const changeOrganizationFilter = useCallback((organization: string) => {
+    setFilter(state => ({ ...state, organization }));
   }, []);
 
   return (
     <DashboardContext.Provider
-      value={{ cashFlows, terminals, establishments, filter, changeFilter }}
+      value={{ cashFlows, terminals, establishments, filter, changeDateFilter, changeOrganizationFilter }}
     >
       {children}
     </DashboardContext.Provider>
