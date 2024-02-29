@@ -12,33 +12,54 @@ export function OverviewStats() {
   const { filter, cashFlows, terminals, establishments } =
     useContext(DashboardContext);
 
+  const filteredCashFlows = useMemo(() => 
+    cashFlows.filter(cashFlow => 
+      !!cashFlow.organizationId && filter.organization ? cashFlow.organizationId == filter.organization : true
+    ), [cashFlows, filter.organization]
+  )
+
+  const filteredTerminal = useMemo(() => 
+    terminals.filter(terminal => 
+      !!terminal.organizationId && filter.organization ? terminal.organizationId == filter.organization : true
+    ), [terminals, filter.organization]
+  )
+
+  const filteredEstablishments = useMemo(() => 
+    establishments.filter(establishment => 
+      !!establishment.organizationId && filter.organization ? establishment.organizationId == filter.organization : true
+    ), [establishments, filter.organization]
+  )
+
   const warehouses = useMemo(() => {
-    return establishments.filter((establishment) => establishment.isWarehouse);
-  }, [establishments]);
+    return filteredEstablishments.filter((establishment) => establishment.isWarehouse);
+  }, [filteredEstablishments]);
 
   const totalTerminalsWarehouse = useMemo(() => {
     return (
-      terminals.filter((terminal) =>
+      filteredTerminal.filter((terminal) =>
         warehouses.some(
           (warehouse) => warehouse.id === terminal.establishmentId
         )
       ).length || 0
     );
-  }, [terminals, warehouses]);
+  }, [filteredTerminal, warehouses]);
 
   const totalTerminals = useMemo(() => {
-    return terminals.length - totalTerminalsWarehouse || 0;
-  }, [terminals, totalTerminalsWarehouse]);
+    return filteredTerminal.length - totalTerminalsWarehouse || 0;
+  }, [filteredTerminal, totalTerminalsWarehouse]);
 
   const totalEstablishments = useMemo(() => {
     return (
-      establishments.filter((establishment) => establishment.isActive && !establishment.isWarehouse).length ||
-      0
+      filteredEstablishments.filter((establishment) => 
+      establishment.isActive && 
+      !establishment.isWarehouse && (
+        !!filter.organization ? establishment.organizationId === filter.organization : true
+      )).length || 0
     );
-  }, [establishments]);
+  }, [filteredEstablishments, filter.organization]);
 
   const totalEarnings = useMemo(() => {
-    return cashFlows
+    return filteredCashFlows
       .filter((cashFlow) => {
         const cashFlowDate = new Date(cashFlow.date);
 
@@ -47,6 +68,7 @@ export function OverviewStats() {
           end: startOfDay(filter.endDate),
         });
 
+
         return isBetween;
       })
       .reduce((acc, cashFlow) => {
@@ -54,7 +76,7 @@ export function OverviewStats() {
 
         return acc;
       }, 0);
-  }, [cashFlows, filter.endDate, filter.startDate]);
+  }, [filteredCashFlows, filter.endDate, filter.startDate]);
 
   return (
     <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>

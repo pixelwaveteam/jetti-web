@@ -1,20 +1,26 @@
 'use client';
 
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 
 import { CardDescription } from '@/components/ui/card';
 import { DashboardContext } from '@/providers/dashboard-provider';
 import { getDateFormatted } from '@/utils/date';
 
 export function RecentCashFlows() {
-  const { cashFlows } = useContext(DashboardContext);
+  const { cashFlows, filter } = useContext(DashboardContext);
 
-  const lastCashFlows = cashFlows.slice(0, 6);
+  const filteredCashFlows = useMemo(() => 
+    cashFlows.filter(cashFlow => 
+      !!cashFlow.organizationId && filter.organization ? cashFlow.organizationId == filter.organization : true
+    ), [cashFlows, filter.organization]
+  )
+
+  const lastCashFlows = filteredCashFlows.slice(0, 6);
 
   return (
     <>
       {
-        cashFlows.length > 0 ?
+        filteredCashFlows.length > 0 ?
           <div className='space-y-8'>
             {lastCashFlows.map((cashFlow) => (
               <div className='flex items-center' key={cashFlow.id}>
