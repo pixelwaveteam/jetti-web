@@ -12,6 +12,7 @@ import { Terminal } from './actions/fetch-terminals';
 export type TerminalDataTableData = Terminal & {
   establishmentState?: string;
   establishmentName?: string;
+  organizationName?: string;
   interfaceName?: string;
   input?: number;
   output?: number;
@@ -155,6 +156,9 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
         </div>
       );
     },
+  },
+  {
+    accessorKey: 'organizationName',
   },
   {
     accessorKey: 'cashOut',

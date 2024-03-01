@@ -3,12 +3,15 @@ import { TerminalCreateSheet } from '@/app/(in)/terminals/create/create-sheet';
 import { DataTable } from '@/components/data-table';
 import braziliansStates from '@/data/brazilian-states.json';
 import { SheetProvider } from '@/providers/sheet-provider';
+import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
 
 interface TerminalDataTableProps {
   data: TerminalDataTableData[];
 }
 
 export async function TerminalDataTable({ data }: TerminalDataTableProps) {
+  const organizations = await fetchOrganizations();
+
   const establishmentsState = data.reduce((acc, { establishmentState }) => 
     (!establishmentState || acc.includes(establishmentState)) ? acc : [...acc, establishmentState] 
   , [] as string[])
@@ -18,6 +21,12 @@ export async function TerminalDataTable({ data }: TerminalDataTableProps) {
     .reduce((acc, state) => (
       { ...acc, [state.name]: state.shortName }
     ), {} as { [x: string]: string; })
+
+      console.log({organizations})
+
+  const organizationsFilterOptions = organizations.reduce((acc, organization) => (
+    { ...acc, [organization.name]: organization.name }
+  ), {} as { [x: string]: string; })
 
   return (
     <DataTable
@@ -40,6 +49,12 @@ export async function TerminalDataTable({ data }: TerminalDataTableProps) {
           key: 'establishmentState',
           label: 'estados',
           options: stateFilterOptions,
+          searchableSelect: true
+        },
+        {
+          key: 'organizationName',
+          label: 'organizações',
+          options: organizationsFilterOptions,
           searchableSelect: true
         },
       ]}
