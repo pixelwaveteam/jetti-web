@@ -52,11 +52,9 @@ export function OverviewStats() {
     return (
       filteredEstablishments.filter((establishment) => 
       establishment.isActive && 
-      !establishment.isWarehouse && (
-        !!filter.organization ? establishment.organizationId === filter.organization : true
-      )).length || 0
+      !establishment.isWarehouse).length || 0
     );
-  }, [filteredEstablishments, filter.organization]);
+  }, [filteredEstablishments]);
 
   const totalEarnings = useMemo(() => {
     return filteredCashFlows

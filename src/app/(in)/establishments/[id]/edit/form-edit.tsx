@@ -38,6 +38,7 @@ import { Establishment } from '../../actions/fetch-establishments';
 const EstablishmentFormEditSchema = z.object({
   organizationId: z.string({ required_error: 'Selecione uma organização.' }),
   isActive: z.boolean(),
+  isWarehouse: z.boolean(),
   name: z
     .string({ required_error: 'Nome não pode ser vazio.' })
     .max(50, 'Nome deve ter no máximo 50 caracteres.'),
@@ -63,6 +64,7 @@ export function EstablishmentFormEdit({
       name: establishment.name,
       organizationId: establishment.organizationId,
       isActive: establishment.isActive,
+      isWarehouse: establishment.isWarehouse,
     },
   });
 
@@ -201,6 +203,23 @@ export function EstablishmentFormEdit({
               </FormItem>
             )}
           />
+
+          <FormField
+            control={control}
+            name="isWarehouse"
+            render={(({ field }) => (
+              <FormItem className='flex items-center gap-x-6'>
+                <div className='space-y-0.5'>
+                  <FormLabel className='text-base'>Esta no Galpão</FormLabel>
+                </div>
+                <FormControl>
+                  <Switch onCheckedChange={field.onChange} checked={field.value} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            ))}
+          />
+
           <div className='flex gap-2'>
             <Button
               type='submit'

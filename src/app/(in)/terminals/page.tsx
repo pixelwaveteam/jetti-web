@@ -47,12 +47,22 @@ export default async function Terminals() {
       terminal.establishmentState = establishmentAddress.state;
     }
 
-    const establishmentName = establishments.find(
+    const establishment = establishments.find(
       (establishment) => establishment.id === rawTerminal.establishmentId
-    )?.name;
+    )
+
+    const establishmentName = establishment?.name;
 
     if (establishmentName) {
       terminal.establishmentName = establishmentName;
+    }
+
+    const organization = establishment && organizations.find((organization) => organization.id === establishment.organizationId)
+
+    const organizationName = organization?.name
+
+    if(organizationName) {
+      terminal.organizationName = organizationName
     }
 
     const interFace = interfaces.find(

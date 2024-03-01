@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { EstablishmentContext } from '@/providers/establishment-provider';
 import { SheetContext } from '@/providers/sheet-provider';
@@ -32,6 +33,7 @@ import { useRouter } from 'next/navigation';
 
 const EstablishmentFormCreateSchema = z.object({
   organizationId: z.string({ required_error: 'Selecione uma organização.' }),
+  isWarehouse: z.boolean(),
   name: z
     .string({ required_error: 'Nome não pode ser vazio.' })
     .max(50, 'Nome deve ter no máximo 50 caracteres.'),
@@ -125,6 +127,23 @@ export function EstablishmentFormCreate() {
             </FormItem>
           )}
         />
+
+        <FormField
+          control={control}
+          name="isWarehouse"
+          render={(({ field }) => (
+            <FormItem className='flex items-center gap-x-6'>
+              <div className='space-y-0.5'>
+                <FormLabel className='text-base'>Esta no Galpão</FormLabel>
+              </div>
+              <FormControl>
+                <Switch onCheckedChange={field.onChange} checked={field.value} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          ))}
+        />
+        
         <Button
           type='submit'
           disabled={formState.isSubmitting}
