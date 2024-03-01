@@ -8,6 +8,7 @@ import { Establishment } from './fetch-establishments';
 interface CreateEstablishment {
   organizationId: string;
   name: string;
+  isWarehouse: boolean;
 }
 
 export async function createEstablishment(data: CreateEstablishment) {
