@@ -3,9 +3,11 @@ import { Metadata } from 'next';
 import { fetchCashFlows } from '@/app/(in)/cash-flows/actions/fetch-cash-flows';
 import { CashFlowDataTable } from '@/app/(in)/cash-flows/data-table';
 import { Terminal, fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
+import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { PageContainer } from '@/components/page-container';
 import { CashFlowProvider } from '@/providers/cash-flow-provider';
 import { NewClosureProvider } from '@/providers/new-closure-provider';
+import { getServerSession } from 'next-auth';
 import { fetchAllClosureCashFlows } from '../closure/actions/fetch-all-closure-cash-flows';
 import { fetchEstablishment } from '../establishments/actions/fetch-establishment';
 import { fetchEstablishments } from '../establishments/actions/fetch-establishments';
@@ -22,6 +24,8 @@ export const metadata: Metadata = {
 };
 
 export default async function CashFlows() {
+  const session = await getServerSession(authOptions);
+
   const [rawCashFlows, rawTerminals, establishments, organizations, users, closuresCashFlows, rawExpenses, organizationsExpenses] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
@@ -58,6 +62,10 @@ export default async function CashFlows() {
       const cashFlowOrganizationName = cashFlowOrganizationId && organizations.find(({ id }) => id === cashFlowOrganizationId)?.name
 
       if(cashFlowOrganizationName) {
+        if(!session?.user.organizationsId.includes(cashFlowOrganizationId)) {
+          continue
+        }
+
         cashFlow.organization = cashFlowOrganizationName;
         cashFlow.organizationId = cashFlowOrganizationId;
       }
@@ -72,8 +80,6 @@ export default async function CashFlows() {
     }
 
     const closureCashFlow = closuresCashFlows.find(closure => closure.cashFlowId === rawCashFlow.id)
-
-    console.log({closuresCashFlows, closureCashFlow, rawCashFlow})
 
     if(closureCashFlow) {
       cashFlow.closed = true;

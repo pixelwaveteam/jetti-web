@@ -20,7 +20,7 @@ export default async function Closures() {
     return null;
   }
 
-  const rawClosures = await fetchClosures();
+  const rawClosures = (await fetchClosures()).filter(closure => session.user.organizationsId.find(id => closure.organization.id === id));
 
   const closures = []
 
