@@ -7,6 +7,7 @@ declare module 'next-auth' {
       id: string;
       name: string;
       username: string;
+      organizationsId: string[];
       role: 'ADMIN' | 'OPERATOR';
     };
     accessToken: string;
@@ -19,6 +20,7 @@ declare module 'next-auth/jwt' {
       id: string;
       name: string;
       username: string;
+      organizationsId: string[];
       role: 'ADMIN' | 'OPERATOR';
     };
     accessToken: string;
