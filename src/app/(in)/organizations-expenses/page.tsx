@@ -31,6 +31,10 @@ export default async function OrganizationsExpenses() {
   const organizationsExpenses: OrganizationExpenseDataTableData[] = []
 
   for(const rawOrganizationExpense of rawOrganizationsExpenses) {
+    if(!session?.user.organizationsId.includes(rawOrganizationExpense.organizationId)) {
+      continue
+    }
+
     const organizationExpense: OrganizationExpenseDataTableData = rawOrganizationExpense
 
     const expense = expenses.find(({ id }) => id === rawOrganizationExpense.expenseId)

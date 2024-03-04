@@ -60,6 +60,10 @@ export default async function Terminals() {
     const organization = establishment && organizations.find((organization) => organization.id === establishment.organizationId)
 
     const organizationName = organization?.name
+    
+    if(!session.user.organizationsId.includes(organization?.id || '')) {
+      continue
+    }
 
     if(organizationName) {
       terminal.organizationName = organizationName
