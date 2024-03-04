@@ -53,6 +53,7 @@ export function EstablishmentFormCreate() {
     resolver: zodResolver(EstablishmentFormCreateSchema),
     defaultValues: {
       name: '',
+      isWarehouse: false
     },
   });
 

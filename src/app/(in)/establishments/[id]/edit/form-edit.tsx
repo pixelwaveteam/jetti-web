@@ -63,8 +63,8 @@ export function EstablishmentFormEdit({
     defaultValues: {
       name: establishment.name,
       organizationId: establishment.organizationId,
-      isActive: establishment.isActive,
-      isWarehouse: establishment.isWarehouse,
+      isActive: !!establishment.isActive,
+      isWarehouse: !!establishment.isWarehouse,
     },
   });
 
