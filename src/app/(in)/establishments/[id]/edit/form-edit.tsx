@@ -210,7 +210,7 @@ export function EstablishmentFormEdit({
             render={(({ field }) => (
               <FormItem className='flex items-center gap-x-6'>
                 <div className='space-y-0.5'>
-                  <FormLabel className='text-base'>Esta no Galpão</FormLabel>
+                  <FormLabel className='text-base'>Galpão</FormLabel>
                 </div>
                 <FormControl>
                   <Switch onCheckedChange={field.onChange} checked={field.value} />
