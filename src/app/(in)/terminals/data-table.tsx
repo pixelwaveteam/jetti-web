@@ -1,8 +1,10 @@
 import { TerminalDataTableData, terminalColumns } from '@/app/(in)/terminals/columns';
 import { TerminalCreateSheet } from '@/app/(in)/terminals/create/create-sheet';
+import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { DataTable } from '@/components/data-table';
 import braziliansStates from '@/data/brazilian-states.json';
 import { SheetProvider } from '@/providers/sheet-provider';
+import { getServerSession } from 'next-auth';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
 
 interface TerminalDataTableProps {
@@ -10,7 +12,9 @@ interface TerminalDataTableProps {
 }
 
 export async function TerminalDataTable({ data }: TerminalDataTableProps) {
-  const organizations = await fetchOrganizations();
+  const session = await getServerSession(authOptions);
+
+  const organizations = (await fetchOrganizations()).filter(({ id }) => session?.user.organizationsId.includes(id));
 
   const establishmentsState = data.reduce((acc, { establishmentState }) => 
     (!establishmentState || acc.includes(establishmentState)) ? acc : [...acc, establishmentState] 
