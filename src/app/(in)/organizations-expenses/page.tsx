@@ -46,6 +46,10 @@ export default async function OrganizationsExpenses() {
     const organization = organizations.find(({ id }) => id === rawOrganizationExpense.organizationId)
 
     if(organization) {
+      if(!session?.user.organizationsId.includes(organization.id)) {
+        continue
+      }
+
       organizationExpense.organizationName = organization.name
     }
 

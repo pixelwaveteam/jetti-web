@@ -1,5 +1,7 @@
+import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { DataTable } from '@/components/data-table';
 import { endOfWeek, startOfWeek } from 'date-fns';
+import { getServerSession } from 'next-auth';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
 import { fetchUsers } from '../users/actions/fetch-users';
 import { ClosureDataTableData, closureColumns } from './create/columns';
@@ -9,8 +11,16 @@ interface ClosureDataTableProps {
 }
 
 export async function ClosureDataTable({ data }: ClosureDataTableProps) {
+  const session = await getServerSession(authOptions);
+
   const  organizations = (await fetchOrganizations()).reduce(
-    (acc, organization) => ({ ...acc, [organization.name]: organization.name }),
+    (acc, organization) => { 
+      if(!session?.user.organizationsId.includes(organization.id)) {
+        return acc
+      }
+
+      return ({ ...acc, [organization.name]: organization.name })
+    },
     {} as [{ [x: string]: string[] }]
   );
 

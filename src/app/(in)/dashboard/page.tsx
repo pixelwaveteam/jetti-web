@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/card';
 import { DashboardProvider } from '@/providers/dashboard-provider';
 
+import { authOptions } from '@/app/api/auth/[...nextauth]/options';
+import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
 import { ChartAnnualEarnings } from './chart-annual-earnings';
@@ -28,12 +30,16 @@ export const metadata: Metadata = {
 };
 
 export default async function Dashboard() {
-  const [rawCashFlows, rawTerminals, establishments, organizations] = await Promise.all([
+  const session = await getServerSession(authOptions);
+
+  const [rawCashFlows, rawTerminals, rawEstablishments, rawOrganizations] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
     fetchEstablishments(),
     fetchOrganizations()
   ]);
+
+  const establishments = rawEstablishments.filter(({ organizationId }) => session?.user.organizationsId.includes(organizationId))
 
   const cashFlows = [];
 
@@ -42,6 +48,10 @@ export default async function Dashboard() {
     const cashFlowEstablishment = cashFlowTerminal && establishments.find(({ id }) => id === cashFlowTerminal.establishmentId)
 
     if(cashFlowEstablishment) {
+      if(!session?.user.organizationsId.includes(cashFlowEstablishment.organizationId)) {
+        continue
+      }
+
       cashFlows.push({...cashFlow, organizationId: cashFlowEstablishment.organizationId})
     }
   }
@@ -52,9 +62,15 @@ export default async function Dashboard() {
     const terminalEstablishment = establishments.find(({ id }) => id === terminal.establishmentId)
 
     if(terminalEstablishment) {
+      if(!session?.user.organizationsId.includes(terminalEstablishment.organizationId)) {
+        continue
+      }
+
       terminals.push({...terminal, organizationId: terminalEstablishment.organizationId})
     }
   }
+
+  const organizations = rawOrganizations.filter(({ id }) => session?.user.organizationsId.includes(id))
 
   return (
     <DashboardProvider initialData={{ cashFlows, terminals, establishments }}>

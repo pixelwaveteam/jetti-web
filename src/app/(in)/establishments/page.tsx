@@ -44,7 +44,7 @@ export default async function Establishments() {
     establishments.push({...establishment, terminalsTotal})
   }
 
-  const organizations = await fetchOrganizations();
+  const organizations = (await fetchOrganizations()).filter(({ id }) => session?.user.organizationsId.includes(id));
 
   return (
     <PageContainer title='Locais'>
