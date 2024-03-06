@@ -6,6 +6,7 @@ import braziliansStates from '@/data/brazilian-states.json';
 import { SheetProvider } from '@/providers/sheet-provider';
 import { getServerSession } from 'next-auth';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
+import { DownloadCsvLink } from './download-csv-link';
 
 interface TerminalDataTableProps {
   data: TerminalDataTableData[];
@@ -64,9 +65,12 @@ export async function TerminalDataTable({ data }: TerminalDataTableProps) {
       ]}
       globalFiltering
     >
-      <SheetProvider>
-        <TerminalCreateSheet />
-      </SheetProvider>
+      <div className='flex items-center gap-x-4'>
+        <SheetProvider>
+          <TerminalCreateSheet />
+        </SheetProvider>
+        <DownloadCsvLink data={data} />
+      </div>
     </DataTable>
   );
 }
