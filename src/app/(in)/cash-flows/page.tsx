@@ -15,6 +15,7 @@ import { fetchExpenses } from '../expenses/actions/fetch-expenses';
 import { fetchInterface } from '../interfaces/actions/fetch-interface';
 import { fetchOrganizationsExpenses } from '../organizations-expenses/actions/fetch-organizations-expenses';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
+import { fetchUserOrganizations } from '../users/actions/fetch-user-organizations';
 import { fetchUsers } from '../users/actions/fetch-users';
 import { CashFlowDataTableData } from './columns';
 
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
 export default async function CashFlows() {
   const session = await getServerSession(authOptions);
 
-  const [rawCashFlows, rawTerminals, establishments, organizations, users, closuresCashFlows, rawExpenses, organizationsExpenses] = await Promise.all([
+  const [rawCashFlows, rawTerminals, establishments, organizations, users, closuresCashFlows, rawExpenses, organizationsExpenses, userOrganizations] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
     fetchEstablishments(),
@@ -35,6 +36,7 @@ export default async function CashFlows() {
     fetchAllClosureCashFlows(),
     fetchExpenses(),
     fetchOrganizationsExpenses(),
+    session?.user.id ? fetchUserOrganizations(session.user.id) : [],
   ]); 
 
   const operators = users.map(({ name }) => name);
@@ -53,21 +55,23 @@ export default async function CashFlows() {
     const cashFlowEstablishmentId = cashFlowsTerminal?.establishmentId
 
     if(cashFlowEstablishmentId) {
-      const { name: establishmentName } = await fetchEstablishment(cashFlowEstablishmentId)
+      const { name: establishmentName, ...establishment } = await fetchEstablishment(cashFlowEstablishmentId)
 
-      cashFlow.establishment = establishmentName
-
-      const cashFlowOrganizationId = establishments.find(({ id }) => id === cashFlowEstablishmentId)?.organizationId
-
-      const cashFlowOrganizationName = cashFlowOrganizationId && organizations.find(({ id }) => id === cashFlowOrganizationId)?.name
-
-      if(cashFlowOrganizationName) {
-        if(!session?.user.organizationsId.includes(cashFlowOrganizationId)) {
-          continue
+      if(userOrganizations.find(({ organizationId }) => organizationId === establishment.organizationId)) {
+        cashFlow.establishment = establishmentName
+  
+        const cashFlowOrganizationId = establishments.find(({ id }) => id === cashFlowEstablishmentId)?.organizationId
+  
+        const cashFlowOrganizationName = cashFlowOrganizationId && organizations.find(({ id }) => id === cashFlowOrganizationId)?.name
+  
+        if(cashFlowOrganizationName) {
+          if(!session?.user.organizationsId.includes(cashFlowOrganizationId)) {
+            continue
+          }
+  
+          cashFlow.organization = cashFlowOrganizationName;
+          cashFlow.organizationId = cashFlowOrganizationId;
         }
-
-        cashFlow.organization = cashFlowOrganizationName;
-        cashFlow.organizationId = cashFlowOrganizationId;
       }
     }
 
