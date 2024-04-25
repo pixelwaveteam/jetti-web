@@ -81,7 +81,10 @@ export default async function CashFlows() {
 
     const closureCashFlow = closuresCashFlows.find(closure => closure.cashFlowId === rawCashFlow.id)
 
+    closureCashFlow?.closureId
+
     if(closureCashFlow) {
+      cashFlow.closureId = closureCashFlow.closureId;
       cashFlow.closed = true;
     }
 
