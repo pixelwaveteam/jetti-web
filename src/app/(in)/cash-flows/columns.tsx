@@ -267,12 +267,10 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
       );
     },
     footer: (info) => {
-      const total = info.table.getRowModel().rows.reduce((acc, row) => 
+      const total = info.table.getFilteredRowModel().rows.reduce((acc, row) => 
         Number(row.original.net) + acc
       , 0)
-
-      console.log(info.table.getRowModel())
-
+      
       return <div>{convertCentsToCurrency(total)}</div>;
     }
   },
