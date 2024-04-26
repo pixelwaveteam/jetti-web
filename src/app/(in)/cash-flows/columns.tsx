@@ -243,6 +243,13 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
         </div>
       );
     },
+    footer: (info) => {
+      const total = info.table.getFilteredRowModel().rows.reduce((acc, row) => 
+        Number(row.original.gross) + acc
+      , 0)
+      
+      return <div>{convertCentsToCurrency(total)}</div>;
+    }
   },
   {
     accessorKey: 'net',
