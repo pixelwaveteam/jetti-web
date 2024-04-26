@@ -8,7 +8,9 @@ import { ReactNode, createContext, useCallback, useMemo, useState } from 'react'
 interface NewClosureContextValues {
   closureCashFlows: CashFlowDataTableData[];
   addNewCashFlow: (cashFlow: CashFlowDataTableData) => void;
+  addNewCashFlows: (cashFlows: CashFlowDataTableData[]) => void;
   removeCashFlow: (id: string) => void;
+  removeCashFlows: (ids: string[]) => void;
   resetClosureCashFlows: () => void;
   expenses: (Expense & OrganizationExpense)[];
 }
@@ -39,8 +41,16 @@ export function NewClosureProvider({ children, initialData }: NewClosureProvider
     setClosureCashFlows((state) => [cashFlow, ...state]);
   }, []);
 
+  const addNewCashFlows = useCallback((cashFlows: CashFlowDataTableData[]) => {
+    setClosureCashFlows((state) => [...cashFlows, ...state]);
+  }, []);
+
   const removeCashFlow = useCallback((id: string) => {
     setClosureCashFlows((state) => state.filter((entry) => entry.id !== id));
+  }, []);
+
+  const removeCashFlows = useCallback((ids: string[]) => {
+    setClosureCashFlows((state) => state.filter((entry) => !ids.includes(entry.id)));
   }, []);
 
   const resetClosureCashFlows = useCallback(() => {
@@ -51,8 +61,10 @@ export function NewClosureProvider({ children, initialData }: NewClosureProvider
     <NewClosureContext.Provider
       value={{ 
         addNewCashFlow, 
+        addNewCashFlows,
         closureCashFlows, 
         removeCashFlow, 
+        removeCashFlows,
         resetClosureCashFlows, 
         expenses
       }}
