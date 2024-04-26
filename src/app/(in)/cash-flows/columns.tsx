@@ -27,8 +27,11 @@ function SelectAllCashFlowsCheckbox({ cashFlows }: { cashFlows: CashFlowDataTabl
   const { addNewCashFlows, removeCashFlows, closureCashFlows } =
     useContext(NewClosureContext);
 
-  const isChecked = useMemo(() => cashFlows.every(element => closureCashFlows.includes(element)), [closureCashFlows, cashFlows])
-
+  const isChecked = useMemo(() => cashFlows.every(cashFlow => 
+    closureCashFlows.find(({ id }) => id === cashFlow.id)), 
+    [closureCashFlows, cashFlows]
+  )
+  
   function onCheck() {
     if(isChecked) {
       const ids = cashFlows.map(({ id }) => id);
