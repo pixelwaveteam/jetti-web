@@ -5,10 +5,13 @@ import { ArrowUpDown, ChevronRight } from 'lucide-react';
 
 import { AddCashFlowButton } from '@/app/(in)/cash-flows/add-cash-flow-button';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { NewClosureContext } from '@/providers/new-closure-provider';
 import { convertCentsToCurrency } from '@/utils/currency';
 import { getDateFormatted } from '@/utils/date';
 import { isSameDay, isWithinInterval } from 'date-fns';
 import Link from 'next/link';
+import { useContext, useMemo } from 'react';
 import { CashFlow } from './actions/fetch-cash-flows';
 
 export type CashFlowDataTableData = CashFlow & {
@@ -19,6 +22,29 @@ export type CashFlowDataTableData = CashFlow & {
   closed?: boolean;
   closureId?: string;
 };
+
+function SelectAllCashFlowsCheckbox({ cashFlows }: { cashFlows: CashFlowDataTableData[] }) {
+  const { addNewCashFlows, removeCashFlows, closureCashFlows } =
+    useContext(NewClosureContext);
+
+  const isChecked = useMemo(() => cashFlows.every(element => closureCashFlows.includes(element)), [closureCashFlows, cashFlows])
+
+  function onCheck() {
+    if(isChecked) {
+      const ids = cashFlows.map(({ id }) => id);
+
+      removeCashFlows(ids);
+
+      return;
+    } 
+
+    addNewCashFlows(cashFlows)
+  }
+  
+  return (
+    <Checkbox checked={isChecked} onCheckedChange={onCheck} />
+  )
+}
 
 export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
   {
@@ -288,6 +314,13 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
   },
   {
     id: 'actions',
+    header: (info) => {
+      const cashFlows = info.table.getRowModel().rows.reduce((acc, row) => 
+        [row.original, ...acc]
+      , [] as CashFlowDataTableData[])
+
+      return <SelectAllCashFlowsCheckbox cashFlows={cashFlows} />;
+    },
     cell: ({ row }) => {
       const cashFlow = row.original;
 
