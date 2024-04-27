@@ -9,6 +9,7 @@ import { CashFlowProvider } from '@/providers/cash-flow-provider';
 import { NewClosureProvider } from '@/providers/new-closure-provider';
 import { getServerSession } from 'next-auth';
 import { fetchAllClosureCashFlows } from '../closure/actions/fetch-all-closure-cash-flows';
+import { fetchAllClosuresExpenses } from '../closure/actions/fetch-all-closures-expenses';
 import { fetchEstablishment } from '../establishments/actions/fetch-establishment';
 import { fetchEstablishments } from '../establishments/actions/fetch-establishments';
 import { fetchExpenses } from '../expenses/actions/fetch-expenses';
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
 export default async function CashFlows() {
   const session = await getServerSession(authOptions);
 
-  const [rawCashFlows, rawTerminals, establishments, organizations, users, closuresCashFlows, rawExpenses, organizationsExpenses, userOrganizations] = await Promise.all([
+  const [rawCashFlows, rawTerminals, establishments, organizations, users, closuresCashFlows, rawExpenses, organizationsExpenses, userOrganizations, closuresExpenses] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
     fetchEstablishments(),
@@ -37,6 +38,7 @@ export default async function CashFlows() {
     fetchExpenses(),
     fetchOrganizationsExpenses(),
     session?.user.id ? fetchUserOrganizations(session.user.id) : [],
+    fetchAllClosuresExpenses(),
   ]); 
 
   const operators = users.map(({ name }) => name);
@@ -119,14 +121,14 @@ export default async function CashFlows() {
     const rawExpense = rawExpenses.find(({ id }) => organizationExpense.expenseId === id)
 
     if(rawExpense) {
-      expenses.push({ ...rawExpense, ...expense });
+      expenses.push({ ...expense, ...rawExpense });
     }
   }
 
   return (
     <PageContainer title='Leituras'>
       <CashFlowProvider initialData={{ terminals, establishments }}>
-        <NewClosureProvider initialData={{ expenses }}>
+        <NewClosureProvider initialData={{ expenses, closuresExpenses }}>
           <CashFlowDataTable data={cashFlows} establishments={establishmentsName} operators={operators} />
         </NewClosureProvider>
       </CashFlowProvider>

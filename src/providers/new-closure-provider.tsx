@@ -1,6 +1,7 @@
 'use client';
 
 import { CashFlowDataTableData } from '@/app/(in)/cash-flows/columns';
+import { ClosureExpense } from '@/app/(in)/closure/actions/fetch-closure-expenses';
 import { Expense } from '@/app/(in)/expenses/actions/fetch-expenses';
 import { OrganizationExpense } from '@/app/(in)/organizations-expenses/actions/fetch-organizations-expenses';
 import { ReactNode, createContext, useCallback, useMemo, useState } from 'react';
@@ -22,7 +23,8 @@ export const NewClosureContext = createContext<NewClosureContextValues>(
 interface NewClosureProviderProps {
   children: ReactNode;
   initialData: {
-    expenses: (Expense & OrganizationExpense)[]
+    expenses: (Expense & OrganizationExpense)[];
+    closuresExpenses : ClosureExpense[];
   }
 }
 
@@ -31,12 +33,14 @@ export function NewClosureProvider({ children, initialData }: NewClosureProvider
     CashFlowDataTableData[]
   >([]);
 
+  
   const cashFlowsOrganizationId = useMemo(() => closureCashFlows.length > 0 ? closureCashFlows[0].organizationId : '', [closureCashFlows])
-
+  
   const expenses = useMemo(() => initialData.expenses.filter(expense =>
-      expense.organizationId === cashFlowsOrganizationId
-    ),[cashFlowsOrganizationId, initialData.expenses])
-
+    expense.organizationId === cashFlowsOrganizationId && 
+    !initialData.closuresExpenses.find(({ expenseId }) => { console.log(expenseId, expense.id) ; return expenseId === expense.id})
+  ),[cashFlowsOrganizationId, initialData.expenses, initialData.closuresExpenses])
+  
   const addNewCashFlow = useCallback((cashFlow: CashFlowDataTableData) => {
     setClosureCashFlows((state) => [cashFlow, ...state]);
   }, []);

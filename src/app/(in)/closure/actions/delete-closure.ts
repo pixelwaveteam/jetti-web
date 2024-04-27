@@ -9,4 +9,6 @@ export async function deleteClosure(id: string) {
   });
 
   revalidateTag('closures');
+  revalidateTag('closures-expenses');
+  
 }
