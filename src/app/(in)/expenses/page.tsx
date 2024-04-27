@@ -20,8 +20,6 @@ export default async function Expenses() {
 
   const expenses = await fetchExpenses();
 
-  console.log({expenses})
-
   return (
     <PageContainer title='Despesas'>
       <ExpenseDataTable data={expenses} />

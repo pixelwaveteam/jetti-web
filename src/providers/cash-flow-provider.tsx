@@ -52,8 +52,6 @@ export function CashFlowProvider({
 }: CashFlowProviderProps) {
   const { data: session } = useSession()
 
-  console.log({session})
-
   const [period, setPeriod] = useState<{
     startDate: Date;
     endDate: Date;
@@ -82,8 +80,6 @@ export function CashFlowProvider({
       .filter((establishment) => !establishment.isWarehouse)
       .filter((establishment) => session?.user.organizationsId.includes(establishment.organizationId))
   }, [initialData.terminals, initialData.establishments, session?.user.organizationsId]);
-
-  console.log({establishments})
 
   const handlePeriodChange = useCallback((lastDate: string | null) => {
     if (!lastDate) {

@@ -56,8 +56,6 @@ export default async function OrganizationsExpenses() {
     organizationsExpenses.push(organizationExpense)
   }
 
-  console.log({organizationsExpenses})
-
   return (
     <PageContainer title='Despesas das Organizações'>
       <OrganizationExpenseProvider initialData={{ organizations, expenses }}>

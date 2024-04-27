@@ -23,8 +23,6 @@ export function ListDistribution({ netDistributions }: ListDistributionProps) {
         const percentage = calculatePercentage(netDistribution.amount, totalAmount);
         const amount = convertCentsToCurrency(netDistribution.amount);
 
-        console.log({percentage})
-
         return (
           <div className='flex items-center' key={netDistribution.id}>
             <div className='space-y-1'>

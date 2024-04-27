@@ -21,9 +21,7 @@ export function ClosureCreateSheet() {
   const { show, setShow } = useContext(SheetContext);
   
   const closureCashFlowsTotal = useMemo(() => closureCashFlows.length, [closureCashFlows]);
-
-  console.log({closureCashFlowsTotal})
-
+  
   if(closureCashFlowsTotal === 0) return;
 
   return (

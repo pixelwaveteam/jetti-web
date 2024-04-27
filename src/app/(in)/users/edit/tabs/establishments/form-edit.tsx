@@ -59,8 +59,6 @@ export function UserEstablishmentFormEdit({
     NewUserEstablishment[]
   >([]);
 
-  console.log('user', user);
-
   const userEstablishment = useMemo(
     () =>
       user.establishments.reduce((acc, rawEstablishment) => {

@@ -27,8 +27,6 @@ export async function TerminalDataTable({ data }: TerminalDataTableProps) {
       { ...acc, [state.name]: state.shortName }
     ), {} as { [x: string]: string; })
 
-      console.log({organizations})
-
   const organizationsFilterOptions = organizations.reduce((acc, organization) => (
     { ...acc, [organization.name]: organization.name }
   ), {} as { [x: string]: string; })

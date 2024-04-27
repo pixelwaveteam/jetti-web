@@ -17,7 +17,6 @@ export function DeleteClosureDialog() {
 
   const handleDeleteInterface = async () => {
     try {
-      console.log({id})
 
       await deleteClosure(id);
 
@@ -30,8 +29,6 @@ export function DeleteClosureDialog() {
         duration: 5000,
       });
     } catch(err) {
-      console.log({err})
-
       toast({
         variant: 'destructive',
         title: 'Erro',
