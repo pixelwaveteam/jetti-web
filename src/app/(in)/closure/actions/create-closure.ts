@@ -17,6 +17,7 @@ export async function createClosure(data: CreateClosure) {
   });
 
   revalidateTag('closures');
+  revalidateTag('closures-expenses');
 
   return response;
 }

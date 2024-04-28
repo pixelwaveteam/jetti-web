@@ -2,7 +2,7 @@
 
 import { api } from '@/lib/api';
 
-interface ServerClosureExpense {
+export interface ServerClosureExpense {
   id: string;
   props: {
     closureId: string;
