@@ -68,7 +68,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.closureId}</span>
+          <span>{cashFlow.closureId?.substring(0, 8)}</span>
         </div>
       );
     },
