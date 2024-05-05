@@ -10,7 +10,6 @@ import {
 
 import { Establishment } from '@/app/(in)/establishments/actions/fetch-establishments';
 import { Terminal } from '@/app/(in)/terminals/actions/fetch-terminals';
-import { useSession } from 'next-auth/react';
 
 interface CashFlowContextValues {
   terminals: (Terminal & {
@@ -50,8 +49,6 @@ export function CashFlowProvider({
   children,
   initialData,
 }: CashFlowProviderProps) {
-  const { data: session } = useSession()
-
   const [period, setPeriod] = useState<{
     startDate: Date;
     endDate: Date;
@@ -65,21 +62,6 @@ export function CashFlowProvider({
       (terminal) => terminal.establishmentId === selectedEstablishment?.id
     );
   }, [selectedEstablishment?.id, initialData.terminals]);
-
-  const establishments = useMemo(() => {
-    const terminalEstablishments = initialData.terminals
-      .map((terminal) => terminal.establishmentId)
-      .filter((value, index, self) => self.indexOf(value) === index);
-
-    
-    return initialData.establishments
-      .filter((establishment) =>
-        terminalEstablishments.includes(establishment.id)
-      )
-      .filter((establishment) => establishment.isActive)
-      .filter((establishment) => !establishment.isWarehouse)
-      .filter((establishment) => session?.user.organizationsId.includes(establishment.organizationId))
-  }, [initialData.terminals, initialData.establishments, session?.user.organizationsId]);
 
   const handlePeriodChange = useCallback((lastDate: string | null) => {
     if (!lastDate) {
@@ -106,7 +88,7 @@ export function CashFlowProvider({
       value={{
         period,
         terminals,
-        establishments,
+        establishments: initialData.establishments,
         selectedEstablishment,
         initialData,
         setPeriod: handlePeriodChange,

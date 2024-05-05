@@ -75,7 +75,7 @@ export function UserEditSheet({ user }: UserEditSheetProps) {
               </TabsContent>
 
               <TabsContent value='password'>
-                <UserPasswordFormEdit />
+                <UserPasswordFormEdit userId={user.id} />
               </TabsContent>
             </>
           )}

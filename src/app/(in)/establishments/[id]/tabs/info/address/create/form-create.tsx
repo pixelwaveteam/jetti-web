@@ -121,9 +121,14 @@ export function EstablishmentAddressFormCreate({
   };
 
   useEffect(() => {
-    if (zipCode && zipCode.length === 8) {
+    if(!zipCode) return;
+
+    const zipFormatted = zipCode.replace('-', '');
+
+    if (zipFormatted.length === 8) {
       const fetchAddress = async () => {
-        const response = await fetchAddressByCep(zipCode);
+
+        const response = await fetchAddressByCep(zipFormatted);
 
         if (!response.logradouro) {
           toast({

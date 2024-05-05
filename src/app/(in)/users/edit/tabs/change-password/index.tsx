@@ -1,4 +1,3 @@
-import { changePassword } from "@/app/(in)/profile/actions/change-password";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -9,6 +8,7 @@ import { Loader2 } from "lucide-react";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { changeUserPassword } from "../../../actions/change-user-password";
 
 const UserPasswordFormEditSchema = z
   .object({
@@ -25,7 +25,11 @@ const UserPasswordFormEditSchema = z
 
 type UserPasswordFormEditSchemaType = z.infer<typeof UserPasswordFormEditSchema>;
 
-export function UserPasswordFormEdit() {
+interface UserPasswordFormEditProps {
+  userId: string;
+}
+
+export function UserPasswordFormEdit({ userId }: UserPasswordFormEditProps) {
   const formMethods = useForm<UserPasswordFormEditSchemaType>({
     resolver: zodResolver(UserPasswordFormEditSchema),
     defaultValues: {
@@ -41,7 +45,7 @@ export function UserPasswordFormEdit() {
 
   async function onSubmit(data: UserPasswordFormEditSchemaType) {
     try {
-      await changePassword(data)
+      await changeUserPassword({ userId, ...data })
 
       setShow(false);
 

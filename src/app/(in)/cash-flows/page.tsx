@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 export default async function CashFlows() {
   const session = await getServerSession(authOptions);
 
-  const [rawCashFlows, rawTerminals, establishments, organizations, users, closuresCashFlows, rawExpenses, organizationsExpenses, userOrganizations, closuresExpenses] = await Promise.all([
+  const [rawCashFlows, rawTerminals, rawEstablishments, organizations, users, closuresCashFlows, rawExpenses, organizationsExpenses, userOrganizations, closuresExpenses] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
     fetchEstablishments(),
@@ -43,11 +43,38 @@ export default async function CashFlows() {
 
   const operators = users.map(({ name }) => name);
 
+  const terminals = [];
+
+  for(const rawTerminal of rawTerminals) {
+    const terminal = rawTerminal as (Terminal & {
+      interfaceName?: string;
+    })
+
+    const fetchedInterface = await fetchInterface(rawTerminal.interfaceId);
+
+    if(fetchedInterface) {
+      terminal.interfaceName = fetchedInterface.name
+    }
+
+    terminals.push(terminal)
+  }
+
+  const terminalEstablishments = terminals
+      .map((terminal) => terminal.establishmentId)
+      .filter((value, index, self) => self.indexOf(value) === index);
+  
+  const establishments = rawEstablishments.filter(({ id, isActive, isWarehouse, organizationId }) => {
+    return terminalEstablishments.includes(id) 
+    && isActive 
+    && !isWarehouse 
+    && session?.user.organizationsId.includes(organizationId)
+  })
+  
   const establishmentsName = establishments
     .map(({ name }) => name)
     .filter((value, index, self) => self.indexOf(value) === index);
 
-  const cashFlows = []
+  const cashFlows = [];
 
   for(const rawCashFlow of rawCashFlows) {
     let cashFlow: CashFlowDataTableData = { ...rawCashFlow };
@@ -95,22 +122,6 @@ export default async function CashFlows() {
     }
 
     cashFlows.push(cashFlow)
-  }
-
-  const terminals = [];
-
-  for(const rawTerminal of rawTerminals) {
-    const terminal = rawTerminal as (Terminal & {
-      interfaceName?: string;
-    })
-
-    const fetchedInterface = await fetchInterface(rawTerminal.interfaceId);
-
-    if(fetchedInterface) {
-      terminal.interfaceName = fetchedInterface.name
-    }
-
-    terminals.push(terminal)
   }
 
   const expenses = []
