@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 export default async function CashFlows() {
   const session = await getServerSession(authOptions);
 
-  const [rawCashFlows, rawTerminals, establishments, organizations, users, closuresCashFlows, rawExpenses, organizationsExpenses, userOrganizations, closuresExpenses] = await Promise.all([
+  const [rawCashFlows, rawTerminals, rawEstablishments, organizations, users, closuresCashFlows, rawExpenses, organizationsExpenses, userOrganizations, closuresExpenses] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
     fetchEstablishments(),
@@ -43,7 +43,7 @@ export default async function CashFlows() {
 
   const operators = users.map(({ name }) => name);
 
-  const establishmentsName = establishments
+  const establishmentsName = rawEstablishments
     .map(({ name }) => name)
     .filter((value, index, self) => self.indexOf(value) === index);
 
@@ -62,7 +62,7 @@ export default async function CashFlows() {
       if(userOrganizations.find(({ organizationId }) => organizationId === establishment.organizationId)) {
         cashFlow.establishment = establishmentName
   
-        const cashFlowOrganizationId = establishments.find(({ id }) => id === cashFlowEstablishmentId)?.organizationId
+        const cashFlowOrganizationId = rawEstablishments.find(({ id }) => id === cashFlowEstablishmentId)?.organizationId
   
         const cashFlowOrganizationName = cashFlowOrganizationId && organizations.find(({ id }) => id === cashFlowOrganizationId)?.name
   
@@ -112,6 +112,17 @@ export default async function CashFlows() {
 
     terminals.push(terminal)
   }
+
+  const terminalEstablishments = terminals
+      .map((terminal) => terminal.establishmentId)
+      .filter((value, index, self) => self.indexOf(value) === index);
+
+  const establishments = rawEstablishments.filter(({ id, isActive, isWarehouse, organizationId }) => {
+    return terminalEstablishments.includes(id) 
+      && isActive 
+      && !isWarehouse 
+      && session?.user.organizationsId.includes(organizationId)
+  })
 
   const expenses = []
 
