@@ -24,6 +24,10 @@ export default async function Establishments() {
 
   const establishments = []
 
+  const organizations = (await fetchOrganizations()).filter(({ id }) => session?.user.organizationsId.includes(id));
+
+  const userOrganizationNames = organizations.map(({ name }) => name).filter((value, index, self) => self.indexOf(value) === index);
+
   for(const rawEstablishment of rawEstablishments) {
     if(!session?.user.organizationsId.includes(rawEstablishment.organizationId)) {
       continue
@@ -39,17 +43,19 @@ export default async function Establishments() {
       establishment = {...establishment, ...restructuredEstablishmentAddress}
     }
 
+    const organization = organizations.find(({ id }) => rawEstablishment.organizationId === id);
+
+    if(!organization) continue;
+
     const terminalsTotal = terminals.filter(terminal => terminal.establishmentId === rawEstablishment.id).length
 
-    establishments.push({...establishment, terminalsTotal})
+    establishments.push({...establishment, terminalsTotal, organization: organization.name})
   }
-
-  const organizations = (await fetchOrganizations()).filter(({ id }) => session?.user.organizationsId.includes(id));
-
+  
   return (
     <PageContainer title='Locais'>
       <EstablishmentProvider initialData={{ organizations }}>
-        <EstablishmentDataTable data={establishments} />
+        <EstablishmentDataTable data={establishments} userOrganizations={userOrganizationNames} />
       </EstablishmentProvider>
     </PageContainer>
   );

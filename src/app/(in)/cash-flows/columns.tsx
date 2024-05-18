@@ -97,6 +97,23 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
     },
   },
   {
+    accessorKey: 'organization',
+    filterFn: (row, id, value) => {
+      return value.length > 0 ? value.includes(row.original.organization) : true;
+    },
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Organização
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+  },
+  {
     accessorKey: 'terminal',
     header: ({ column }) => {
       return (

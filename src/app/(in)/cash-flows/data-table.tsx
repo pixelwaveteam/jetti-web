@@ -18,12 +18,14 @@ interface CashFlowDataTableProps {
   data: CashFlowDataTableData[];
   operators: string[];
   establishments: string[];
+  userOrganizations: string[];
 }
 
 export function CashFlowDataTable({
   data,
   establishments,
   operators,
+  userOrganizations
 }: CashFlowDataTableProps) {
   const { data: session } = useSession();
 
@@ -77,6 +79,11 @@ export function CashFlowDataTable({
           label: 'operadores',
           items: operators,
         },
+        {
+          key: 'organization',
+          label: 'organizações',
+          items: userOrganizations,
+        }
       ]}
       globalFiltering
       total

@@ -11,6 +11,7 @@ export type EstablishmentDataTableData = Establishment & {
   state?: string;
   city?: string;
   terminalsTotal?: number;
+  organization?: string;
 };
 
 export const establishmentColumns: ColumnDef<EstablishmentDataTableData>[] = [
@@ -34,6 +35,23 @@ export const establishmentColumns: ColumnDef<EstablishmentDataTableData>[] = [
         <div className='flex gap-2 items-center'>
           <span className='truncate'>{establishment.name}</span>
         </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'organization',
+    filterFn: (row, id, value) => {
+      return value.length > 0 ? value.includes(row.original.organization) : true;
+    },
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Organização
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
       );
     },
   },

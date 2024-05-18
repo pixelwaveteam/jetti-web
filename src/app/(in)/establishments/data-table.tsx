@@ -10,9 +10,10 @@ import { SheetProvider } from '@/providers/sheet-provider';
 
 interface EstablishmentDataTableProps {
   data: EstablishmentDataTableData[];
+  userOrganizations: string[];
 }
 
-export function EstablishmentDataTable({ data }: EstablishmentDataTableProps) {
+export function EstablishmentDataTable({ data, userOrganizations }: EstablishmentDataTableProps) {
   const stateFilterOptions = braziliansStates.reduce(
     (acc, state) => ({ ...acc, [state.name]: state.shortName }),
     {} as { [x: string]: string }
@@ -50,6 +51,11 @@ export function EstablishmentDataTable({ data }: EstablishmentDataTableProps) {
           label: 'terminais',
           isNumber: true,
         },
+        {
+          key: 'organization',
+          label: 'organizações',
+          items: userOrganizations,
+        }
       ]}
       globalFiltering
     >

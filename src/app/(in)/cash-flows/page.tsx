@@ -136,11 +136,19 @@ export default async function CashFlows() {
     }
   }
 
+  const userOrganizationNames = userOrganizations.reduce((acc, { organizationId }) => {
+    const organizationName = organizations.find(organization => organization.id === organizationId)?.name;
+    if(organizationName) return [...acc, organizationName]; 
+    return acc
+  }, [] as string[]).filter((value, index, self) => self.indexOf(value) === index)
+
+  console.log({ userOrganizationNames })
+
   return (
     <PageContainer title='Leituras'>
       <CashFlowProvider initialData={{ terminals, establishments }}>
         <NewClosureProvider initialData={{ expenses, closuresExpenses }}>
-          <CashFlowDataTable data={cashFlows} establishments={establishmentsName} operators={operators} />
+          <CashFlowDataTable data={cashFlows} establishments={establishmentsName} operators={operators} userOrganizations={userOrganizationNames} />
         </NewClosureProvider>
       </CashFlowProvider>
     </PageContainer>
