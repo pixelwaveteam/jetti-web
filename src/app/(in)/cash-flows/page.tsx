@@ -141,9 +141,7 @@ export default async function CashFlows() {
     if(organizationName) return [...acc, organizationName]; 
     return acc
   }, [] as string[]).filter((value, index, self) => self.indexOf(value) === index)
-
-  console.log({ userOrganizationNames })
-
+  
   return (
     <PageContainer title='Leituras'>
       <CashFlowProvider initialData={{ terminals, establishments }}>

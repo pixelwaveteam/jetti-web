@@ -38,7 +38,7 @@ export function NewClosureProvider({ children, initialData }: NewClosureProvider
   
   const expenses = useMemo(() => initialData.expenses.filter(expense =>
     expense.organizationId === cashFlowsOrganizationId && 
-    !initialData.closuresExpenses.find(({ expenseId }) => { console.log(expenseId, expense.id) ; return expenseId === expense.id})
+    !initialData.closuresExpenses.find(({ expenseId }) => expenseId === expense.id)
   ),[cashFlowsOrganizationId, initialData.expenses, initialData.closuresExpenses])
   
   const addNewCashFlow = useCallback((cashFlow: CashFlowDataTableData) => {
