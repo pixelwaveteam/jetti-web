@@ -6,11 +6,10 @@ import { getDateFormatted } from "@/utils/date";
 import { CashFlow } from "../../cash-flows/actions/fetch-cash-flow";
 
 interface ClosuresCashFlowsTableProps {
-  closuresCashFlows: CashFlow[];
-  establishmentName: string;
+  closuresCashFlows: (CashFlow & { establishmentName: string })[];
 }
 
-export function ClosuresCashFlowsTable({ closuresCashFlows, establishmentName }: ClosuresCashFlowsTableProps) {
+export function ClosuresCashFlowsTable({ closuresCashFlows }: ClosuresCashFlowsTableProps) {
   return (
     <Table>
       <TableHeader>
@@ -39,7 +38,7 @@ export function ClosuresCashFlowsTable({ closuresCashFlows, establishmentName }:
               key={cashFlow.id}
             >
               <TableCell className='py-2'>
-                {establishmentName}
+                {cashFlow.establishmentName}
               </TableCell>
               <TableCell className='py-2'>
                 {getDateFormatted(cashFlow.date)}

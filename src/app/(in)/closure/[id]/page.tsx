@@ -42,7 +42,7 @@ interface ClosureProps {
 }
 
 export default async function Closure({ params: { id } }: ClosureProps) {
-  const {  net, gross, closerId, createdAt } = await fetchClosure(id);
+  const {  net, gross, closerId, createdAt, organizationId } = await fetchClosure(id);
 
   const closureDistribution = await fetchClosureDistributions(id);
 
@@ -55,14 +55,21 @@ export default async function Closure({ params: { id } }: ClosureProps) {
   const cashFlows = []
 
   for(const closureCashFlow of closureCashFlows) {
-    const cashFlow = await fetchCashFlow(closureCashFlow.cashFlowId);
+    const rawCashFlow = await fetchCashFlow(closureCashFlow.cashFlowId);
+
+    const terminal = await fetchTerminal(rawCashFlow.terminalId)
+
+    const establishment = await fetchEstablishment(terminal.establishmentId);
+
+    const cashFlow = {
+      ...rawCashFlow,
+      establishmentName: establishment.name,
+    }
 
     cashFlows.push(cashFlow)
   }
 
-  const terminal = await fetchTerminal(cashFlows[0].terminalId)
-
-  const establishment = await fetchEstablishment(terminal.establishmentId);
+  
 
   const closureExpenses = await fetchClosureExpenses(id);
 
@@ -78,7 +85,7 @@ export default async function Closure({ params: { id } }: ClosureProps) {
     } catch {}
 
     try {
-      const organizationExpense = await fetchOrganizationExpense(establishment.organizationId, closureExpense.expenseId)
+      const organizationExpense = await fetchOrganizationExpense(organizationId, closureExpense.expenseId)
 
       newExpense = {...newExpense, ...organizationExpense}
     } catch {}
@@ -129,7 +136,7 @@ export default async function Closure({ params: { id } }: ClosureProps) {
               <CardTitle>Leituras</CardTitle>
             </CardHeader>
             <CardContent className='pl-2'>
-              <ClosuresCashFlowsTable establishmentName={establishment.name} closuresCashFlows={cashFlows} />
+              <ClosuresCashFlowsTable closuresCashFlows={cashFlows} />
             </CardContent>
           </Card>
           <Card className='col-span-1'>
