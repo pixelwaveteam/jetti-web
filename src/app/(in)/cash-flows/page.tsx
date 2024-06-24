@@ -84,11 +84,9 @@ export default async function CashFlows() {
     const cashFlowEstablishmentId = cashFlowsTerminal?.establishmentId
 
     if(cashFlowEstablishmentId) {
-      const { name: establishmentName, ...establishment } = await fetchEstablishment(cashFlowEstablishmentId)
+      const establishment = await fetchEstablishment(cashFlowEstablishmentId)
 
       if(userOrganizations.find(({ organizationId }) => organizationId === establishment.organizationId)) {
-        cashFlow.establishment = establishmentName
-  
         const cashFlowOrganizationId = establishments.find(({ id }) => id === cashFlowEstablishmentId)?.organizationId
   
         const cashFlowOrganizationName = cashFlowOrganizationId && organizations.find(({ id }) => id === cashFlowOrganizationId)?.name

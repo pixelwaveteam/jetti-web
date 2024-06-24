@@ -15,7 +15,6 @@ import { useContext, useMemo } from 'react';
 import { CashFlow } from './actions/fetch-cash-flows';
 
 export type CashFlowDataTableData = CashFlow & {
-  establishment?: string;
   organization?: string;
   organizationId?: string;
   interface?: string;
@@ -168,7 +167,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
     accessorKey: 'establishment',
     filterFn: (row, id, value) => {
       return value.length > 0
-        ? value.includes(row.original.establishment)
+        ? value.includes(row.original.registeredEstablishmentName)
         : true;
     },
     header: ({ column }) => {
@@ -187,7 +186,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.establishment || '-'}</span>
+          <span>{cashFlow.registeredEstablishmentName || '-'}</span>
         </div>
       );
     },

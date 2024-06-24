@@ -5,6 +5,8 @@ import { api } from '@/lib/api';
 export interface CashFlow {
   id: string;
   terminal: string;
+  registeredEstablishmentName: string;
+  registeredInterfaceName: string;
   operator: string;
   code: number;
   cashIn: number;
