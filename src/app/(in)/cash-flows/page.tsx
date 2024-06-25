@@ -124,13 +124,13 @@ export default async function CashFlows() {
 
   const expenses = []
 
-  for(const organizationExpense of organizationsExpenses) {
-    const expense = organizationExpense;
+  for(const { expenseId, ...organizationExpense } of organizationsExpenses) {
+    const expense = rawExpenses.find(({ id }) => expenseId === id)
 
-    const rawExpense = rawExpenses.find(({ id }) => organizationExpense.expenseId === id)
+    console.log({expense, organizationExpense, a: {...organizationExpense, ...expense}})
 
-    if(rawExpense) {
-      expenses.push({ ...expense, ...rawExpense });
+    if(expense) {
+      expenses.push({ ...organizationExpense, name: expense.name });
     }
   }
 

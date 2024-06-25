@@ -87,9 +87,8 @@ export default async function Closure({ params: { id } }: ClosureProps) {
     try {
       const organizationExpense = await fetchOrganizationExpense(organizationId, closureExpense.expenseId)
 
-      newExpense = {...newExpense, ...organizationExpense}
+      newExpense = { ...organizationExpense, name: newExpense.name }
     } catch {}
-
 
     expenses.push(newExpense)
   }

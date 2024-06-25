@@ -42,7 +42,7 @@ export function SelectExpensesSheet({ onChange, selectedExpenses }: SelectExpens
     )
   , [expenses, selectedExpenses])
 
-  function onSelect(expense: Expense & OrganizationExpense) {
+  function onSelect(expense: Expense & Omit<OrganizationExpense, "expenseId">) {
     onChange([expense, ...selectedExpenses])
   }
 

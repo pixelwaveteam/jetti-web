@@ -36,7 +36,6 @@ const ClosureFormCreateSchema = () =>
     })),
     expenses: z.array(z.object({
       id: z.string(),
-      expenseId: z.string(),
       name: z.string(),
       amount: z.number(),
     }))
@@ -71,7 +70,7 @@ export function ClosureFormCreate() {
   const onSubmit = async (data: ClosureFormCreateType) => {
     try {
       const cashFlows = JSON.stringify(data.cashFlows.map(cashFlow => cashFlow.id));
-      const expenses = JSON.stringify(data.expenses.map(expense => expense.expenseId));
+      const expenses = JSON.stringify(data.expenses.map(expense => expense.id));
 
       const closureCreated = await createClosure({cashFlows, expenses});
 
@@ -152,7 +151,7 @@ export function ClosureFormCreate() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Despesas</FormLabel>
-              <ul className='flex gap-2 flex-col'>
+              <ul className='flex gap-2 flex-col overflow-y-auto'>
                 {field.value.map((expense) => (
                   <li key={expense.id}>
                     <Button

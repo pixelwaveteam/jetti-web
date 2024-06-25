@@ -13,7 +13,7 @@ interface NewClosureContextValues {
   removeCashFlow: (id: string) => void;
   removeCashFlows: (ids: string[]) => void;
   resetClosureCashFlows: () => void;
-  expenses: (Expense & OrganizationExpense)[];
+  expenses: (Expense & Omit<OrganizationExpense, "expenseId">)[];
 }
 
 export const NewClosureContext = createContext<NewClosureContextValues>(
@@ -23,7 +23,7 @@ export const NewClosureContext = createContext<NewClosureContextValues>(
 interface NewClosureProviderProps {
   children: ReactNode;
   initialData: {
-    expenses: (Expense & OrganizationExpense)[];
+    expenses: (Expense & Omit<OrganizationExpense, "expenseId">)[];
     closuresExpenses : ClosureExpense[];
   }
 }
