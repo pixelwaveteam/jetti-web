@@ -36,9 +36,6 @@ import { Terminal } from '../actions/fetch-terminals';
 const TerminalFormEditSchema = z.object({
   establishmentId: z.string({ required_error: 'Local não pode ser vazio.' }),
   interfaceId: z.string({ required_error: 'Interface não pode ser vazia.' }),
-  code: z
-    .string({ required_error: 'Código não pode ser vazio.' })
-    .max(10, 'Código deve ter no máximo 10 caracteres.'),
   isActive: z.boolean(),
   input: z.coerce.number({ required_error: 'Entrada não pode ser vazia.' }).transform(value => value*100),
   output: z.coerce.number({ required_error: 'Saída não pode ser vazia.' }).transform(value => value*100),
@@ -60,7 +57,6 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
     defaultValues: {
       establishmentId: terminal.establishmentId,
       interfaceId: terminal.interfaceId,
-      code: String(terminal.code),
       isActive: terminal.isActive,
       input: terminal.input/100,
       output: terminal.output/100,
@@ -72,7 +68,6 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
   const onSubmit = async ({
     input,
     output,
-    code,
     ...data
   }: TerminalFormEditType) => {
     try {
@@ -143,20 +138,13 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
     <div className='space-y-6'>
       <Form {...formMethods}>
         <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
-          <FormField
-            control={control}
-            disabled={true}
-            name='code'
-            render={({ field: { onChange, ...field } }) => (
-              <FormItem>
-                <FormLabel>Código</FormLabel>
-                <FormControl>
-                  <Input placeholder='Código do terminal' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <FormItem>
+            <FormLabel>Código</FormLabel>
+            <FormControl>
+              <Input placeholder='Código do terminal' disabled value={String(terminal.code)} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
           <FormField
             control={control}
             name='establishmentId'
