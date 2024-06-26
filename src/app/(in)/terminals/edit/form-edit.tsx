@@ -82,7 +82,6 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
           ...data,
           input: Number(input),
           output: Number(output),
-          code: Number(code),
         },
       });
 
@@ -146,8 +145,9 @@ export function TerminalFormEdit({ terminal }: TerminalFormEditProps) {
         <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
           <FormField
             control={control}
+            disabled={true}
             name='code'
-            render={({ field }) => (
+            render={({ field: { onChange, ...field } }) => (
               <FormItem>
                 <FormLabel>Código</FormLabel>
                 <FormControl>
