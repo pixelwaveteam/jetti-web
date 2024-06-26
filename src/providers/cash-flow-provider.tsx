@@ -63,6 +63,10 @@ export function CashFlowProvider({
     );
   }, [selectedEstablishment?.id, initialData.terminals]);
 
+  const establishments = useMemo(() => initialData.establishments.filter(establishment => 
+    !establishment.isWarehouse)
+  , [initialData.establishments])
+
   const handlePeriodChange = useCallback((lastDate: string | null) => {
     if (!lastDate) {
       setPeriod(null);
@@ -88,7 +92,7 @@ export function CashFlowProvider({
       value={{
         period,
         terminals,
-        establishments: initialData.establishments,
+        establishments,
         selectedEstablishment,
         initialData,
         setPeriod: handlePeriodChange,

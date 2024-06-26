@@ -65,8 +65,7 @@ export default async function CashFlows() {
   
   const establishments = rawEstablishments.filter(({ id, isActive, isWarehouse, organizationId }) => {
     return terminalEstablishments.includes(id) 
-    && isActive 
-    && !isWarehouse 
+    && isActive
     && session?.user.organizationsId.includes(organizationId)
   })
   
