@@ -17,6 +17,10 @@ export async function TerminalDataTable({ data }: TerminalDataTableProps) {
 
   const organizations = (await fetchOrganizations()).filter(({ id }) => session?.user.organizationsId.includes(id));
 
+  const establishmentsName = data.reduce((acc, { establishmentName }) => 
+    (!establishmentName || Object.values(acc).includes(establishmentName)) ? acc : { ...acc, [establishmentName]: establishmentName }
+  , {} as { [x: string]: string; })
+
   const establishmentsState = data.reduce((acc, { establishmentState }) => 
     (!establishmentState || acc.includes(establishmentState)) ? acc : [...acc, establishmentState] 
   , [] as string[])
@@ -60,6 +64,12 @@ export async function TerminalDataTable({ data }: TerminalDataTableProps) {
           options: organizationsFilterOptions,
           searchableSelect: true
         },
+        {
+          key: 'establishmentName',
+          label: 'locais',
+          options: establishmentsName,
+          searchableSelect: true,
+        }
       ]}
       globalFiltering
     >
