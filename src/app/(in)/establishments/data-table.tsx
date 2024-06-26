@@ -34,6 +34,14 @@ export function EstablishmentDataTable({ data, userOrganizations }: Establishmen
           label: 'nomes',
         },
         {
+          key: 'isActive',
+          label: 'status',
+          options: {
+            Ativo: true,
+            Desativo: false
+          }
+        },
+        {
           key: 'state',
           label: 'estados',
           options: stateFilterOptions,

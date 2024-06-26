@@ -3,6 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, ChevronRight } from 'lucide-react';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Establishment } from './actions/fetch-establishments';
@@ -37,6 +38,27 @@ export const establishmentColumns: ColumnDef<EstablishmentDataTableData>[] = [
         </div>
       );
     },
+  },
+  {
+    accessorKey: 'isActive',
+    header: () => {
+      return 'Status';
+    },
+    cell: ({ row }) => {
+      const terminal = row.original;
+
+      return (
+        <div className='flex gap-2 items-center'>
+          <Badge
+            variant={terminal.isActive ? 'default' : 'destructive'}
+            className='text-xs'
+          >
+            {terminal.isActive ? 'Ativo' : 'Inativo'}
+          </Badge>
+        </div>
+      );
+    },
+    enableGlobalFilter: false,
   },
   {
     accessorKey: 'organization',
