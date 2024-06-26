@@ -17,7 +17,6 @@ import { CashFlow } from './actions/fetch-cash-flows';
 export type CashFlowDataTableData = CashFlow & {
   organization?: string;
   organizationId?: string;
-  interface?: string;
   closed?: boolean;
   closureId?: string;
 };
@@ -131,7 +130,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
       return (
         <div className='flex flex-col gap-2 items-start'>
           <span>
-            {cashFlow.terminal} - {cashFlow.interface || ''}
+            {cashFlow.terminal} - {cashFlow.registeredInterfaceName || ''}
           </span>
         </div>
       );

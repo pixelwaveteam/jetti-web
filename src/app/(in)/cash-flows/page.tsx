@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 import { fetchCashFlows } from '@/app/(in)/cash-flows/actions/fetch-cash-flows';
 import { CashFlowDataTable } from '@/app/(in)/cash-flows/data-table';
-import { Terminal, fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
+import { fetchTerminals } from '@/app/(in)/terminals/actions/fetch-terminals';
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { PageContainer } from '@/components/page-container';
 import { CashFlowProvider } from '@/providers/cash-flow-provider';
@@ -13,7 +13,6 @@ import { fetchAllClosuresExpenses } from '../closure/actions/fetch-all-closures-
 import { fetchEstablishment } from '../establishments/actions/fetch-establishment';
 import { fetchEstablishments } from '../establishments/actions/fetch-establishments';
 import { fetchExpenses } from '../expenses/actions/fetch-expenses';
-import { fetchInterface } from '../interfaces/actions/fetch-interface';
 import { fetchOrganizationsExpenses } from '../organizations-expenses/actions/fetch-organizations-expenses';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
 import { fetchUserOrganizations } from '../users/actions/fetch-user-organizations';
@@ -28,7 +27,7 @@ export const metadata: Metadata = {
 export default async function CashFlows() {
   const session = await getServerSession(authOptions);
 
-  const [rawCashFlows, rawTerminals, rawEstablishments, organizations, users, closuresCashFlows, rawExpenses, organizationsExpenses, userOrganizations, closuresExpenses] = await Promise.all([
+  const [rawCashFlows, terminals, rawEstablishments, organizations, users, closuresCashFlows, rawExpenses, organizationsExpenses, userOrganizations, closuresExpenses] = await Promise.all([
     fetchCashFlows(),
     fetchTerminals(),
     fetchEstablishments(),
@@ -42,22 +41,6 @@ export default async function CashFlows() {
   ]); 
 
   const operators = users.map(({ name }) => name);
-
-  const terminals = [];
-
-  for(const rawTerminal of rawTerminals) {
-    const terminal = rawTerminal as (Terminal & {
-      interfaceName?: string;
-    })
-
-    const fetchedInterface = await fetchInterface(rawTerminal.interfaceId);
-
-    if(fetchedInterface) {
-      terminal.interfaceName = fetchedInterface.name
-    }
-
-    terminals.push(terminal)
-  }
 
   const terminalEstablishments = terminals
       .map((terminal) => terminal.establishmentId)
@@ -79,7 +62,7 @@ export default async function CashFlows() {
   for(const rawCashFlow of rawCashFlows) {
     let cashFlow: CashFlowDataTableData = { ...rawCashFlow };
 
-    const cashFlowsTerminal = rawTerminals.find(({ code }) => String(code) === rawCashFlow.terminal)
+    const cashFlowsTerminal = terminals.find(({ code }) => String(code) === rawCashFlow.terminal)
 
     const cashFlowEstablishmentId = cashFlowsTerminal?.establishmentId
 
@@ -100,14 +83,6 @@ export default async function CashFlows() {
           cashFlow.organizationId = cashFlowOrganizationId;
         }
       }
-    }
-
-    const terminalsInterfaceId = cashFlowsTerminal?.interfaceId
-
-    const terminalsInterface = terminalsInterfaceId && await fetchInterface(terminalsInterfaceId)
-
-    if(terminalsInterface) {
-      cashFlow.interface = terminalsInterface.name;
     }
 
     const closureCashFlow = closuresCashFlows.find(closure => closure.cashFlowId === rawCashFlow.id)
