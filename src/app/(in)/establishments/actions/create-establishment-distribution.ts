@@ -3,12 +3,14 @@
 import { revalidateTag } from 'next/cache';
 
 import { api } from '@/lib/api';
+import { PercentageOutOfDistribution } from './fetch-establishment-distributions';
 
 interface CreateEstablishmentDistribution {
   establishmentId: string;
   name: string;
   description: string;
   percentage: number;
+  percentageOutOfDistribution?: PercentageOutOfDistribution;
 }
 
 export async function createEstablishmentDistribution(

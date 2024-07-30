@@ -2,12 +2,15 @@
 
 import { api } from '@/lib/api';
 
+export type PercentageOutOfDistribution = 'JETTI' | 'TOTAL' | 'ESTABLISHMENT';
+
 export interface EstablishmentDistribution {
   id: string;
   establishmentId: string;
   name: string;
   description: string | null;
   percentage: number;
+  percentageOutOfDistribution?: PercentageOutOfDistribution;
 }
 
 export async function fetchEstablishmentDistributions(establishmentId: string) {

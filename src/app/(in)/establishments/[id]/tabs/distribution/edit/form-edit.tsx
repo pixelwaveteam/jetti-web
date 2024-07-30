@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { DialogProvider } from '@/providers/dialog-provider';
@@ -40,6 +41,7 @@ const EstablishmentDistributionFormEditSchema = z.object({
 
       return value;
     }),
+  percentageOutOfDistribution: z.enum(['JETTI', 'ESTABLISHMENT', 'TOTAL']).optional(),
 });
 
 type EstablishmentDistributionFormEditType = z.infer<
@@ -62,6 +64,7 @@ export function EstablishmentDistributionFormEdit({
       name: establishmentDistribution.name,
       description: establishmentDistribution.description ?? '',
       percentage: establishmentDistribution.percentage / 100,
+      percentageOutOfDistribution: establishmentDistribution.percentageOutOfDistribution,
     },
   });
 
@@ -121,6 +124,10 @@ export function EstablishmentDistributionFormEdit({
     .toLowerCase()
     .includes('jetti');
 
+  const isEstablishment = establishmentDistribution.name
+    .toLowerCase()
+    .includes('local');
+
   return (
     <div className='space-y-6'>
       <Form {...formMethods}>
@@ -174,6 +181,40 @@ export function EstablishmentDistributionFormEdit({
               </FormItem>
             )}
           />
+
+          {
+            !isJetti && !isEstablishment && (
+              <FormField
+                control={control}
+                name='percentageOutOfDistribution'
+                render={({ field: { onChange, ...field } }) => (
+                  <FormItem>
+                    <FormLabel>Percentual relativo a</FormLabel>
+                    <Select
+                      onValueChange={onChange}
+                      {...field}
+                    >
+                      <SelectTrigger className="flex-1 min-w-[15rem]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="JETTI">
+                          Jetti
+                        </SelectItem>
+                        <SelectItem value="TOTAL">
+                          Total
+                        </SelectItem>
+                        <SelectItem value="ESTABLISHMENT">
+                          Local
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+            )
+          }
+          
 
           {!isJetti && (
             <div className='flex gap-2'>

@@ -3,6 +3,7 @@
 import { revalidateTag } from 'next/cache';
 
 import { api } from '@/lib/api';
+import { PercentageOutOfDistribution } from './fetch-establishment-distributions';
 
 interface UpdateEstablishmentDistribution {
   id: string;
@@ -11,7 +12,8 @@ interface UpdateEstablishmentDistribution {
     name: string;
     description?: string;
     percentage: number;
-  };
+    percentageOutOfDistribution?: PercentageOutOfDistribution;
+};
 }
 
 export async function updateEstablishmentDistribution({

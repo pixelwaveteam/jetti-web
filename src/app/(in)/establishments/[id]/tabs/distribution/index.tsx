@@ -1,7 +1,7 @@
 import { Plus } from 'lucide-react';
 
 import { EstablishmentDistributionCreateSheet } from '@/app/(in)/establishments/[id]/tabs/distribution/create/create-sheet';
-import { fetchEstablishmentDistributions } from '@/app/(in)/establishments/actions/fetch-establishment-distributions';
+import { EstablishmentDistribution, fetchEstablishmentDistributions } from '@/app/(in)/establishments/actions/fetch-establishment-distributions';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -18,6 +18,7 @@ import { Establishment } from '../../../actions/fetch-establishments';
 
 interface TabDistributionProps {
   establishment: Establishment;
+  establishmentDistributions: EstablishmentDistribution[];
 }
 
 export async function TabDistribution({ establishment }: TabDistributionProps) {
@@ -25,9 +26,9 @@ export async function TabDistribution({ establishment }: TabDistributionProps) {
     establishment.id
   );
 
-  const totalPercentageOnDistribution =
-    establishmentDistributions.reduce((acc, cur) => acc + cur.percentage, 0) /
-    100;
+  const jettiPercentageOnDistribution = establishmentDistributions.find(({ name }) => name.toLowerCase() === "jetti")?.percentage || 0;
+
+  const partnersPercentageOnDistribution = establishmentDistributions.reduce((acc, { percentage, name }) => name.toLowerCase() !== "jetti" ? acc + percentage : acc , 0)
 
   return (
     <Card>
@@ -38,6 +39,7 @@ export async function TabDistribution({ establishment }: TabDistributionProps) {
             <SheetProvider>
               <EstablishmentDistributionCreateSheet
                 establishmentId={establishment.id}
+                establishmentDistributions={establishmentDistributions}
               >
                 <Button
                   variant='secondary'
@@ -56,12 +58,12 @@ export async function TabDistribution({ establishment }: TabDistributionProps) {
         </CardDescription>
         <div className='flex items-center'>
           <Progress
-            value={totalPercentageOnDistribution}
+            value={partnersPercentageOnDistribution/100}
             className='w-[16vw]'
           />
           <span className='ml-2 text-sm text-gray-300'>
-            {totalPercentageOnDistribution}% parceiros /{' '}
-            {100 - totalPercentageOnDistribution}% jetti
+            {partnersPercentageOnDistribution/100}% parceiros /{' '}
+            {jettiPercentageOnDistribution/100}% jetti
           </span>
         </div>
       </CardHeader>

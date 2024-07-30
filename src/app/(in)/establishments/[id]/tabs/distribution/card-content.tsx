@@ -6,7 +6,7 @@ import { EstablishmentDistribution } from '../../../actions/fetch-establishment-
 
 interface CardContentEstablishmentDistributionProps {
   establishmentId: string;
-  establishmentDistributions?: EstablishmentDistribution[];
+  establishmentDistributions: EstablishmentDistribution[];
 }
 
 export function CardContentEstablishmentDistribution({
@@ -16,14 +16,19 @@ export function CardContentEstablishmentDistribution({
   if (!establishmentDistributions || establishmentDistributions.length === 0) {
     return (
       <SheetProvider>
-        <EstablishmentDistributionCreateSheet establishmentId={establishmentId}>
+        <EstablishmentDistributionCreateSheet establishmentDistributions={establishmentDistributions} establishmentId={establishmentId}>
           <EmptyState label='Criar distribuição' />
         </EstablishmentDistributionCreateSheet>
       </SheetProvider>
     );
   }
 
+  
+  const jettiPercentageOnDistribution = establishmentDistributions.find(({ name }) => name.toLowerCase() === "jetti")?.percentage || 0;
+
+  const establishmentPercentageOnDistribution = establishmentDistributions.find(({ name }) => name.toLowerCase() === "local")?.percentage || 0;
+
   return (
-    <EstablishmentDistributionDataTable data={establishmentDistributions} />
+    <EstablishmentDistributionDataTable data={establishmentDistributions} establishmentPercentageOnDistribution={establishmentPercentageOnDistribution} jettiPercentageOnDistribution={jettiPercentageOnDistribution} />
   );
 }

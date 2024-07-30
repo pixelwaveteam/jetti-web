@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { createEstablishmentDistribution } from '@/app/(in)/establishments/actions/create-establishment-distribution';
+import { EstablishmentDistribution } from '@/app/(in)/establishments/actions/fetch-establishment-distributions';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -18,6 +19,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { SheetContext } from '@/providers/sheet-provider';
@@ -38,6 +40,7 @@ const EstablishmentDistributionFormCreateSchema = z.object({
 
       return value;
     }),
+  percentageOutOfDistribution: z.enum(['JETTI', 'ESTABLISHMENT', 'TOTAL'])
 });
 
 type EstablishmentDistributionFormCreateType = z.infer<
@@ -46,21 +49,28 @@ type EstablishmentDistributionFormCreateType = z.infer<
 
 interface EstablishmentDistributionFormCreateProps {
   establishmentId: string;
+  establishmentDistributions: EstablishmentDistribution[];
 }
 
 export function EstablishmentDistributionFormCreate({
   establishmentId,
+  establishmentDistributions,
 }: EstablishmentDistributionFormCreateProps) {
   const { setShow } = useContext(SheetContext);
   const { toast } = useToast();
 
   const formMethods = useForm<EstablishmentDistributionFormCreateType>({
     resolver: zodResolver(EstablishmentDistributionFormCreateSchema),
+    defaultValues: {
+      percentageOutOfDistribution: 'JETTI'
+    }
   });
+
+  console.log({ establishmentDistributions })
 
   const { control, handleSubmit, formState } = formMethods;
 
-  const onSubmit = async (data: EstablishmentDistributionFormCreateType) => {
+  const onSubmit = async ({ ...data }: EstablishmentDistributionFormCreateType) => {
     try {
       await createEstablishmentDistribution({
         establishmentId,
@@ -135,6 +145,35 @@ export function EstablishmentDistributionFormCreate({
             </FormItem>
           )}
         />
+
+      <FormField
+        control={control}
+        name='percentageOutOfDistribution'
+        render={({ field: { onChange, ...field } }) => (
+          <FormItem>
+            <FormLabel>Percentual relativo a</FormLabel>
+            <Select
+              onValueChange={onChange}
+              {...field}
+            >
+              <SelectTrigger className="flex-1 min-w-[15rem]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="JETTI">
+                  Jetti
+                </SelectItem>
+                <SelectItem value="TOTAL">
+                  Total
+                </SelectItem>
+                <SelectItem value="ESTABLISHMENT">
+                  Local
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </FormItem>
+        )}
+      />
 
         <Button
           type='submit'

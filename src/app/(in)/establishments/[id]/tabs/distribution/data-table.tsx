@@ -6,30 +6,20 @@ import { DataTable } from '@/components/data-table';
 
 interface EstablishmentDistributionDataTableProps {
   data: EstablishmentDistributionDataTableData[];
+  jettiPercentageOnDistribution: number, 
+  establishmentPercentageOnDistribution: number
 }
 
 export function EstablishmentDistributionDataTable({
   data,
+  jettiPercentageOnDistribution,
+  establishmentPercentageOnDistribution,
 }: EstablishmentDistributionDataTableProps) {
-  const percentageTotal = data.reduce((acc, item) => {
-    return acc + item.percentage;
-  }, 0);
-
-  const pencentageJetti = 10000 - percentageTotal;
-
-  const mockJettiData = {
-    id: 'jetti',
-    establishmentId: 'jetti',
-    name: 'jetti',
-    description: 'jetti',
-    percentage: pencentageJetti,
-  };
-
-  data.push(mockJettiData);
+  const columns = establishmentDistributionColumns(jettiPercentageOnDistribution, establishmentPercentageOnDistribution);
 
   return (
     <DataTable
-      columns={establishmentDistributionColumns}
+      columns={columns}
       data={data}
       globalFiltering
     />
