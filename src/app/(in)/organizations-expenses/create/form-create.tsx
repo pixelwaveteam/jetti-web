@@ -21,6 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { OrganizationExpenseContext } from '@/providers/expense-provider';
 import { SheetContext } from '@/providers/sheet-provider';
+import { createExpense } from '../../expenses/actions/create-expense';
 import { createOrganizationExpense } from '../actions/create-organization-expense';
 
 const OrganizationExpenseFormCreateSchema = z.object({
@@ -52,9 +53,33 @@ export function OrganizationExpenseFormCreate() {
 
   const { control, formState, handleSubmit } = formMethods;
 
-  const onSubmit = async (data: OrganizationExpenseFormCreateType) => {
+  const onSubmit = async ({ expenseId, ...data }: OrganizationExpenseFormCreateType) => {
     try {
+      const selectedExpenseName = expenses.find(({ id }) => id === expenseId)?.name || '';
+
+      const selectedOrganizationName = organizations.find(({ id }) => id === data.organizationId)?.name || '';
+
+      const expensesNames = expenses.map(({ name }) => name)
+
+      const expenseName = `${selectedExpenseName} - ${selectedOrganizationName}`
+
+      const higherRegisteredExpenseNameNumber = expensesNames
+        .filter(name => name.includes(expenseName))
+        .reduce((acc, name) =>
+            name.replaceAll(/[^-]+/g, '').length > 1 ? 
+              Number(name.match(/\d+/g)) > acc ? Number(name.match(/\d+/g)) : acc
+              : acc, 
+          0,
+        );
+
+      const completeExpenseName = `${expenseName} -  ${higherRegisteredExpenseNameNumber+1}`
+
+      const { expense } = await createExpense({
+        name: completeExpenseName
+      });
+
       await createOrganizationExpense({
+        expenseId: expense.id,
         ...data,
       });
 
@@ -67,6 +92,8 @@ export function OrganizationExpenseFormCreate() {
         duration: 5000,
       });
     } catch (error) {
+      console.log({error})
+
       toast({
         variant: 'destructive',
         title: 'Erro',
@@ -121,7 +148,7 @@ export function OrganizationExpenseFormCreate() {
 
                 <SearchableSelectContent label='despesas'>
                   {
-                    expenses.map(expense => (
+                    expenses.filter(({name}) => name.replaceAll(/[^-]+/g, '').length <= 1).map(expense => (
                       <SearchableSelectItem textValue={expense.name} value={expense.id} key={expense.id}>
                         {expense.name}
                       </SearchableSelectItem>
