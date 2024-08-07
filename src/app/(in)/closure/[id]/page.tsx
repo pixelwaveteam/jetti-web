@@ -94,14 +94,16 @@ export default async function Closure({ params: { id } }: ClosureProps) {
     expenses.push(newExpense)
   }
 
+  const expensesTotal = expenses.reduce((acc, expense) => acc + expense.amount, 0)
+
   const renderDeleteClosureButton = (
     <DeleteClosureDialog />
   )
 
   const statValues = {
     cashFlowsTotal: closureCashFlowsTotal,
-    gross,
-    net,
+    gross: net,
+    net: net - expensesTotal,
   };
 
   const renderDescription = (
