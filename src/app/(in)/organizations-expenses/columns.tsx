@@ -6,6 +6,7 @@ import { ArrowUpDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 import { convertCentsToCurrency } from '@/utils/currency';
+import { getDateFormatted } from '@/utils/date';
 import { OrganizationExpense } from './actions/fetch-organizations-expenses';
 import { OrganizationExpenseEditSheet } from './edit/edit-sheet';
 
@@ -80,6 +81,29 @@ export const organizationsExpensesColumns: ColumnDef<OrganizationExpenseDataTabl
       return (
         <div className='flex gap-2 items-center'>
           <span className='truncate'>{convertCentsToCurrency(expense.amount)}</span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'createdAt',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Data
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const expense = row.original;
+
+      return (
+        <div className='flex gap-2 items-center'>
+          <span className='truncate'>{getDateFormatted(expense.createdAt)}</span>
         </div>
       );
     },
