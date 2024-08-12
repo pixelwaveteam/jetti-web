@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { convertCentsToCurrency } from '@/utils/currency';
 import { ClosureDistribution } from '../actions/fetch-closure-distribution';
+import { DeleteClosureDistributionDialog } from './delete-closure-distribution-dialog';
 
 interface ListDistributionProps {
   netDistributions: ClosureDistribution[];
@@ -31,7 +32,8 @@ export function ListDistribution({ netDistributions }: ListDistributionProps) {
                 <Badge color='primary'>{`${percentage}%`}</Badge>
               </p>
             </div>
-            <div className='ml-auto font-medium'>{amount}</div>
+            <div className='ml-auto font-medium pr-2'>{amount}</div>
+            <DeleteClosureDistributionDialog id={netDistribution.id} />
           </div>
         );
       })}
