@@ -1,6 +1,6 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { DataTable } from '@/components/data-table';
-import { endOfWeek, startOfWeek } from 'date-fns';
+import { endOfYear, startOfYear } from 'date-fns';
 import { getServerSession } from 'next-auth';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
 import { fetchUsers } from '../users/actions/fetch-users';
@@ -29,8 +29,8 @@ export async function ClosureDataTable({ data }: ClosureDataTableProps) {
     {} as [{ [x: string]: string[] }]
   );
 
-  const currentStartOfWeek = startOfWeek(new Date());
-  const currentEndOfWeek = endOfWeek(new Date());
+  const currentStartOfWeek = startOfYear(new Date());
+  const currentEndOfWeek = endOfYear(new Date());
 
   return (
     <DataTable
