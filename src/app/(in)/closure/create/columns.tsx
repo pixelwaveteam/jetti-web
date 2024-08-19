@@ -120,7 +120,7 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{convertCentsToCurrency(closure.closure.gross)}</span>
+          <span className='truncate'>{convertCentsToCurrency(closure.closure.gross/2)}</span>
         </div>
       );
     },
