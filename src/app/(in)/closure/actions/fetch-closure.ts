@@ -8,6 +8,7 @@ export interface Closure {
   closerId: string;
   gross: number;
   net: number;
+  date: Date;
   createdAt: Date;
   updatedAt?: Date;
 }

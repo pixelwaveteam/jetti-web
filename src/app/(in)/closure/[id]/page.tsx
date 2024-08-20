@@ -42,7 +42,7 @@ interface ClosureProps {
 }
 
 export default async function Closure({ params: { id } }: ClosureProps) {
-  const {  net, gross, closerId, createdAt, organizationId } = await fetchClosure(id);
+  const {  net, gross, closerId, date, organizationId } = await fetchClosure(id);
 
   const closureDistribution = await fetchClosureDistributions(id);
 
@@ -118,7 +118,7 @@ export default async function Closure({ params: { id } }: ClosureProps) {
       </div>
       <div className='flex gap-1 items-center'>
         <Calendar size={16} />
-        <span>{getDateFormatted(createdAt)}</span>
+        <span>{getDateFormatted(date)}</span>
       </div>
     </div>
   );

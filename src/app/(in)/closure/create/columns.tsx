@@ -5,15 +5,13 @@ import { ArrowUpDown, ChevronRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { convertCentsToCurrency } from '@/utils/currency';
-import { getDateFormatted } from '@/utils/date';
-import { isSameDay, isWithinInterval } from 'date-fns';
+import { format, isSameDay, isWithinInterval } from 'date-fns';
 import Link from 'next/link';
 import { Closure } from '../actions/fetch-closures';
 
 export type ClosureDataTableData = Closure & {
   closer?: string;
   organizationName: string;
-  date: Date;
 };
 
 export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
@@ -97,7 +95,7 @@ export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
 
       return (
         <div className='flex gap-2 items-center'>
-          <span className='truncate'>{getDateFormatted(closure.date)}</span>
+          <span className='truncate'>{format(new Date(closure.closure.date), 'MM/yyyy')}</span>
         </div>
       );
     },
