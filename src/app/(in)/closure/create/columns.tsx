@@ -12,6 +12,7 @@ import { Closure } from '../actions/fetch-closures';
 export type ClosureDataTableData = Closure & {
   closer?: string;
   organizationName: string;
+  date: Date;
 };
 
 export const closureColumns: ColumnDef<ClosureDataTableData>[] = [
