@@ -267,9 +267,7 @@ export function EstablishmentAddressFormCreate({
                     value={!!cityItemsByState ? field.value : ''}
                     disabled={!state}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder='Selecione...' className='w-fit' />
-                    </SelectTrigger>
+                    <SelectTrigger className="w-fit" />
 
                     <SelectContent>
                       {cityItemsByState &&
