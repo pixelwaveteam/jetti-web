@@ -144,11 +144,7 @@ export function EstablishmentAddressFormCreate({
         setValue('state', response.uf);
 
         if (!!response.uf && !!response.localidade) {
-          const cityFromList = cityItems[response.uf].find(city => city.toLocaleLowerCase() === response.localidade.toLocaleLowerCase());
-
-          if(cityFromList) {
-            setValue('city', cityFromList);
-          }
+          setValue('city', response.localidade);
         }
 
         setFocus('number');
@@ -263,24 +259,28 @@ export function EstablishmentAddressFormCreate({
             <FormItem>
               <FormLabel>Cidade</FormLabel>
               <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={!!cityItemsByState ? field.value : ''}
-                  disabled={!state}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder='Selecione...' />
-                  </SelectTrigger>
+                <div className="flex flex-row">
+                  <Input className="flex-1" {...field} disabled={!state} />
 
-                  <SelectContent>
-                    {cityItemsByState &&
-                      cityItemsByState.map((item) => (
-                        <SelectItem value={item} key={item}>
-                          {item}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={!!cityItemsByState ? field.value : ''}
+                    disabled={!state}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder='Selecione...' />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      {cityItemsByState &&
+                        cityItemsByState.map((item) => (
+                          <SelectItem value={item} key={item}>
+                            {item}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
