@@ -263,7 +263,7 @@ export function EstablishmentAddressFormCreate({
                   <Input className="flex-1" {...field} disabled={!state} />
 
                   <Select
-                    onValueChange={field.onChange}
+                    onValueChange={(e) => cityItemsByState.includes(e) && field.onChange(e)}
                     value={!!cityItemsByState ? field.value : ''}
                     disabled={!state}
                   >
