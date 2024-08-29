@@ -62,7 +62,7 @@ export function EstablishmentDistributionFormCreate({
   const formMethods = useForm<EstablishmentDistributionFormCreateType>({
     resolver: zodResolver(EstablishmentDistributionFormCreateSchema),
     defaultValues: {
-      percentageOutOfDistribution: 'JETTI'
+      percentageOutOfDistribution: 'TOTAL'
     }
   });
 
