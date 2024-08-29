@@ -127,27 +127,28 @@ export function EstablishmentAddressFormCreate({
 
     if (zipFormatted.length === 8) {
       const fetchAddress = async () => {
+        try {
+          const response = await fetchAddressByCep(zipFormatted);
 
-        const response = await fetchAddressByCep(zipFormatted);
-
-        if (!response.logradouro) {
-          toast({
-            variant: 'destructive',
-            title: 'Erro',
-            description: 'CEP não encontrado.',
-            duration: 5000,
-          });
-
-          return;
-        }
-
-        setValue('street', response.logradouro);
-        setValue('additional', response.complemento);
-        setValue('district', response.bairro);
-        setValue('state', response.uf);
-        setCityValueByCEP(response.localidade);
-
-        setFocus('number');
+          if (!response.logradouro) {
+            toast({
+              variant: 'destructive',
+              title: 'Erro',
+              description: 'CEP não encontrado.',
+              duration: 5000,
+            });
+  
+            return;
+          }
+  
+          setValue('street', response.logradouro);
+          setValue('additional', response.complemento);
+          setValue('district', response.bairro);
+          setValue('state', response.uf);
+          setCityValueByCEP(response.localidade);
+  
+          setFocus('number');
+        } catch(err) {}
       };
 
       fetchAddress();
