@@ -268,7 +268,7 @@ export function EstablishmentAddressFormCreate({
                     disabled={!state}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder='Selecione...' />
+                      <SelectValue placeholder='Selecione...' className='w-fit' />
                     </SelectTrigger>
 
                     <SelectContent>
