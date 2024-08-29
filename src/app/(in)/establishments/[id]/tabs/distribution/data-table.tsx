@@ -12,14 +12,10 @@ interface EstablishmentDistributionDataTableProps {
 
 export function EstablishmentDistributionDataTable({
   data,
-  jettiPercentageOnDistribution,
-  establishmentPercentageOnDistribution,
 }: EstablishmentDistributionDataTableProps) {
-  const columns = establishmentDistributionColumns(jettiPercentageOnDistribution, establishmentPercentageOnDistribution);
-
   return (
     <DataTable
-      columns={columns}
+      columns={establishmentDistributionColumns}
       data={data}
       globalFiltering
     />

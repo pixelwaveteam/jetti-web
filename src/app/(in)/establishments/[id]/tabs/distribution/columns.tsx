@@ -9,43 +9,28 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 
-function getPercentageOutOfDistributionDisplay(percentageOutOfDistribution: PercentageOutOfDistribution, jettiPercentageOnDistribution: number, establishmentPercentageOnDistribution: number) {
+function getPercentageOutOfDistributionDisplay(percentageOutOfDistribution: PercentageOutOfDistribution) {
   switch(percentageOutOfDistribution) {
     case 'JETTI': 
       return (
-        <>
-          <Badge variant='outline'>
-            {jettiPercentageOnDistribution/100}%
-          </Badge>
-
-          <span className='capitalize'>da Jetti</span>
-        </>
+        <span>da Jetti</span>
       )
     
     case 'ESTABLISHMENT': 
       return (
-        <>
-          <Badge variant='outline'>
-            {establishmentPercentageOnDistribution/100}%
-          </Badge>
-
-          <span className='capitalize'>do local</span>
-        </>
+        <span>do local</span>
       )
 
     case 'TOTAL': 
       return (
-        <span className='capitalize'>do total</span>
+        <span>do total</span>
       )
   }
 }
 
 export type EstablishmentDistributionDataTableData = EstablishmentDistribution;
 
-export const establishmentDistributionColumns = (
-    jettiPercentageOnDistribution: number, 
-    establishmentPercentageOnDistribution: number
-  ): ColumnDef<EstablishmentDistributionDataTableData>[] => 
+export const establishmentDistributionColumns: ColumnDef<EstablishmentDistributionDataTableData>[] = 
     [
       {
         accessorKey: 'name',
@@ -60,7 +45,7 @@ export const establishmentDistributionColumns = (
             </Button>
           );
         },
-        cell: ({ row }) => {
+        cell: async ({ row }) => {
           const establishmentDistribution = row.original;
 
           return (
@@ -72,13 +57,7 @@ export const establishmentDistributionColumns = (
               {
                 establishmentDistribution.percentageOutOfDistribution  && (
                   <>
-                    <span>de</span>
-
-                    {getPercentageOutOfDistributionDisplay(
-                      establishmentDistribution.percentageOutOfDistribution, 
-                      jettiPercentageOnDistribution, 
-                      establishmentPercentageOnDistribution
-                    )}
+                    {getPercentageOutOfDistributionDisplay(establishmentDistribution.percentageOutOfDistribution)}
                   </>
                 )
               }
