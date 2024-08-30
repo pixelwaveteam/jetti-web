@@ -10,6 +10,7 @@ interface ServerClosure {
       closerId: { value: string };
       gross: number;
       net: number;
+      date: Date;
       createdAt: Date;
       updatedAt?: Date;
     }
@@ -31,6 +32,7 @@ export interface Closure {
     closerId: { value: string };
     gross: number;
     net: number;
+    date: Date;
     createdAt: Date;
     updatedAt?: Date;
   };

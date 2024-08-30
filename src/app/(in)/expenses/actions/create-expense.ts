@@ -3,16 +3,19 @@
 import { revalidateTag } from 'next/cache';
 
 import { api } from '@/lib/api';
+import { Expense } from './fetch-expenses';
 
 interface CreateExpense {
   name: string;
 }
 
 export async function createExpense(data: CreateExpense) {
-  await api('/expenses', {
+  const expense: Expense = await api('/expenses', {
     method: 'POST',
     body: JSON.stringify(data),
   });
 
   revalidateTag('expenses');
+
+  return { expense };
 }

@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -68,7 +68,6 @@ export function EstablishmentAddressFormCreate({
 }: EstablishmentAddressFormCreateProps) {
   const { setShow } = useContext(SheetContext);
   const { toast } = useToast();
-  const [cityValueByCEP, setCityValueByCEP] = useState('');
 
   const formMethods = useForm<EstablishmentAddressFormCreateType>({
     resolver: zodResolver(EstablishmentAddressFormCreateSchema),
@@ -87,7 +86,6 @@ export function EstablishmentAddressFormCreate({
   const zipCode = watch('zipCode');
 
   const state = watch('state');
-  const city = watch('city');
 
   const cityItemsByState = useMemo(
     () => cityItems[state as keyof typeof cityItems] || undefined,
@@ -127,7 +125,6 @@ export function EstablishmentAddressFormCreate({
 
     if (zipFormatted.length === 8) {
       const fetchAddress = async () => {
-
         const response = await fetchAddressByCep(zipFormatted);
 
         if (!response.logradouro) {
@@ -145,7 +142,10 @@ export function EstablishmentAddressFormCreate({
         setValue('additional', response.complemento);
         setValue('district', response.bairro);
         setValue('state', response.uf);
-        setCityValueByCEP(response.localidade);
+
+        if (!!response.uf && !!response.localidade) {
+          setValue('city', response.localidade);
+        }
 
         setFocus('number');
       };
@@ -153,12 +153,6 @@ export function EstablishmentAddressFormCreate({
       fetchAddress();
     }
   }, [setFocus, setValue, toast, zipCode, trigger]);
-
-  useEffect(() => {
-    if (!!state && !!cityValueByCEP && !city) {
-      setValue('city', cityValueByCEP);
-    }
-  }, [state, cityValueByCEP, city, setValue]);
 
   return (
     <Form {...formMethods}>
@@ -265,24 +259,26 @@ export function EstablishmentAddressFormCreate({
             <FormItem>
               <FormLabel>Cidade</FormLabel>
               <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={!!cityItemsByState ? field.value : ''}
-                  disabled={!state}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder='Selecione...' />
-                  </SelectTrigger>
+                <div className="flex flex-row">
+                  <Input className="flex-1" {...field} disabled={!state} />
 
-                  <SelectContent>
-                    {cityItemsByState &&
-                      cityItemsByState.map((item) => (
-                        <SelectItem value={item} key={item}>
-                          {item}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
+                  <Select
+                    onValueChange={(e) => cityItemsByState.includes(e) && field.onChange(e)}
+                    value={!!cityItemsByState ? field.value : ''}
+                    disabled={!state}
+                  >
+                    <SelectTrigger className="w-fit" />
+
+                    <SelectContent>
+                      {cityItemsByState &&
+                        cityItemsByState.map((item) => (
+                          <SelectItem value={item} key={item}>
+                            {item}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -25,7 +25,7 @@ export default async function Closures() {
   const closures = []
 
   for(const rawClosure of rawClosures) {
-    const closure: ClosureDataTableData = {...rawClosure, organizationName: rawClosure.organization.name, date: rawClosure.closure.createdAt}
+    const closure: ClosureDataTableData = {...rawClosure, organizationName: rawClosure.organization.name, date: rawClosure.closure.date}
 
     const closer = await fetchUser(rawClosure.closure.closerId.value)
 

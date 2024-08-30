@@ -35,7 +35,7 @@ export function ClosuresExpensesTable({ closuresExpenses }: ClosuresExpensesTabl
               key={expense.id}
             >
               <TableCell className='py-2'>
-                {expense.name}
+                {expense.name.indexOf('-') ? expense.name.substring(0, expense.name.indexOf('-') - 1) : expense.name}
               </TableCell>
               <TableCell className='py-2'>
                 {getDateFormatted(expense.createdAt)}

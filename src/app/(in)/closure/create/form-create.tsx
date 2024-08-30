@@ -11,17 +11,23 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useToast } from '@/hooks/use-toast';
 import { NewClosureContext } from '@/providers/new-closure-provider';
 import { SheetContext, SheetProvider } from '@/providers/sheet-provider';
 import { convertCentsToCurrency } from '@/utils/currency';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
 import { createClosure } from '../actions/create-closure';
 import { ConfirmClosureCreationModal } from './confirm-closure-creation-modal';
@@ -39,7 +45,8 @@ const ClosureFormCreateSchema = () =>
       expenseId: z.string(),
       name: z.string(),
       amount: z.number(),
-    }))
+    })),
+    date: z.date({ required_error: 'Data é obrigatória.' }),
   });
 
 const ClosureFormCreateSchemaDefault = ClosureFormCreateSchema();
@@ -73,7 +80,7 @@ export function ClosureFormCreate() {
       const cashFlows = JSON.stringify(data.cashFlows.map(cashFlow => cashFlow.id));
       const expenses = JSON.stringify(data.expenses.map(expense => expense.expenseId));
 
-      const closureCreated = await createClosure({cashFlows, expenses});
+      const closureCreated = await createClosure({cashFlows, expenses, date: data.date});
 
       if(closureCreated) {
         push(`/closure/${closureCreated.id}`)
@@ -174,6 +181,35 @@ export function ClosureFormCreate() {
           )}
         />
 
+        <FormField
+          control={control}
+          name='date'
+          render={({ field: { value, onChange, ...field } }) => (
+            <Popover key={field.name}>
+              <PopoverTrigger asChild>
+                <FormItem>
+                  <FormLabel>Data</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='--/--/----'
+                      value={value ? format(value, 'dd/MM/yyyy') : ''}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </PopoverTrigger>
+              <PopoverContent>
+                <Calendar
+                  locale={ptBR}
+                  mode='single'
+                  selected={value}
+                  onSelect={onChange}
+                />
+              </PopoverContent>
+            </Popover>
+          )}
+        />
 
         <strong className='text-right w-full block'>Total: {convertCentsToCurrency(total)}</strong>
 
