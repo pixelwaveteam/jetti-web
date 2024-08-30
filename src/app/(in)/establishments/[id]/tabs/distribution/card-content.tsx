@@ -23,12 +23,8 @@ export function CardContentEstablishmentDistribution({
     );
   }
 
-  
-  const jettiPercentageOnDistribution = establishmentDistributions.find(({ name }) => name.toLowerCase() === "jetti")?.percentage || 0;
-
-  const establishmentPercentageOnDistribution = establishmentDistributions.find(({ name }) => name.toLowerCase() === "local")?.percentage || 0;
 
   return (
-    <EstablishmentDistributionDataTable data={establishmentDistributions} establishmentPercentageOnDistribution={establishmentPercentageOnDistribution} jettiPercentageOnDistribution={jettiPercentageOnDistribution} />
+    <EstablishmentDistributionDataTable data={establishmentDistributions} />
   );
 }

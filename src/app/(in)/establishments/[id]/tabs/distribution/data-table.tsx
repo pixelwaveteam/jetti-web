@@ -6,8 +6,6 @@ import { DataTable } from '@/components/data-table';
 
 interface EstablishmentDistributionDataTableProps {
   data: EstablishmentDistributionDataTableData[];
-  jettiPercentageOnDistribution: number, 
-  establishmentPercentageOnDistribution: number
 }
 
 export function EstablishmentDistributionDataTable({

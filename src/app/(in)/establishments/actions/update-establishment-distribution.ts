@@ -12,7 +12,7 @@ interface UpdateEstablishmentDistribution {
     name: string;
     description?: string;
     percentage: number;
-    percentageOutOfDistribution?: PercentageOutOfDistribution;
+    percentageOutOf?: PercentageOutOfDistribution;
 };
 }
 

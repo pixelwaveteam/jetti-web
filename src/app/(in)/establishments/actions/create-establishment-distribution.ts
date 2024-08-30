@@ -10,7 +10,7 @@ interface CreateEstablishmentDistribution {
   name: string;
   description: string;
   percentage: number;
-  percentageOutOfDistribution?: PercentageOutOfDistribution;
+  percentageOutOf: PercentageOutOfDistribution;
 }
 
 export async function createEstablishmentDistribution(

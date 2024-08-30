@@ -26,9 +26,9 @@ export async function TabDistribution({ establishment }: TabDistributionProps) {
     establishment.id
   );
 
-  const jettiPercentageOnDistribution = establishmentDistributions.find(({ name }) => name.toLowerCase() === "jetti")?.percentage || 0;
+  const jettiPercentageOnDistribution = establishmentDistributions.find(({ name }) => name.toLowerCase() === "jetti")?.totalPercentage || 0;
 
-  const partnersPercentageOnDistribution = establishmentDistributions.reduce((acc, { percentage, name }) => name.toLowerCase() !== "jetti" ? acc + percentage : acc , 0)
+  const partnersPercentageOnDistribution = establishmentDistributions.reduce((acc, { totalPercentage, name }) => name.toLowerCase() !== "jetti" ? acc + totalPercentage : acc , 0)
 
   return (
     <Card>

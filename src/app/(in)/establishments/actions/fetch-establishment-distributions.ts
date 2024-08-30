@@ -9,8 +9,9 @@ export interface EstablishmentDistribution {
   establishmentId: string;
   name: string;
   description: string | null;
+  percentageOutOf: PercentageOutOfDistribution;
   percentage: number;
-  percentageOutOfDistribution?: PercentageOutOfDistribution;
+  totalPercentage: number;
 }
 
 export async function fetchEstablishmentDistributions(establishmentId: string) {
@@ -22,6 +23,6 @@ export async function fetchEstablishmentDistributions(establishmentId: string) {
       },
     }
   );
-
+  
   return response;
 }

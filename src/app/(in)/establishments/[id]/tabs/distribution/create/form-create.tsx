@@ -40,7 +40,7 @@ const EstablishmentDistributionFormCreateSchema = z.object({
 
       return value;
     }),
-  percentageOutOfDistribution: z.enum(['JETTI', 'ESTABLISHMENT', 'TOTAL'])
+  percentageOutOf: z.enum(['JETTI', 'ESTABLISHMENT', 'TOTAL'])
 });
 
 type EstablishmentDistributionFormCreateType = z.infer<
@@ -54,7 +54,6 @@ interface EstablishmentDistributionFormCreateProps {
 
 export function EstablishmentDistributionFormCreate({
   establishmentId,
-  establishmentDistributions,
 }: EstablishmentDistributionFormCreateProps) {
   const { setShow } = useContext(SheetContext);
   const { toast } = useToast();
@@ -62,11 +61,9 @@ export function EstablishmentDistributionFormCreate({
   const formMethods = useForm<EstablishmentDistributionFormCreateType>({
     resolver: zodResolver(EstablishmentDistributionFormCreateSchema),
     defaultValues: {
-      percentageOutOfDistribution: 'TOTAL'
+      percentageOutOf: 'TOTAL'
     }
   });
-
-  console.log({ establishmentDistributions })
 
   const { control, handleSubmit, formState } = formMethods;
 
@@ -148,7 +145,7 @@ export function EstablishmentDistributionFormCreate({
 
       <FormField
         control={control}
-        name='percentageOutOfDistribution'
+        name='percentageOutOf'
         render={({ field: { onChange, ...field } }) => (
           <FormItem>
             <FormLabel>Percentual relativo a</FormLabel>

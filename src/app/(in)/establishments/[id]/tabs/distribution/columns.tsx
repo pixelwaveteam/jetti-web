@@ -9,21 +9,16 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
 
-function getPercentageOutOfDistributionDisplay(percentageOutOfDistribution: PercentageOutOfDistribution) {
-  switch(percentageOutOfDistribution) {
+function getPercentageOutOfDistributionDisplay(percentageOutOf: PercentageOutOfDistribution) {
+  switch(percentageOutOf) {
     case 'JETTI': 
       return (
-        <span>da Jetti</span>
+        <span>da Jetti =</span>
       )
     
     case 'ESTABLISHMENT': 
       return (
-        <span>do local</span>
-      )
-
-    case 'TOTAL': 
-      return (
-        <span>do total</span>
+        <span>do local =</span>
       )
   }
 }
@@ -51,16 +46,23 @@ export const establishmentDistributionColumns: ColumnDef<EstablishmentDistributi
           return (
             <div className='flex gap-2 items-center'>
               <span>{establishmentDistribution.name}</span>
-              <Badge variant='secondary'>
-                {establishmentDistribution.percentage / 100}%
-              </Badge>
               {
-                establishmentDistribution.percentageOutOfDistribution  && (
+                establishmentDistribution.percentageOutOf !== 'TOTAL' && (
                   <>
-                    {getPercentageOutOfDistributionDisplay(establishmentDistribution.percentageOutOfDistribution)}
+                    <Badge variant='outline'>
+                      {establishmentDistribution.percentage / 100}%
+                    </Badge>
+
+                    <>
+                      {getPercentageOutOfDistributionDisplay(establishmentDistribution.percentageOutOf)}
+                    </>
                   </>
                 )
               }
+
+                <Badge variant='secondary'>
+                  {establishmentDistribution.totalPercentage/100}%
+                </Badge>
             </div>
           );
         },

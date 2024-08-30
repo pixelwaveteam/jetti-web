@@ -41,7 +41,7 @@ const EstablishmentDistributionFormEditSchema = z.object({
 
       return value;
     }),
-  percentageOutOfDistribution: z.enum(['JETTI', 'ESTABLISHMENT', 'TOTAL']).optional(),
+  percentageOutOf: z.enum(['JETTI', 'ESTABLISHMENT', 'TOTAL']).optional(),
 });
 
 type EstablishmentDistributionFormEditType = z.infer<
@@ -64,7 +64,7 @@ export function EstablishmentDistributionFormEdit({
       name: establishmentDistribution.name,
       description: establishmentDistribution.description ?? '',
       percentage: establishmentDistribution.percentage / 100,
-      percentageOutOfDistribution: establishmentDistribution.percentageOutOfDistribution,
+      percentageOutOf: establishmentDistribution.percentageOutOf,
     },
   });
 
@@ -182,39 +182,35 @@ export function EstablishmentDistributionFormEdit({
             )}
           />
 
-          {
-            !isJetti && !isEstablishment && (
-              <FormField
-                control={control}
-                name='percentageOutOfDistribution'
-                render={({ field: { onChange, ...field } }) => (
-                  <FormItem>
-                    <FormLabel>Percentual relativo a</FormLabel>
-                    <Select
-                      onValueChange={onChange}
-                      {...field}
-                    >
-                      <SelectTrigger className="flex-1 min-w-[15rem]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="JETTI">
-                          Jetti
-                        </SelectItem>
-                        <SelectItem value="TOTAL">
-                          Total
-                        </SelectItem>
-                        <SelectItem value="ESTABLISHMENT">
-                          Local
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-            )
-          }
-          
+          <FormField
+            control={control}
+            name='percentageOutOf'
+            disabled={isJetti || isEstablishment}
+            render={({ field: { onChange, ...field } }) => (
+              <FormItem>
+                <FormLabel>Percentual relativo a</FormLabel>
+                <Select
+                  onValueChange={onChange}
+                  {...field}
+                >
+                  <SelectTrigger className="flex-1 min-w-[15rem]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="JETTI">
+                      Jetti
+                    </SelectItem>
+                    <SelectItem value="TOTAL">
+                      Total
+                    </SelectItem>
+                    <SelectItem value="ESTABLISHMENT">
+                      Local
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
 
           {!isJetti && (
             <div className='flex gap-2'>
