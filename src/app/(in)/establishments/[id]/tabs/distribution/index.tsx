@@ -16,6 +16,7 @@ import { CardContentEstablishmentDistribution } from '@/app/(in)/establishments/
 import { Progress } from '@/components/ui/progress';
 import { inspect } from 'util';
 import { Establishment } from '../../../actions/fetch-establishments';
+import { Logger } from './logger';
 
 interface TabDistributionProps {
   establishment: Establishment;
@@ -26,14 +27,13 @@ export async function TabDistribution({ establishment }: TabDistributionProps) {
     establishment.id
   );
 
-  console.log(inspect({establishmentDistributions}, { depth: null }))
-
   const jettiPercentageOnDistribution = establishmentDistributions.find(({ name }) => name.toLowerCase() === "jetti")?.totalPercentage || 0;
 
   const partnersPercentageOnDistribution = establishmentDistributions.reduce((acc, { totalPercentage, name }) => name.toLowerCase() !== "jetti" ? acc + totalPercentage : acc , 0)
 
   return (
     <Card>
+      <Logger log={inspect({establishmentDistributions}, { depth: null })} /> 
       <CardHeader>
         <CardTitle>
           <div className='flex items-center justify-between'>
