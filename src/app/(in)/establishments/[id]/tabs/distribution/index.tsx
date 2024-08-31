@@ -1,7 +1,7 @@
 import { Plus } from 'lucide-react';
 
 import { EstablishmentDistributionCreateSheet } from '@/app/(in)/establishments/[id]/tabs/distribution/create/create-sheet';
-import { EstablishmentDistribution, fetchEstablishmentDistributions } from '@/app/(in)/establishments/actions/fetch-establishment-distributions';
+import { fetchEstablishmentDistributions } from '@/app/(in)/establishments/actions/fetch-establishment-distributions';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -18,7 +18,6 @@ import { Establishment } from '../../../actions/fetch-establishments';
 
 interface TabDistributionProps {
   establishment: Establishment;
-  establishmentDistributions: EstablishmentDistribution[];
 }
 
 export async function TabDistribution({ establishment }: TabDistributionProps) {
