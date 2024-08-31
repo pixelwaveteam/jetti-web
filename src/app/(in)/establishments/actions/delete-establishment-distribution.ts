@@ -9,5 +9,6 @@ export async function deleteEstablishmentDistribution(id: string) {
     method: 'DELETE',
   });
 
+  revalidateTag('establishments');
   revalidateTag('establishment-distributions');
 }

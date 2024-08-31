@@ -29,5 +29,6 @@ export async function updateEstablishmentDistribution({
     throw new Error(result.message);
   }
 
+  revalidateTag('establishments');
   revalidateTag('establishment-distributions');
 }
