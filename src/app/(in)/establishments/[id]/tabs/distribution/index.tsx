@@ -14,6 +14,7 @@ import { SheetProvider } from '@/providers/sheet-provider';
 
 import { CardContentEstablishmentDistribution } from '@/app/(in)/establishments/[id]/tabs/distribution/card-content';
 import { Progress } from '@/components/ui/progress';
+import { inspect } from 'util';
 import { Establishment } from '../../../actions/fetch-establishments';
 
 interface TabDistributionProps {
@@ -24,6 +25,8 @@ export async function TabDistribution({ establishment }: TabDistributionProps) {
   const establishmentDistributions = await fetchEstablishmentDistributions(
     establishment.id
   );
+
+  console.log(inspect({establishmentDistributions}, { depth: null }))
 
   const jettiPercentageOnDistribution = establishmentDistributions.find(({ name }) => name.toLowerCase() === "jetti")?.totalPercentage || 0;
 
