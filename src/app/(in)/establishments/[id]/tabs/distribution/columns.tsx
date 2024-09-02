@@ -13,12 +13,12 @@ function getPercentageOutOfDistributionDisplay(percentageOutOf: PercentageOutOfD
   switch(percentageOutOf) {
     case 'JETTI': 
       return (
-        <span>da Jetti =</span>
+        <span>da Jetti</span>
       )
     
     case 'ESTABLISHMENT': 
       return (
-        <span>do local =</span>
+        <span>do local</span>
       )
   }
 }
@@ -59,10 +59,6 @@ export const establishmentDistributionColumns: ColumnDef<EstablishmentDistributi
                   </>
                 )
               }
-
-                <Badge variant='secondary'>
-                  {establishmentDistribution.totalPercentage/100}%
-                </Badge>
             </div>
           );
         },
