@@ -59,6 +59,14 @@ export const establishmentDistributionColumns: ColumnDef<EstablishmentDistributi
                   </>
                 )
               }
+
+              {
+                establishmentDistribution.percentageOutOf === "TOTAL" && (
+                  <Badge variant='secondary'>
+                    {establishmentDistribution.totalPercentage/100}%
+                  </Badge>
+                )
+              }
             </div>
           );
         },
