@@ -11,6 +11,8 @@ export interface CashFlow {
   code: number;
   cashIn: number;
   cashOut: number;
+  lastInput: number;
+  lastOutput: number,
   gross: number;
   net: number;
   date: string;
