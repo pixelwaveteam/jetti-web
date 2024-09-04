@@ -59,7 +59,6 @@ export function CashFlowDataTable({
         }
       ]}
       globalFiltering
-      total
     />
   );
 }
