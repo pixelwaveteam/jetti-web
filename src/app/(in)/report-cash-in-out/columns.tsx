@@ -116,7 +116,7 @@ export const cashFlowColumns: ColumnDef<ReportCashInOutDataTableData>[] = [
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Ultima Entrada
+          Entrada
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
@@ -139,7 +139,7 @@ export const cashFlowColumns: ColumnDef<ReportCashInOutDataTableData>[] = [
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Ultima Saída
+          Saída
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
