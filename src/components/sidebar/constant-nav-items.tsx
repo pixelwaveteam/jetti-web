@@ -1,4 +1,5 @@
 import {
+  AlertCircle,
   Building,
   DollarSign,
   FileArchive,
@@ -83,6 +84,12 @@ export const navItems = [
     title: 'Despesas das Organizações',
     icon: FileMinus2,
     path: '/organizations-expenses',
+    roles: ['ADMIN', 'OPERATOR'],
+  },
+  {
+    title: 'Relatórios Entradas/Saídas',
+    icon: AlertCircle,
+    path: '/report-cash-in-out',
     roles: ['ADMIN', 'OPERATOR'],
   },
 ] as NavItem[];
