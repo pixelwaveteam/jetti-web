@@ -125,7 +125,7 @@ export const cashFlowColumns: ColumnDef<ReportCashInOutDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.lastInput/100}</span>
+          <span>{cashFlow.input/100}</span>
         </div>
       );
     },
@@ -148,7 +148,7 @@ export const cashFlowColumns: ColumnDef<ReportCashInOutDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.lastOutput/100}</span>
+          <span>{cashFlow.output/100}</span>
         </div>
       );
     },
