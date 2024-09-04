@@ -4,7 +4,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { convertCentsToCurrency } from '@/utils/currency';
 import { getDateFormatted } from '@/utils/date';
 import { isSameDay, isWithinInterval } from 'date-fns';
 import { CashFlow } from '../cash-flows/actions/fetch-cash-flows';
@@ -126,7 +125,7 @@ export const cashFlowColumns: ColumnDef<ReportCashInOutDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{convertCentsToCurrency(cashFlow.lastInput)}</span>
+          <span>{cashFlow.lastInput}</span>
         </div>
       );
     },
@@ -149,7 +148,7 @@ export const cashFlowColumns: ColumnDef<ReportCashInOutDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{convertCentsToCurrency(cashFlow.lastOutput)}</span>
+          <span>{cashFlow.lastOutput}</span>
         </div>
       );
     },
