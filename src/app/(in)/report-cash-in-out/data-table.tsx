@@ -45,10 +45,6 @@ export function CashFlowDataTable({
           defaultValue: { from: currentStartOfTrimester, to: currentEndOfTrimester },
         },
         {
-          key: 'code',
-          label: 'código',
-        },
-        {
           key: 'terminal',
           label: 'código de terminal',
         },
