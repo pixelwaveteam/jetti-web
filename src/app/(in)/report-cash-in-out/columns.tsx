@@ -14,30 +14,6 @@ export type ReportCashInOutDataTableData = CashFlow & {
 
 export const cashFlowColumns: ColumnDef<ReportCashInOutDataTableData>[] = [
   {
-    accessorKey: 'code',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant='ghost'
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
-          id
-          <ArrowUpDown className='ml-2 h-4 w-4' />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const cashFlow = row.original;
-
-      return (
-        <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.code}</span>
-        </div>
-      );
-    },
-  },
-  
-  {
     accessorKey: 'organization',
     filterFn: (row, id, value) => {
       return value.length > 0 ? value.includes(row.original.organization) : true;
@@ -125,7 +101,7 @@ export const cashFlowColumns: ColumnDef<ReportCashInOutDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.lastInput}</span>
+          <span>{cashFlow.input/100}</span>
         </div>
       );
     },
@@ -148,7 +124,7 @@ export const cashFlowColumns: ColumnDef<ReportCashInOutDataTableData>[] = [
 
       return (
         <div className='flex flex-col gap-2 items-start'>
-          <span>{cashFlow.lastOutput}</span>
+          <span>{cashFlow.output/100}</span>
         </div>
       );
     },
