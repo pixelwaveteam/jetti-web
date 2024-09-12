@@ -8,6 +8,7 @@ export interface NetDistributionData {
   name: string;
   description: string | null;
   percentage: number;
+  displayPercentage: number;
   amount: number;
 }
 

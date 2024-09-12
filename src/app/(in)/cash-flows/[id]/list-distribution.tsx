@@ -21,7 +21,7 @@ export function ListDistribution({ netDistributions }: ListDistributionProps) {
     <div className='space-y-4'>
       {netDistributions.map((netDistribution) => {
         const percentageDistribution = formattedToPercentage(
-          netDistribution.percentage
+          netDistribution.displayPercentage
         );
         const amountDistribution = convertCentsToCurrency(
           netDistribution.amount
