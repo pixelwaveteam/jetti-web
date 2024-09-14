@@ -4,6 +4,7 @@ import {
 } from '@/app/(in)/establishments/columns';
 import { EstablishmentCreateSheet } from '@/app/(in)/establishments/create/create-sheet';
 import { DataTable } from '@/components/data-table';
+import { DownloadCsvLink } from '@/components/download-csv-link';
 import braziliansCitiesByState from '@/data/brazilian-cities-by-state.json';
 import braziliansStates from '@/data/brazilian-states.json';
 import { SheetProvider } from '@/providers/sheet-provider';
@@ -23,6 +24,8 @@ export function EstablishmentDataTable({ data, userOrganizations }: Establishmen
     (acc, state) => ({ ...acc, [state.short]: state.cities }),
     {} as [{ [x: string]: string[] }]
   );
+
+  console.log({esta: data})
 
   return (
     <DataTable
@@ -67,9 +70,12 @@ export function EstablishmentDataTable({ data, userOrganizations }: Establishmen
       ]}
       globalFiltering
     >
-      <SheetProvider>
-        <EstablishmentCreateSheet />
-      </SheetProvider>
+      <div className='flex items-center gap-x-4'>
+        <SheetProvider>
+          <EstablishmentCreateSheet />
+        </SheetProvider>
+        <DownloadCsvLink data={data} fileName='Locais' />
+      </div>
     </DataTable>
   );
 }
