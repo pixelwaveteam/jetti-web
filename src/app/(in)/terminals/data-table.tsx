@@ -2,11 +2,11 @@ import { TerminalDataTableData, terminalColumns } from '@/app/(in)/terminals/col
 import { TerminalCreateSheet } from '@/app/(in)/terminals/create/create-sheet';
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { DataTable } from '@/components/data-table';
+import { DownloadCsvLink } from '@/components/download-csv-link';
 import braziliansStates from '@/data/brazilian-states.json';
 import { SheetProvider } from '@/providers/sheet-provider';
 import { getServerSession } from 'next-auth';
 import { fetchOrganizations } from '../organizations/actions/fetch-organizations';
-import { DownloadCsvLink } from './download-csv-link';
 
 interface TerminalDataTableProps {
   data: TerminalDataTableData[];

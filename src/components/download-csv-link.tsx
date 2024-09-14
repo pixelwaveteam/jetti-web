@@ -3,13 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { json2csv } from 'json-2-csv';
 import { Download } from "lucide-react";
-import { TerminalDataTableData } from "./columns";
 
-interface TerminalDataTableProps {
-  data: TerminalDataTableData[];
+interface DownloadCsvLinkProps<DataType> {
+  data: DataType[];
 }
 
-export function DownloadCsvLink({ data }: TerminalDataTableProps) {
+export function DownloadCsvLink<T extends Object>({ data }: DownloadCsvLinkProps<T>) {
   
   const blob = new Blob([json2csv(data)], {type: 'text/csv;charset=utf-8;'});
 
