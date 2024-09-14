@@ -88,7 +88,7 @@ export function EstablishmentAddressFormCreate({
   const state = watch('state');
 
   const cityItemsByState = useMemo(
-    () => cityItems[state as keyof typeof cityItems] || undefined,
+    () => cityItems[state as keyof typeof cityItems] || [],
     [state]
   );
 
