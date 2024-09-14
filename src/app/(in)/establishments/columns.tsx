@@ -1,6 +1,6 @@
 'use client';
 
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef } from '@/components/data-table';
 import { ArrowUpDown, ChevronRight } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';

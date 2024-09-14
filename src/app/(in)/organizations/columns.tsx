@@ -1,6 +1,6 @@
 'use client';
 
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef } from '@/components/data-table';
 import { ArrowUpDown } from 'lucide-react';
 
 import { OrganizationEditSheet } from '@/app/(in)/organizations/edit/edit-sheet';

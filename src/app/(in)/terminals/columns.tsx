@@ -1,9 +1,9 @@
 'use client';
 
-import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
 import { TerminalEditSheet } from '@/app/(in)/terminals/edit/edit-sheet';
+import { ColumnDef } from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { SheetProvider } from '@/providers/sheet-provider';
@@ -158,9 +158,6 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
     },
   },
   {
-    accessorKey: 'organizationName',
-  },
-  {
     accessorKey: 'cashOut',
     header: ({ column }) => {
       return (
@@ -182,6 +179,10 @@ export const terminalColumns: ColumnDef<TerminalDataTableData>[] = [
         </div>
       );
     },
+  },
+  {
+    accessorKey: 'organizationName',
+    hide: true,
   },
   {
     id: 'actions',

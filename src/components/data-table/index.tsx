@@ -3,10 +3,11 @@
 import { ReactNode, useState } from 'react';
 
 import {
-  ColumnDef,
   ColumnFiltersState,
+  RowData,
   SortingState,
   Table as TableType,
+  ColumnDef as TanColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -95,6 +96,8 @@ type FilterBy = {
   | FilterByCheckCombobox
   | BaseFilterBy
 );
+
+export type ColumnDef<TData extends RowData, TValue = unknown> = TanColumnDef<TData, TValue> & { hide?: true }
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -201,11 +204,16 @@ export function DataTable<TData, TValue>({
   const defaultFilters = filterBy
     ?.filter((filter) => filter.defaultValue)
     .map(({ key, defaultValue }) => ({ id: key, value: defaultValue }));
+
   const [sorting, setSorting] = useState<SortingState>([]);
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
     defaultFilters ?? []
   );
   const [globalFilter, setGlobalFilter] = useState('');
+
+  // @ts-ignore
+  const [columnVisibility, setColumnVisibility] = useState(columns.reduce((acc, { hide, accessorKey }) => ( accessorKey ? { ...acc, [accessorKey]: hide === undefined ?? false } : acc), {}));
 
   const table = useReactTable({
     data,
@@ -221,6 +229,7 @@ export function DataTable<TData, TValue>({
       sorting,
       columnFilters,
       globalFilter,
+      columnVisibility,
     },
   });
 

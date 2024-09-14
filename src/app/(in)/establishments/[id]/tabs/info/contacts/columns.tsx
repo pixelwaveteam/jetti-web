@@ -1,6 +1,6 @@
 'use client';
 
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef } from '@/components/data-table';
 import { ArrowUpDown } from 'lucide-react';
 
 import { EstablishmentContactEditSheet } from '@/app/(in)/establishments/[id]/tabs/info/contacts/edit/edit-sheet';

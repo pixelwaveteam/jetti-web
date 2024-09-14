@@ -1,6 +1,6 @@
 'use client';
 
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef } from '@/components/data-table';
 import { ArrowUpDown, ChevronRight } from 'lucide-react';
 
 import { AddCashFlowButton } from '@/app/(in)/cash-flows/add-cash-flow-button';
