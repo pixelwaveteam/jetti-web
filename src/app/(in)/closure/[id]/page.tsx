@@ -12,6 +12,7 @@ import {
 import { getDateFormatted } from '@/utils/date';
 
 import { ClosureProvider } from '@/providers/closure-provider';
+import { convertCentsToCurrency } from '@/utils/currency';
 import { fetchCashFlow } from '../../cash-flows/actions/fetch-cash-flow';
 import { fetchEstablishment } from '../../establishments/actions/fetch-establishment';
 import { fetchExpense } from '../../expenses/actions/fetch-expense';
@@ -123,6 +124,8 @@ export default async function Closure({ params: { id } }: ClosureProps) {
     </div>
   );
 
+  const total = cashFlows.reduce((acc, { gross }) => acc + gross, 0)
+
   return (
     <ClosureProvider initialData={{ }}>
       <PageContainer
@@ -135,7 +138,7 @@ export default async function Closure({ params: { id } }: ClosureProps) {
         <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
           <Card className='col-span-1'>
             <CardHeader>
-              <CardTitle>Leituras</CardTitle>
+              <CardTitle>Leituras ({convertCentsToCurrency(total)})</CardTitle>
             </CardHeader>
             <CardContent className='pl-2'>
               <ClosuresCashFlowsTable closuresCashFlows={cashFlows} />
@@ -143,7 +146,7 @@ export default async function Closure({ params: { id } }: ClosureProps) {
           </Card>
           <Card className='col-span-1'>
             <CardHeader>
-              <CardTitle>Despesas</CardTitle>
+              <CardTitle>Despesas ({convertCentsToCurrency(expensesTotal)})</CardTitle>
             </CardHeader>
             <CardContent className='pl-2'>
               <ClosuresExpensesTable closuresExpenses={expenses} />
