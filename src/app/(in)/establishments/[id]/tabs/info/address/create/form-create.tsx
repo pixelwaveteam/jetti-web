@@ -121,11 +121,9 @@ export function EstablishmentAddressFormCreate({
   useEffect(() => {
     if(!zipCode) return;
 
-    const zipFormatted = zipCode.replace('-', '');
-
-    if (zipFormatted.length === 8) {
+    if (zipCode.length === 8) {
       const fetchAddress = async () => {
-        const response = await fetchAddressByCep(zipFormatted);
+        const response = await fetchAddressByCep(zipCode);
 
         if (!response.logradouro) {
           toast({
@@ -154,17 +152,22 @@ export function EstablishmentAddressFormCreate({
     }
   }, [setFocus, setValue, toast, zipCode, trigger]);
 
+  function formatZipInput(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value.replace('-', '');
+    return value;
+  }
+
   return (
     <Form {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className='mt-4 space-y-4'>
         <FormField
           control={control}
           name='zipCode'
-          render={({ field }) => (
+          render={({ field: { onChange , ...field } }) => (
             <FormItem>
               <FormLabel>CEP</FormLabel>
               <FormControl>
-                <Input placeholder='CEP do local' {...field} />
+                <Input placeholder='CEP do local' onChange={e => onChange(formatZipInput(e))} {...field} />
               </FormControl>
               <FormDescription>
                 CEP do local para preenchimento automático.

@@ -142,6 +142,11 @@ export function EstablishmentAddressFormEdit({
     }
   }
 
+  function formatZipInput(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value.replace('-', '');
+    return value;
+  }
+
   return (
     <div className='space-y-6'>
       <Form {...formMethods}>
@@ -149,11 +154,11 @@ export function EstablishmentAddressFormEdit({
           <FormField
             control={control}
             name='zipCode'
-            render={({ field }) => (
+            render={({ field: { onChange , ...field } }) => (
               <FormItem>
                 <FormLabel>CEP</FormLabel>
                 <FormControl>
-                  <Input placeholder='CEP do local' {...field} />
+                  <Input placeholder='CEP do local' onChange={e => onChange(formatZipInput(e))} {...field} />
                 </FormControl>
                 <FormDescription>
                   CEP do local para preenchimento automático.
