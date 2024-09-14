@@ -77,7 +77,7 @@ export async function TerminalDataTable({ data }: TerminalDataTableProps) {
         <SheetProvider>
           <TerminalCreateSheet />
         </SheetProvider>
-        <DownloadCsvLink data={data} />
+        <DownloadCsvLink data={data} fileName='terminais' />
       </div>
     </DataTable>
   );
