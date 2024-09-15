@@ -158,8 +158,6 @@ export function CashFlowFormCreate() {
   }, [input, lastInput, setError, clearErrors]);
 
   useEffect(() => {
-    console.log({output, lastOutput})
-
     if (output && Number(output)*100 < lastOutput) {
       setError('output', {
         message: 'O valor de saída deve ser maior ou igual anterior',

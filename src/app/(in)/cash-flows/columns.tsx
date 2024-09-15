@@ -281,9 +281,7 @@ export const cashFlowColumns: ColumnDef<CashFlowDataTableData>[] = [
     },
     cell: ({ row }) => {
       const cashFlow = row.original;
-
-      console.log({cashFlow})
-
+      
       return (
         <div className='flex flex-col gap-2 items-start'>
           <span>{convertCentsToCurrency(cashFlow.net)}</span>

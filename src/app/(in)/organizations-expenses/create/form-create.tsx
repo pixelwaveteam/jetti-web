@@ -92,8 +92,6 @@ export function OrganizationExpenseFormCreate() {
         duration: 5000,
       });
     } catch (error) {
-      console.log({error})
-
       toast({
         variant: 'destructive',
         title: 'Erro',

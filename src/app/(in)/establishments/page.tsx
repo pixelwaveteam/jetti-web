@@ -26,10 +26,6 @@ export default async function Establishments() {
 
   const organizations = (await fetchOrganizations()).filter(({ id }) => session?.user.organizationsId.includes(id));
 
-  const a = await fetchOrganizations();
-
-  console.log({a})
-
   const userOrganizationNames = organizations.map(({ name }) => name).filter((value, index, self) => self.indexOf(value) === index);
 
   for(const rawEstablishment of rawEstablishments) {

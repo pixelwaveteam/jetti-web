@@ -24,9 +24,7 @@ export function EstablishmentDataTable({ data, userOrganizations }: Establishmen
     (acc, state) => ({ ...acc, [state.short]: state.cities }),
     {} as [{ [x: string]: string[] }]
   );
-
-  console.log({esta: data})
-
+  
   return (
     <DataTable
       columns={establishmentColumns}

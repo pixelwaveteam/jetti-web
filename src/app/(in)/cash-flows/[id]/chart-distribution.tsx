@@ -20,8 +20,6 @@ export function ChartDistribution({
     });
   }, [netDistributions]);
 
-  console.log({netDistributions})
-
   return (
     <ResponsiveContainer width='100%' height={350}>
       <PieChart>
