@@ -11,6 +11,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 import { PageContainer } from '@/components/page-container';
 import { TerminalProvider } from '@/providers/terminal-provider';
 
+import { inspect } from 'util';
 import { fetchEstablishmentAddress } from '../establishments/actions/fetch-establishment-address';
 import { TerminalDataTableData } from './columns';
 
@@ -33,6 +34,8 @@ export default async function Terminals() {
   const establishments = await fetchEstablishments();
   const interfaces = await fetchInterfaces();
   const userEstablishments = await fetchUserEstablishments(user.id);
+
+  console.log(inspect({rawTerminals}, { depth: null }))
 
   const terminals = [];
 
