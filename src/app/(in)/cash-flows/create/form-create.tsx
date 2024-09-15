@@ -6,8 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
-  useState,
+  useRef
 } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -39,10 +38,7 @@ import { CashFlowContext } from '@/providers/cash-flow-provider';
 import { SheetContext } from '@/providers/sheet-provider';
 import { revalidateTerminals } from '../../terminals/actions/revalidate-terminal';
 
-const CashFlowFormCreateSchema = (
-  lastInput: number | undefined = 0,
-  lastOutput: number | undefined = 0
-) =>
+const CashFlowFormCreateSchema = () =>
   z.object({
     terminalId: z.string({ required_error: 'Terminal é obrigatório.' }),
     input: z.coerce
@@ -50,19 +46,13 @@ const CashFlowFormCreateSchema = (
         required_error: 'Entrada é obrigatório.',
         invalid_type_error: 'Entrada deve ser um número. Substitua "," por "."',
       })
-      .transform((value) => value * 100)
-      .refine((value) => value >= lastInput, {
-        message: 'O valor de entrada deve ser maior ou igual anterior',
-      }),
+      .transform((value) => value * 100),
     output: z.coerce
       .number({
         required_error: 'Saída é obrigatório.',
         invalid_type_error: 'Saída deve ser um número. Substitua "," por "."',
       })
-      .transform((value) => value * 100)
-      .refine((value) => value >= lastOutput, {
-        message: 'O valor de saída deve ser maior ou igual anterior',
-      }),
+      .transform((value) => value * 100),
   });
 
 const CashFlowFormCreateSchemaDefault = CashFlowFormCreateSchema();
@@ -90,17 +80,9 @@ export function CashFlowFormCreate() {
     return (completed / totalTerminals) * 100;
   }, [terminals, completedTerminals]);
 
-  const [formInputOutputMinimum, setFormInputOutputMinimum] = useState({
-    lastInput: 0,
-    lastOutput: 0,
-  });
-
   const formMethods = useForm<CashFlowFormCreateType>({
     resolver: zodResolver(
-      CashFlowFormCreateSchema(
-        formInputOutputMinimum.lastInput,
-        formInputOutputMinimum.lastOutput
-      )
+      CashFlowFormCreateSchema()
     ),
     defaultValues: {
       terminalId:
@@ -110,9 +92,13 @@ export function CashFlowFormCreate() {
     },
   });
 
-  const { control, handleSubmit, watch, setValue, reset } = formMethods;
+  const { control, handleSubmit, watch, setValue, reset, setError, clearErrors } = formMethods;
 
   const terminalId = watch('terminalId');
+
+  const input = watch('input');
+  
+  const output = watch('output');
 
   const onSubmit = async (data: CashFlowFormCreateType) => {
     try {
@@ -151,6 +137,7 @@ export function CashFlowFormCreate() {
     return terminals.find((terminal) => terminal.id === terminalId)?.input || 0;
   }, [terminals, terminalId]);
 
+  
   const lastOutput = useMemo(() => {
     return (
       terminals.find((terminal) => terminal.id === terminalId)?.output || 0
@@ -158,16 +145,34 @@ export function CashFlowFormCreate() {
   }, [terminals, terminalId]);
 
   useEffect(() => {
-    if (lastInput) {
-      setFormInputOutputMinimum((state) => ({ ...state, lastInput }));
+    if (input && input < lastInput) {
+      setError('input', {
+        message: 'O valor de entrada deve ser maior ou igual anterior',
+        type: 'min',
+      })
     }
-  }, [lastInput]);
+
+    if(Number(input)*100 >= lastInput) {
+      clearErrors('input')
+    }
+  }, [input, lastInput, setError, clearErrors]);
 
   useEffect(() => {
-    if (lastOutput) {
-      setFormInputOutputMinimum((state) => ({ ...state, lastOutput }));
+    console.log({output, lastOutput})
+
+    if (output && Number(output)*100 < lastOutput) {
+      setError('output', {
+        message: 'O valor de saída deve ser maior ou igual anterior',
+        type: 'min',
+      })
+
+      return;
     }
-  }, [lastOutput]);
+
+    if(Number(output)*100 >= lastOutput) {
+      clearErrors('output')
+    }
+  }, [output, lastOutput, setError, clearErrors]);
 
   useEffect(() => {
     async function handlePeriodCashFlow(selectedTerminalId: string) {
