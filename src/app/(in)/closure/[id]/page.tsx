@@ -138,7 +138,7 @@ export default async function Closure({ params: { id } }: ClosureProps) {
         <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
           <Card className='col-span-1'>
             <CardHeader>
-              <CardTitle>Leituras ({convertCentsToCurrency(total)})</CardTitle>
+              <CardTitle>Leituras <span className='text-lg'>({convertCentsToCurrency(total)})</span></CardTitle>
             </CardHeader>
             <CardContent className='pl-2'>
               <ClosuresCashFlowsTable closuresCashFlows={cashFlows} />
@@ -146,7 +146,7 @@ export default async function Closure({ params: { id } }: ClosureProps) {
           </Card>
           <Card className='col-span-1'>
             <CardHeader>
-              <CardTitle>Despesas ({convertCentsToCurrency(expensesTotal)})</CardTitle>
+              <CardTitle>Despesas <span className='text-lg'>({convertCentsToCurrency(expensesTotal)})</span></CardTitle>
             </CardHeader>
             <CardContent className='pl-2'>
               <ClosuresExpensesTable closuresExpenses={expenses} />
