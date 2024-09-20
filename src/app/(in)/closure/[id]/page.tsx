@@ -103,7 +103,7 @@ export default async function Closure({ params: { id } }: ClosureProps) {
 
   const statValues = {
     cashFlowsTotal: closureCashFlowsTotal,
-    gross: gross/2,
+    gross: gross,
     net,
   };
 
