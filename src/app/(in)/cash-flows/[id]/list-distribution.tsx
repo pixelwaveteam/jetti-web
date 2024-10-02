@@ -20,9 +20,14 @@ export function ListDistribution({ netDistributions }: ListDistributionProps) {
   return (
     <div className='space-y-4'>
       {netDistributions.map((netDistribution) => {
-        const percentageDistribution = formattedToPercentage(
+        const percentageDistributionDisplay = formattedToPercentage(
           netDistribution.displayPercentage
         );
+
+        const percentageDistribution = formattedToPercentage(
+          netDistribution.percentage
+        );
+
         const amountDistribution = convertCentsToCurrency(
           netDistribution.amount
         );
@@ -33,7 +38,28 @@ export function ListDistribution({ netDistributions }: ListDistributionProps) {
               <span className='font-medium leading-none'>
                 {netDistribution.name}
               </span>
-              <Badge color='primary'>{`${percentageDistribution}%`}</Badge>
+              {/* {
+                establishmentDistribution.percentageOutOf !== 'TOTAL' && (
+                  <>
+                    <Badge variant='outline'>
+                      {establishmentDistribution.percentage / 100}%
+                    </Badge>
+
+                    <>
+                      {getPercentageOutOfDistributionDisplay(establishmentDistribution.percentageOutOf)}
+                    </>
+                  </>
+                )
+              }
+
+              {
+                establishmentDistribution.percentageOutOf === "TOTAL" && (
+                  <Badge variant='secondary'>
+                    {establishmentDistribution.percentage/100}%
+                  </Badge>
+                )
+              } */}
+              <Badge color='primary'>{`${percentageDistributionDisplay}%`}</Badge>
             </div>
             <div className='ml-auto font-medium'>{amountDistribution}</div>
           </div>
