@@ -86,17 +86,15 @@ export default async function CashFlows() {
       const establishment = await fetchEstablishment(cashFlowEstablishmentId)
 
       if(userOrganizations.find(({ organizationId }) => organizationId === establishment.organizationId)) {
-        const cashFlowOrganizationId = establishments.find(({ id }) => id === cashFlowEstablishmentId)?.organizationId
-  
-        const cashFlowOrganizationName = cashFlowOrganizationId && organizations.find(({ id }) => id === cashFlowOrganizationId)?.name
+        const cashFlowOrganizationName = organizations.find(({ id }) => id === establishment.organizationId)?.name
   
         if(cashFlowOrganizationName) {
-          if(!session?.user.organizationsId.includes(cashFlowOrganizationId)) {
+          if(!session?.user.organizationsId.includes(establishment.organizationId)) {
             continue
           }
   
           cashFlow.organization = cashFlowOrganizationName;
-          cashFlow.organizationId = cashFlowOrganizationId;
+          cashFlow.organizationId = establishment.organizationId;
         }
       }
     }
