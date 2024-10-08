@@ -78,24 +78,18 @@ export default async function CashFlows() {
   for(const rawCashFlow of rawCashFlows) {
     let cashFlow: CashFlowDataTableData = { ...rawCashFlow };
 
-    const cashFlowsTerminal = rawTerminals.find(({ code }) => String(code) === rawCashFlow.terminal)
+    const establishment = await fetchEstablishment(rawCashFlow.establishmentId)
 
-    const cashFlowEstablishmentId = cashFlowsTerminal?.establishmentId
-
-    if(cashFlowEstablishmentId) {
-      const establishment = await fetchEstablishment(cashFlowEstablishmentId)
-
-      if(userOrganizations.find(({ organizationId }) => organizationId === establishment.organizationId)) {
-        const cashFlowOrganizationName = organizations.find(({ id }) => id === establishment.organizationId)?.name
+    if(userOrganizations.find(({ organizationId }) => organizationId === establishment.organizationId)) {
+      const cashFlowOrganizationName = organizations.find(({ id }) => id === establishment.organizationId)?.name
   
-        if(cashFlowOrganizationName) {
-          if(!session?.user.organizationsId.includes(establishment.organizationId)) {
-            continue
-          }
-  
-          cashFlow.organization = cashFlowOrganizationName;
-          cashFlow.organizationId = establishment.organizationId;
+      if(cashFlowOrganizationName) {
+        if(!session?.user.organizationsId.includes(establishment.organizationId)) {
+          continue
         }
+  
+        cashFlow.organization = cashFlowOrganizationName;
+        cashFlow.organizationId = establishment.organizationId;
       }
     }
     
